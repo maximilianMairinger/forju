@@ -1,0 +1,21 @@
+:host {
+  /* height: 80vh; */
+  background: linear-gradient(rgb(255, 99, 99), rgb(255, 128, 227));
+}
+component-body {
+  background: linear-gradient(rgb(149, 255, 99), rgb(150, 234, 255));
+}
+
+h2 {
+  font-weight: normal;
+  display: block;
+  margin: 0;
+  position: relative;
+  float: left;
+  width: 100%;
+  opacity: 0;
+}
+
+h2:first-child {
+  opacity: 1;
+}

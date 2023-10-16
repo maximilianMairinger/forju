@@ -1,0 +1,255 @@
+:host {
+  height: 90vh;
+  width: 100%;
+  min-height: 650px;
+}
+
+
+landing-circle-wrapper {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-start;
+  height: 35%;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+c-landing-circle {
+  width: auto;
+  height: 100%;
+  transition: .3s;
+}
+
+c-text-blob {
+  --font-size: 20px; 
+  --body-size: 100%;
+}
+
+
+component-body {
+  display: flex;
+  flex-flow: row;
+  width: 100%;
+  height: 100%;
+  flex-direction: row-reverse;
+  overflow: hidden;
+}
+
+c-line-accent {
+  position: absolute;
+  display: block;
+  width: 41px;
+  margin-left: -35px;
+  margin-top: -20px;
+  transition: .25s margin-left;
+}
+
+@media (max-width: 800px) {
+  c-line-accent {
+    margin-left: 0
+  }
+}
+
+left-side {
+  display: flex;
+  align-items: center;
+  position: relative;
+  left: 0;
+  top: 0;
+  width: 35%;
+  max-width: 638px;
+  
+  padding: 0 calc(11.5% - 12px);
+  padding-right: 0;
+  box-sizing: border-box;
+  height: 95%;
+  transition: .3s;
+  z-index: 1;
+  pointer-events: none;
+}
+
+right-side {
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex-grow: 1;
+  box-sizing: border-box;
+  height: 95%;
+  padding-top: 70px;
+  transform: scale(1) translateX(-100px) translateY(100px);
+  transition: .3s;
+  max-width: 65%;
+}
+
+@media (max-width: 1600px) {
+  right-side {
+    transform: scale(1.1) translateX(-50px) translateY(70px)
+  }
+}
+
+
+@media (max-width: 1350px) {
+  right-side {
+    transform: scale(1.1) translateX(-50px) translateY(60px)
+  }
+}
+
+@media (max-width: 1300px) {
+  right-side {
+    transform: scale(1.05) translateX(-40px) translateY(50px)
+  }
+}
+
+c-big-video {
+  width: 100%;
+  height: auto;
+  /* max-height: 100%; */
+}
+
+
+
+@media (max-width: 1190px) {
+  component-body {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  left-side {
+    width: 100%;
+    padding: 0 calc(11.5% - 12px);
+    height: 40%;
+    max-width: 600px;
+    padding-left: 0;
+    transform: translateY(-150px);
+  }
+  right-side {
+    width: 100%;
+    height: fit-content;
+    flex-grow: initial;
+    padding: 0 calc(11.5% - 12px);
+    transform: scale(1) translateX(0px) translateY(0);
+    padding-top: 120px;
+    padding-bottom: 40px;
+    margin-bottom: 20px;
+    flex-grow: initial;
+    max-width: initial;
+  }
+  :host {
+    height: initial;
+    min-height: fit-content;
+  }
+  text-blob {
+    margin-bottom: 80px;
+  }
+}
+
+@media (max-width: 800px) {
+  right-side {
+    transform: scale(1.5) translateX(-70px) translateY(0);
+  }
+  left-side {
+    padding-left: calc(11.5% - 12px);
+    transform: translateY(-110px);
+  }
+}
+
+@media (max-width: 700px) {
+  right-side {
+    transform: scale(1.5) translateX(-55px) translateY(0);
+  }
+  left-side {
+    transform: translateY(-100px);
+  }
+}
+@media (max-width: 650px) {
+  right-side {
+    transform: scale(1.5) translateX(-50px) translateY(0);
+  }
+}
+@media (max-width: 600px) {
+  right-side {
+    transform: scale(1.5) translateX(-40px) translateY(0);
+  }
+  left-side {
+    transform: translateY(-80px);
+  }
+}
+@media (max-width: 500px) {
+  left-side {
+    transform: translateY(-70px);
+  }
+}
+
+
+text-blob {
+  display: inline-block;
+  max-width: 100%;
+  width: 100%;
+  z-index: 1;
+  pointer-events: all;
+}
+
+c-block-button {
+  --background: var(--primary-theme);
+  --text: var(--plain-background);
+  --border: unset;
+  --padding: 15px 50px;
+  font-size: 18px;
+}
+
+arrow-circle {
+  background-color: white;
+  box-shadow: 0 0 30px 0 rgba(0,0,0,.06);
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+}
+
+c-arrow-icon {
+  transform: rotate(90deg) translateX(2px);
+  height: 28px;
+  pointer-events: none;
+}
+
+view-work c-link {
+  font-size: 21px;
+  padding: 0 15px;
+  user-select: none;
+}
+
+view-work {
+  position: absolute;
+  bottom: calc(3vw + 20px);
+  /* bottom: 75px; */
+  left: calc(11.5% - 12px);
+  display: flex;
+  align-items: center;
+}
+
+view-work c-button {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  --drag: none;
+}
+
+view-work c-ripple-button {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+@media (max-width: 500px) {
+  view-work, landing-circle-wrapper {
+    display: none;
+  }
+  component-body {
+    margin-bottom: -90px;
+  }
+}

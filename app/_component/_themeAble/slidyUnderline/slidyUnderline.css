@@ -1,0 +1,11 @@
+:host {
+  height: 2px
+}
+
+component-body {
+  background: rgb(var(--primary-text));
+  height: 100%;
+  width: 100%;
+  border-radius: 2px;
+  transition: background-color .25s;
+}

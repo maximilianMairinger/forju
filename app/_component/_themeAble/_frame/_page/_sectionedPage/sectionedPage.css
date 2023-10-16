@@ -1,0 +1,21 @@
+
+
+component-body {
+  display: inline-block;
+  width: 100%;
+  position: relative;
+  min-width: 365px;
+  /* todo bug */
+  /* overflow: hidden; */
+}
+
+component-body > * {
+  display: block;
+  width: 100%;
+  position: relative;
+  float: left;
+
+  /* content-visibility: hidden;
+  contain-intrinsic-size: 100vh; */
+}
+

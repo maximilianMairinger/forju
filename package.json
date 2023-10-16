@@ -87,6 +87,7 @@
     "webpack-cli": "^4.3.1",
     "webpack-inject-plugin": "^1.5.5",
     "webpack-merge": "^5.7.3",
+    "ws": "^8.14.2",
     "yargs": "16.2.0"
   },
   "dependencies": {
@@ -95,6 +96,7 @@
     "@types/multimap": "^1.1.2",
     "ajaon": "^1.5.11",
     "animated-scroll-to": "^2.3.0",
+    "animation-frame-delta": "^2.8.6",
     "audio-loader": "^1.0.3",
     "audio-play": "^2.3.1",
     "capture-video-frame": "^1.0.0",
@@ -104,6 +106,7 @@
     "extended-dom": "^4.0.31",
     "fast-decode-uri-component": "^1.0.1",
     "fast-linked-list": "^3.2.0",
+    "get-base-url": "^3.0.2",
     "get-video-screenshot": "^1.0.1",
     "is-safari": "^1.0.0",
     "josm": "^1.2.17",
@@ -113,7 +116,8 @@
     "raw-image": "^1.1.1",
     "slugify": "^1.6.5",
     "tiny-delay": "^1.0.5",
-    "tippy.js": "^6.3.7"
+    "tippy.js": "^6.3.7",
+    "waapi-easing": "^1.0.3"
   },
   "version": "1.0.0"
 }

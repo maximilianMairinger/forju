@@ -1,0 +1,87 @@
+:host {
+  /* private */
+  --wave-opacity: 1;
+
+  --wave-color: rgb(var(--text));
+  --counter-wave-color: var(--background-color);
+}
+
+
+button-text {
+  color: #D2E1E1;
+}
+
+:host(.preSelected) {
+  --focus: 0, 153, 255;
+}
+
+
+:host(.preSelected) button-text {
+  color: white;
+}
+
+
+
+/* :host(.rippleSettled.preSelected) button-text {
+  
+} */
+
+:host(:not(.selected):not(.preSelected).rippleSettled) button-text {
+  color: rgb(var(--primary-text));
+  color: black;
+  mix-blend-mode: normal;
+}
+
+:host(.selected.preSelected.rippleSettled) button-text {
+  color: #d2e1e1;
+  mix-blend-mode: normal;
+}
+
+/* button-text {
+  color: var(--text-color);
+}
+
+:host(.selected) button-text {
+  color: var(--counter-text-color);
+} */
+
+
+
+
+button-waves :nth-child(2n) button-wave {
+  background: var(--counter-wave-color);
+}
+
+button-waves :nth-child(2n):last-child button-wave {
+  background: var(--counter-wave-color);
+}
+
+button-waves :nth-child(2n+1):last-child button-wave {
+  background: var(--wave-color);
+}
+
+
+
+button-text {
+  mix-blend-mode: difference;
+}
+
+
+
+
+/* :host(:not(.enabled)) {
+  border: 1px solid rgba(var(--border), .15);
+  color: rgb(var(--text))
+}
+
+
+:host(:focus-within) {
+  border: 1px solid rgba(var(--border), .35);
+}
+
+:host(:focus-within) component-body {
+  background: rgba(var(--text), .075)
+} */
+
+
+

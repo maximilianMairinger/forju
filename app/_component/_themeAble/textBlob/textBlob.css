@@ -1,0 +1,36 @@
+:host {
+  --font-size: 16px;
+  --theme: var(--primary-theme);
+  display: inline-block;
+  margin-bottom: 20px;
+  --body-size: 70%;
+  --header-fontsize-factor: 2.5;
+}
+
+h1 {
+  font-size: calc(var(--font-size) * var(--header-fontsize-factor));
+  position: relative;
+  margin-bottom: .2em;
+  margin-top: .15em;
+  line-height: 1.13em;
+}
+
+p {
+  margin-top: 0;
+  font-size: var(--font-size);
+  position: relative;
+  width: var(--body-size);
+  margin-bottom: 0;
+}
+
+note-header {
+  font-size: var(--font-size);
+  font-weight: bold;
+  color: rgb(var(--theme));
+  position: relative;
+  display: block
+}
+
+note-header::selection {
+  background: rgba(var(--theme), 0.15);
+}

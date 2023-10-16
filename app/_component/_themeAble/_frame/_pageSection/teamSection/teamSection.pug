@@ -1,0 +1,30 @@
+tilt-background
+quote-section
+  big-circle
+
+
+  left-side
+    c-text-blob(heading="$[ home.team.heading ]" note="$[ home.team.note ]")
+
+
+  right-side
+    quote-box 
+      quote-heading 
+        heading-line
+          heading-text  $[ home.team.quote.0.author ]
+          heading-seperator / 
+        heading-subtext $[ home.team.quote.0.authorTitle ]
+      
+      quote-text $[ home.team.quote.0.text ]
+      c-link(content="$[ home.team.quote.0.projectName ]" link="$[ home.team.quote.0.projectLink ]")
+      
+      c-quotation-mark.top
+      c-quotation-mark.bot 
+
+  c-designer-woman
+  floor-line
+
+
+image-wrapper
+  image-inner-wrapper
+    c-image(src="/res/img/dist/blueSet.JPG").team

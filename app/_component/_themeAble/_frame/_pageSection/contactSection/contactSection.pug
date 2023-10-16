@@ -1,0 +1,54 @@
+grid-column.cta
+  h1.chonker $[ home.contact.cta.heading ]
+  p $[ home.contact.cta.text ]
+  c-block-button(content="$[ home.contact.cta.button ]" link="contact/form")
+grid-column.speachBubble.a
+  c-speach-bubble
+grid-column.speachBubble.b
+  c-speach-bubble
+grid-column.contact.head
+  h1.chonker $[ home.contact.socials.heading ]
+  p $[ home.contact.socials.text ]
+grid-column.contact.data.linkList
+  h2.lil $[ home.contact.socials.contact.heading ]
+  c-copy-link
+    c-send-icon
+    | $[ home.contact.socials.contact.email ]
+  //- c-copy-link
+  //-   c-phone-icon
+  //-   | $[ home.contact.socials.contact.phone ]
+  //- c-copy-link
+  //-   c-home-icon
+  //-   | $[ home.contact.socials.contact.address ]
+grid-column.contact.socials.linkList
+  h2.lil $[ home.contact.socials.socialMedia.heading ]
+  c-link(link="https://at.linkedin.com/company/xcenic")
+    c-linked-in-icon 
+    | $[ home.contact.socials.socialMedia.linkedIn ]
+  c-link(link="https://www.instagram.com/xcenicofficial")
+    c-instagram-icon
+    | $[ home.contact.socials.socialMedia.instagram ]
+  //- c-link(link="https://www.tiktok.com/@xcenic")
+  //-   c-tiktok-icon 
+  //-   | $[ home.contact.socials.socialMedia.tikTok ]
+
+
+grid-column.legal
+  legal-container
+    legal-container-background
+    legal-box
+      grid-legal.head
+        name-artifact $[ xcenic.longName ]
+        h1 $[ xcenic.longName ]
+        p © 2019-<span id="currentYear"></span>. $[ home.contact.legal.legalNotice ]
+      grid-legal.body.terms
+        c-link.lil(link="legalNotice", eventtarget="parent")
+          | $[ home.contact.legal.terms.heading ]
+          c-arrow-pointer
+        p $[ home.contact.legal.terms.text ]
+
+      grid-legal.body.privacy
+        c-link.lil(link="privacy", eventtarget="parent")
+          | $[ home.contact.legal.privacy.heading ]
+          c-arrow-pointer
+        p $[ home.contact.legal.privacy.text ]

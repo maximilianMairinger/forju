@@ -1,0 +1,91 @@
+:host {
+  --text: var(--primary-text);
+}
+
+
+:host {
+  color: rgb(var(--text));
+  user-select: none;
+  display: inline-block;
+}
+
+:host(.active) {
+  font-weight: bold;
+}
+
+:host(.pressed) a {
+  color: rgba(var(--text), .7);
+}
+
+:host a {
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+slot {
+  font-weight: inherit;
+  cursor: inherit;
+
+
+  display: flex;
+  align-items: center;
+}
+
+::slotted(*) {
+  height: min-content;
+  width: 1.1119em;
+  display: inline-block;
+  position: absolute;
+
+  /* top: 50%;
+  transform: translateY(-50%); */
+}
+
+
+
+a {
+  color: rgb(var(--text));
+  font-weight: inherit;
+  cursor: inherit;
+  position: relative;
+  transition: color .15s;
+}
+
+c-external-link-icon {
+  width: 1.02em;
+  height: 1.02em;
+  display: inline-block;
+  margin-left: .12em;
+  margin-right: .05em;
+  transform: translateY(2px)
+}
+
+slidy-underline-wrapper {
+  display: block;
+  position: absolute;
+  bottom: -.1em;
+  border-radius: 2px;
+  height: 2px;
+  overflow: hidden;
+  width: 100%;
+  pointer-events: none;
+}
+
+slidy-underline {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  background: rgb(var(--text));
+  border-radius: 2px;
+  height: 2px;
+}
+
+link-body {
+  width: -moz-fit-content;
+  width: fit-content;
+  display: block;
+  height: fit-content;
+  position: relative;
+  overflow: visible;
+}

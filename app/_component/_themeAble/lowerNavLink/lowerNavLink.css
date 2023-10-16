@@ -1,0 +1,72 @@
+:host {
+  display: block;
+  --padding: 10%;
+  border-radius: 20px;
+}
+component-body {
+  width: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: inherit;
+}
+
+icon-container {
+  pointer-events: none;
+  display: flex;
+  height: auto;
+  flex-grow: 1;
+
+  top: var(--padding);
+  height: calc(67% - calc(var(--padding) * 2));
+
+  z-index: 10;
+}
+
+icon-container > * {
+  margin: auto;
+  min-height: 20px;
+  box-sizing: border-box;
+  width: 40px;
+}
+
+:host(.highlight) text-container {
+  color: rgb(var(--theme))
+}
+
+component-body {
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+
+text-container {
+  pointer-events: none;
+  transition: .1s color;
+  color: rgb(var(--primary-text));
+  z-index: 10;
+}
+
+text-container {
+  display: block;
+  bottom: var(--padding);
+
+  text-align: center;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: bold;
+
+  font-size: 14px;
+}
+
+c-ripple-button {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+}

@@ -1,0 +1,49 @@
+#editAble {
+  /* border: 1px solid rgba(var(--plain-text), .2);
+  border: 1px solid rgba(0, 0, 0, .2); */
+  resize: none;
+}
+
+textarea {
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
+}
+
+textarea::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
+}
+
+placeholder-bg {
+  height: 20px;
+  opacity: 0;
+  background: var(--background-color);
+  position: relative;
+  display: block;
+  width: calc(100% - 10px);
+}
+
+placeholder-gradient {
+  display: block;
+  height: 20px;
+  width: calc(100% - 10px);
+  position: relative;
+  opacity: 0;
+  transition: .2s;
+  background: linear-gradient(0deg, rgba(var(--background), 0), rgba(var(--background), 1));
+}
+
+bottom-gradient {
+  bottom: 0;
+  display: block;
+  height: 20px;
+  width: calc(100% - 10px);
+  position: absolute;
+  opacity: 0;
+  transition: .2s;
+  background: linear-gradient(180deg, rgba(var(--background), 0), rgba(var(--background), 1));
+}
+
+
+.up.animDone placeholder-bg, .up.animDone:not(.scrollStart) placeholder-gradient, component-body:not(.scrollEnd) bottom-gradient {
+  opacity: 1;
+}

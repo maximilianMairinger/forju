@@ -1,0 +1,69 @@
+:host {
+  height: 0px;
+  width: 100%;
+  min-height: 0px;
+  z-index: 2;
+  overflow: visible;
+
+  content-visibility: visible !important;
+}
+
+component-body {
+  min-height: 0;
+  height: max-content;
+  margin-top: -10px;
+  padding-top: 10px;
+  overflow: hidden;
+}
+
+
+skew-lines-wrapper {
+  width: 100%;
+  display: inline-block;
+  transform: rotate(1deg) translateY(3px) ;
+  transform-origin: top;
+  pointer-events: none;
+  overflow: hidden;
+  margin-top: -10px;
+  padding-right: 100%;
+}
+
+background-lines {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 0 calc(11.5% - 27px);
+  box-sizing: border-box;
+  transition: .3s;
+  transform: rotate(-1deg);
+  transform-origin: top;
+}
+
+c-line {
+  height: unset;
+  width: unset;
+  margin-top: -13px;
+}
+
+
+
+
+
+@media (max-width: 1400px) {
+  background-lines > c-line:last-child {
+    display: none;
+  }
+}
+
+
+@media (max-width: 1100px) {
+  background-lines > c-line:nth-last-child(2) {
+    display: none;
+  }
+}
+
+@media (max-width: 730px) {
+  background-lines > c-line:nth-last-child(3) {
+    display: none;
+  }
+}

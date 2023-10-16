@@ -1,0 +1,22 @@
+/* There is a bug in chrome which staggers transitions if declared in differnet shadowrrots on tspan... 04/06/2020 */
+
+:host {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  fill: rgb(var(--primary-text))
+}
+
+svg {
+  width: inherit;
+  height: inherit;  
+  max-width: inherit;
+  max-height: inherit;
+  display: block;
+}
+
+
+:host svg *:not(tspan) {
+  transition: inherit
+}
+

@@ -6,6 +6,7 @@ dist/
 .deploy
 
 package-lock.json
+pnpm-lock.yaml
 
 public/sw.js
 public/sw.*.js

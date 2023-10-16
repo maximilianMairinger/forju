@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+c-button {
+  width: inherit;
+  height: inherit;
+  max-height: inherit;
+  max-width: inherit;
+}
+
+move-me {
+  background-color: transparent;
+}
+

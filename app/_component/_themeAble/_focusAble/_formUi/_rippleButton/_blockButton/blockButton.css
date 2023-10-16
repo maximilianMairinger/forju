@@ -1,0 +1,27 @@
+:host {
+  --padding: 13px 24px;
+}
+
+:host {
+  transition: color .3s, background-color .3s;
+  display: block;
+  width: fit-content;
+}
+
+button-text {
+  display: block;
+  font-size: 1em;
+  margin: auto 0;
+  padding: var(--padding);
+  text-align: center;
+  font-weight: bold;
+  
+  box-sizing: border-box;
+}
+
+
+move-me {
+  width: inherit;
+  height: inherit;
+  background-color: rgb(var(--background));
+}

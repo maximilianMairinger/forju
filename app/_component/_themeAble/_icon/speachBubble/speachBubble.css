@@ -1,0 +1,8 @@
+:host {
+  --theme: var(--primary-theme)
+}
+
+
+#text {
+  fill: rgb(var(--theme))
+}
