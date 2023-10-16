@@ -1,0 +1,42 @@
+:host {
+  width: 100%;
+  height: 100%;
+  
+  display: inline-block;
+  vertical-align:bottom;
+  --display: block;
+  position: relative;
+  --object-position: 50% 50%;
+}
+
+picture {
+  display: var(--display);
+  width: inherit;
+  height: inherit;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+picture:first-of-type {
+  position: relative;
+  top: initial;
+  left: initial;
+}
+
+img {
+  display: var(--display);
+  opacity: 0;
+  object-fit: cover;
+  object-position: var(--object-position);
+  width: inherit;
+  height: inherit;
+  user-select: none;
+  user-drag: none; 
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+

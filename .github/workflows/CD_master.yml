@@ -1,0 +1,375 @@
+name: master
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  # JOB to run change detection
+  detectChanges:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: read
+    outputs:
+      images: ${{ steps.filter.outputs.images }}
+      imagesFiles: ${{ steps.filter.outputs.images_files }}
+      server: ${{ steps.filter.outputs.server }}
+      replServer: ${{ steps.filter.outputs.replServer }}
+      app: ${{ steps.filter.outputs.app }}
+      serviceWorker: ${{ steps.filter.outputs.serviceWorker }}
+      dependencies: ${{ steps.filter.outputs.dependencies }}
+      public: ${{ steps.filter.outputs.public }}
+      deployOption: ${{ steps.filter.outputs.deployOption }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        base: master
+        list-files: 'csv'
+        filters: |
+          images:
+            - added|modified: 'app/res/img/**'
+          server:
+            - 'server/**'
+          replServer:
+            - 'replServer/**'
+          app:
+            - 'app/**'
+          serviceWorker:
+            - 'serviceWorker/**'
+          dependencies:
+            - 'package.json'
+          public:
+            - 'public/**'
+          deployOption:
+            - '.deploy'
+
+
+  buildApp: 
+    runs-on: ubuntu-latest
+    needs: [detectChanges]
+    timeout-minutes: 15
+    
+    steps: 
+    - name: "checkout"
+      if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') }}
+      uses: actions/checkout@master
+
+    - name: Setting up node
+      if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') }}
+      uses: actions/setup-node@master
+      with:
+        node-version: '16.x'
+
+    - name: Installing runner dependencies
+      if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') }}
+      run: npm i
+
+    # - name: set environment variables
+    #   uses: allenevans/set-env@v2.0.0
+    #   with:
+    #     GOOGLE_MAPS_API_KEY: '${{ secrets.MAPS_API_KEY }}'
+    
+    - name: "Building app"
+      if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') }}
+      run: npm run buildProdApp --if-present
+
+    - name: "Uploading files to remote"
+      if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') }}
+      uses: appleboy/scp-action@v0.1.1
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        source: "public/dist"
+        target: /var/www/html/forju/master/_${{github.sha}}
+        overwrite: true
+
+  buildServer: 
+    runs-on: ubuntu-latest
+    needs: [detectChanges]
+    timeout-minutes: 15
+    
+    steps: 
+    - name: "checkout"
+      if: ${{ needs.detectChanges.outputs.server == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      uses: actions/checkout@master
+
+    - name: Setting up node
+      if: ${{ needs.detectChanges.outputs.server == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      uses: actions/setup-node@master
+      with:
+        node-version: '16.x'
+
+    - name: Installing runner dependencies
+      if: ${{ needs.detectChanges.outputs.server == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      run: npm i
+
+    # - name: set environment variables
+    #   uses: allenevans/set-env@v2.0.0
+    #   with:
+    #     GOOGLE_MAPS_API_KEY: '${{ secrets.MAPS_API_KEY }}'
+    
+    - name: "Building server"
+      if: ${{ needs.detectChanges.outputs.server == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      run: npm run buildProdServer --if-present
+
+    - name: "Uploading files to remote"
+      if: ${{ needs.detectChanges.outputs.server == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      uses: appleboy/scp-action@v0.1.1
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        source: "server"
+        target: /var/www/html/forju/master/_${{github.sha}}
+        overwrite: true
+
+  buildReplServer: 
+    runs-on: ubuntu-latest
+    needs: [detectChanges]
+    timeout-minutes: 15
+    
+    steps: 
+    - name: "checkout"
+      if: ${{ needs.detectChanges.outputs.replServer == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      uses: actions/checkout@master
+
+    - name: Setting up node
+      if: ${{ needs.detectChanges.outputs.replServer == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      uses: actions/setup-node@master
+      with:
+        node-version: '16.x'
+
+    - name: Installing runner dependencies
+      if: ${{ needs.detectChanges.outputs.replServer == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      run: npm i
+
+    # - name: set environment variables
+    #   uses: allenevans/set-env@v2.0.0
+    #   with:
+    #     GOOGLE_MAPS_API_KEY: '${{ secrets.MAPS_API_KEY }}'
+    
+    - name: "Building repl server"
+      if: ${{ needs.detectChanges.outputs.replServer == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      run: npm run buildProdReplServer --if-present
+
+    - name: "Uploading files to remote"
+      if: ${{ needs.detectChanges.outputs.replServer == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      uses: appleboy/scp-action@v0.1.1
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        source: "replServer"
+        target: /var/www/html/forju/master/_${{github.sha}}
+        overwrite: true
+
+
+  buildServiceWorker: 
+    runs-on: ubuntu-latest
+    needs: [detectChanges]
+    timeout-minutes: 15
+    
+    steps: 
+    - name: "checkout"
+      if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      uses: actions/checkout@master
+
+    - name: Setting up node
+      if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      uses: actions/setup-node@master
+      with:
+        node-version: '16.x'
+
+    - name: Installing runner dependencies
+      if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      run: npm i
+
+    # - name: set environment variables
+    #   uses: allenevans/set-env@v2.0.0
+    #   with:
+    #     GOOGLE_MAPS_API_KEY: '${{ secrets.MAPS_API_KEY }}'
+    
+    - name: "Building service worker"
+      if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' }}
+      run: npm run buildProdSw --if-present
+
+    - name: "Uploading files to remote"
+      if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' }}
+      uses: appleboy/scp-action@v0.1.1
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        # todo service worker dist
+        passphrase: ${{ secrets.PASSPHRASE }}
+        source: "public/sw.js"
+        target: /var/www/html/forju/master/_${{github.sha}}
+        overwrite: true
+
+  compressImages: 
+    runs-on: ubuntu-latest
+    needs: [detectChanges]
+    timeout-minutes: 100
+
+    steps: 
+    - name: "checkout"
+      if: ${{ needs.detectChanges.outputs.images == 'true' }}
+      uses: actions/checkout@master
+      with:
+        lfs: "true"
+
+    - name: Setting up node
+      if: ${{ needs.detectChanges.outputs.images == 'true' }}
+      uses: actions/setup-node@master
+      with:
+        node-version: '16.x'
+
+    - name: Installing runner dependencies
+      if: ${{ needs.detectChanges.outputs.images == 'true' }}
+      run: npm i image-web -g
+
+    - name: Setting environment variables
+      if: ${{ needs.detectChanges.outputs.images == 'true' }}
+      uses: allenevans/set-env@v2.0.0
+      with:
+        UV_THREADPOOL_SIZE: '1' # otherwise may take up too much memory and cause action to be canceled.
+
+
+    - name: "Compressing images"
+      if: ${{ needs.detectChanges.outputs.images == 'true' }}
+      # replace the input of the compressImage command (hopefully using image-web) with the image diffs of this commit. Also add legacyLogs option
+      run: "eval `node -e \"let a = JSON.parse(fs.readFileSync('package.json').toString()).scripts.compressImages.split(' '); let i = a.indexOf('image-web'); assert(i !== -1); assert(a[0] === 'image-web' || (a[0] === 'npx' && (a[1] === 'image-web' || (a[1] === '--yes' && a[2] === 'image-web'))); a[i+1] = require('process').argv[1]; console.log(a.join(' ') + (a.includes('--legacyLogs') ? '' : ' --legacyLogs'))\" \"${{ needs.detectChanges.outputs.imagesFiles }}\"`"
+
+    - name: "Uploading files to remote"
+      if: ${{ needs.detectChanges.outputs.images == 'true' }}
+      uses: appleboy/scp-action@v0.1.1
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        source: "public/res/img/dist"
+        target: /var/www/html/forju/master/_${{github.sha}}
+        overwrite: true
+
+
+  uploadPublicAssets: 
+    runs-on: ubuntu-latest
+    needs: [detectChanges]
+    timeout-minutes: 15
+
+    
+    steps: 
+    - name: "checkout"
+      if: ${{ needs.detectChanges.outputs.public == 'true' }}
+      uses: actions/checkout@master
+
+    - name: Upload public files
+      if: ${{ needs.detectChanges.outputs.public == 'true' }}
+      uses: appleboy/scp-action@v0.1.1
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        source: "public"
+        target: /var/www/html/forju/master/_${{github.sha}}
+        overwrite: true
+
+  dependencies: 
+    runs-on: ubuntu-latest
+    needs: [detectChanges]
+    timeout-minutes: 15
+
+    
+    steps: 
+    - name: "checkout"
+      if: ${{ needs.detectChanges.outputs.dependencies == 'true' }}
+      uses: actions/checkout@master
+
+    - name: Upload dependency declaration
+      if: ${{ needs.detectChanges.outputs.dependencies == 'true' }}
+      uses: appleboy/scp-action@v0.1.1
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        source: "package.json"
+        target: /var/www/html/forju/master
+        overwrite: true
+
+    - name: Installing dependencies on remote
+      if: ${{ needs.detectChanges.outputs.dependencies == 'true' }}
+      uses: appleboy/ssh-action@master
+      with: 
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        script: |
+          cd /var/www/html/forju/master
+          source ~/.nvm/nvm.sh
+          nvm use default
+          npm i
+
+  deploy: 
+    runs-on: ubuntu-latest
+    needs: [detectChanges, buildApp, buildServer, buildReplServer, buildServiceWorker, compressImages, uploadPublicAssets, dependencies]
+    if: always()
+    timeout-minutes: 15
+
+    steps:
+    - name: "checkout"
+      if: ${{ needs.detectChanges.outputs.deployOption == 'true' }}
+      uses: actions/checkout@master
+
+    - name: Upload deploy option files
+      if: ${{ needs.detectChanges.outputs.deployOption == 'true' }}
+      uses: appleboy/scp-action@v0.1.1
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        source: ".deploy"
+        target: /var/www/html/forju/master
+        overwrite: true
+
+
+    - name: Moving files from temp storage 
+      if: ${{ (needs.detectChanges.outputs.dependencies == 'true') || (needs.detectChanges.outputs.images == 'true') || (needs.detectChanges.outputs.server == 'true') || (needs.detectChanges.outputs.replServer == 'true') || (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.serviceWorker == 'true') || (needs.detectChanges.outputs.public == 'true') }}
+      uses: appleboy/ssh-action@master
+      with: 
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        # https://unix.stackexchange.com/a/182155/431792
+        script: |
+          cp -rlf /var/www/html/forju/master/_${{github.sha}}/* /var/www/html/forju/master
+          rm -r /var/www/html/forju/master/_${{github.sha}}
+
+    
+    - name: Restarting server
+      if: ${{ (needs.detectChanges.outputs.deployOption == 'true') || (needs.detectChanges.outputs.server == 'true') || (needs.detectChanges.outputs.replServer == 'true') || (needs.detectChanges.outputs.dependencies == 'true') }}
+      uses: appleboy/ssh-action@master
+      with: 
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        script: |
+          cd /var/www/html/forju/master
+          source ~/.nvm/nvm.sh
+          nvm use default
+          npx wait-on ecosystem.config.js
+          node pm2Reload.js

@@ -1,0 +1,1 @@
+All this files must be compressed manually. There is no task runner that does this set up currently. They can be found precompiled in their original state already under /public. If you change something, please go to some online minifier like http://beautifytools.com/html-minifier.php / https://codebeautify.org/jsonminifier and copy the result to /public.

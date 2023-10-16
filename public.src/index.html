@@ -1,0 +1,105 @@
+<!-- https://terser.org/html-minifier-terser/ -->
+<!DOCTYPE html>
+<html dir=ltr lang=en>
+<head>
+  <meta charset=utf-8>
+  <title>Forju</title>
+  <meta content="user-scalable=no,width=device-width,initial-scale=1,maximum-scale=1" name=viewport>
+  <meta content=no name=msapplication-tap-highlight>
+  <!-- <link rel='manifest' href='/webmanifest.json'> -->
+  <!-- <link href="/res/favicon/forju_logo_180x180.png" rel=icon type=image/png> -->
+  <link rel="prefetch" importance="low" href="/res/font/avertacy-regular.woff2" as="font" type="font/woff2" crossorigin/>
+  <script src="/dist/forju.js"></script>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/res/img/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/res/img/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/res/img/favicon/favicon-16x16.png">
+  <link rel="mask-icon" href="/res/img/favicon/safari-pinned-tab.svg" color="#003fd2">
+  <link rel="shortcut icon" href="/res/img/favicon/favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-config" content="/res/img/favicon/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
+    
+
+  <style>
+    html {
+      height: 100%;
+      width: 100%;
+    }
+
+    body {
+      margin: 0;
+      -webkit-tap-highlight-color: transparent;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Averta CY', Arial, sans-serif;
+    }
+
+    c-center {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    c-error {
+      font-size: 20px;
+      text-align: center;
+      min-width: 300px;
+      max-width: 70%
+    }
+
+    ::selection {
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    /* Dunno why but this regular font has a bold version included. Looks a little little different than the actual bold version (maybe its just an upscaled version of the regular one but this works for me rn) */
+    @font-face {
+      font-family: 'Averta CY';
+      src: url('/res/font/avertacy-regular.woff2') format('woff2'),
+           url('/res/font/avertacy-regular.woff') format('woff');
+      font-style: normal;
+      font-weight: normal;
+      font-display: swap;
+    
+    }
+    
+    @font-face {
+      font-family: 'Averta Cy';
+      src: url('/res/font/avertacy-bold.woff2') format('woff2'),
+          url('/res/font/avertacy-bold.woff') format('woff');
+      font-weight: bold;
+      font-style: normal;
+      font-display: swap;
+    
+    }
+  </style>
+</head>
+<body>
+<c-init>
+  <c-center>
+    <c-error>
+      Ouch, something went wrong while loading this site. If you'd like to use this page please consider using a
+      modern browser (like <a href=https://www.google.com/chrome/ >chrome</a>).<br><br>Note that java-script is 
+      required to load this page.
+    </c-error>
+  </c-center>
+  <script>
+    (function () {
+      var e = document.querySelector("c-center");
+      e.style.opacity = 0;
+      setTimeout(function () {
+        e.style.transition = ".5s", setTimeout(function () {
+          e.style.opacity = 1;
+        }, 100)
+      }, 400)
+    })()
+  </script>
+</c-init>
+
+</body>
+</html>

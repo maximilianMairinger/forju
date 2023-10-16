@@ -1,0 +1,27 @@
+{
+	"dir" : "ltr",
+	"lang" : "English",
+	"name" : "Forju",
+	"scope" : "/",
+	"start_url": "/",
+
+	"display" : "standalone",
+	"short_name" : "nameAsShort}",
+	"theme_color" : "white",
+	"description" : "$[description",
+	"orientation" : "portrait-primary",
+	"background_color" : "white",
+	"icons" : [
+		{
+			"src": "./res/img/forju_logo_180x180.png",
+			"sizes": "180x180",
+			"type": "image/png"
+		},
+		{
+			"src": "./res/img/forju_logo_1000x1000.png",
+			"sizes": "1000x1000",
+			"type": "image/png"
+		}		
+	],
+	"screenshots" : []
+}

@@ -1,0 +1,40 @@
+/* ::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: white;
+} */
+
+:host(:focus){
+  outline: none;
+}
+*:focus{
+  outline:none;
+}
+
+::-webkit-scrollbar-corner {
+  background: rgba(0,0,0,0);
+}
+
+::selection {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+component-body {
+  width: 100%;
+  height: 100%;
+  display: block;
+  font-family: inherit;
+  position: absolute;
+  color: rgb(59, 59, 59);
+  transition: .3s color;
+  letter-spacing: .5px;
+  font-family: 'PT Sans', sans-serif;
+}

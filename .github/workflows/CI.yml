@@ -1,0 +1,27 @@
+name: CI
+
+on: pull_request
+
+jobs:
+
+  CI: 
+    name: CI
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps: 
+    - name: "Checkout"
+      uses: actions/checkout@master
+    - name: "Setup node"
+      uses: actions/setup-node@master
+      with:
+        node-version: '16.x'
+
+    - name: Installing runner dependencies
+      run: npm i
+    
+    - name: "Building"
+      run: npm run build --if-present
+
+    - name: "Testing"
+      run: npm test --if-present

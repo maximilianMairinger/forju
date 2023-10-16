@@ -1,0 +1,12 @@
+:host {
+  --primary-text: 238, 223, 223;
+  --plain-text: 255, 255, 255;
+  --primary-themed-background: 241, 245, 254;
+  --primary-strongly-themed-background: 233, 233, 246;
+  --secondary-themed-background: 255, 245, 245;
+  --plain-background: 255, 255, 255;
+  --primary-theme: 0, 63, 210;
+  --secondary-theme: 238, 37, 52;
+
+  --soft-shadow: 0px 0px 30px 0px rgba(0,0,0,0.07);
+}
