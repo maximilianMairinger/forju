@@ -64,6 +64,12 @@ jobs:
       with:
         node-version: '16.x'
 
+    - name: Setting up deno
+      if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') }}
+      uses: denoland/setup-deno@v1
+      with:
+        deno-version: v1.x
+
     - name: Installing runner dependencies
       if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') }}
       run: npm i
