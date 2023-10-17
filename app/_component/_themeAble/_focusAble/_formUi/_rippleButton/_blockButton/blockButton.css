@@ -15,7 +15,7 @@ button-text {
   padding: var(--padding);
   text-align: center;
   font-weight: bold;
-  
+
   box-sizing: border-box;
 }
 

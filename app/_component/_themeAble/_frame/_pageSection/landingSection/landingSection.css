@@ -16,6 +16,18 @@ landing-circle-wrapper {
   justify-content: flex-end;
 }
 
+c-oval-icon {
+  --color: rgb(var(--primary-strongly-themed-background));
+  position: absolute;
+  /* left: -100px; */
+  width: auto;
+  height: 100%;
+  top: 0;
+  left: 0;
+  transform: translate(-280px, -558px) scale(2);
+
+}
+
 c-landing-circle {
   width: auto;
   height: 100%;
@@ -45,6 +57,31 @@ c-line-accent {
   margin-top: -20px;
   transition: .25s margin-left;
 }
+
+
+
+
+
+right-side c-image {
+  border-radius: 20px;
+  width: 900px;
+  height: 600px;
+  margin-left: 150px;
+  margin-bottom: 250px;
+}
+
+c-spike-icon {
+  width: 350px;
+  height: 350px;
+  display: block;
+  position: absolute;
+  top: -310px;
+  right: 40px;
+}
+
+
+
+
 
 @media (max-width: 800px) {
   c-line-accent {
@@ -77,11 +114,25 @@ right-side {
   flex-grow: 1;
   box-sizing: border-box;
   height: 95%;
-  padding-top: 70px;
+  margin-top: 70px;
   transform: scale(1) translateX(-100px) translateY(100px);
   transition: .3s;
   max-width: 65%;
 }
+
+
+
+c-fidget.a {
+  top: -25px;
+  left: -40px;
+  --color: rgb(var(--primary-theme));
+}
+
+c-fidget.b {
+  top: 600px;
+  left: 100px;
+}
+
 
 @media (max-width: 1600px) {
   right-side {
@@ -127,13 +178,14 @@ c-big-video {
     width: 100%;
     height: fit-content;
     flex-grow: initial;
-    padding: 0 calc(11.5% - 12px);
+    margin: 0 calc(11.5% - 12px);
     transform: scale(1) translateX(0px) translateY(0);
-    padding-top: 120px;
-    padding-bottom: 40px;
+    margin-top: 120px;
+    margin-bottom: 40px;
     margin-bottom: 20px;
     flex-grow: initial;
     max-width: initial;
+    justify-content: center;
   }
   :host {
     height: initial;
@@ -142,43 +194,49 @@ c-big-video {
   text-blob {
     margin-bottom: 80px;
   }
+
+  right-side c-image {
+    margin-left: 0;
+  }
+
+  c-fidget.b {
+    top: 670px;
+    left: calc(30% - 200px);
+    --color: rgb(var(--primary-theme));
+  }
+
+  c-fidget.a {
+
+    --color: rgb(var(--secondary-themed-background));
+  }
+  
+  landing-circle-wrapper {
+    display: none;
+  }
+}
+
+@media (max-width: 1000px) {
+  right-side c-image {
+    width: calc(100vw - 100px);
+  }
 }
 
 @media (max-width: 800px) {
-  right-side {
-    transform: scale(1.5) translateX(-70px) translateY(0);
+  right-side c-image {
+    width: calc(93vw);
   }
   left-side {
-    padding-left: calc(11.5% - 12px);
-    transform: translateY(-110px);
+    padding-left: calc(11.5% - 12px)
   }
 }
 
 @media (max-width: 700px) {
-  right-side {
-    transform: scale(1.5) translateX(-55px) translateY(0);
+  c-fidget.b {
+    top: 670px;
+    right: 10%;
+    left: unset;
   }
-  left-side {
-    transform: translateY(-100px);
-  }
-}
-@media (max-width: 650px) {
-  right-side {
-    transform: scale(1.5) translateX(-50px) translateY(0);
-  }
-}
-@media (max-width: 600px) {
-  right-side {
-    transform: scale(1.5) translateX(-40px) translateY(0);
-  }
-  left-side {
-    transform: translateY(-80px);
-  }
-}
-@media (max-width: 500px) {
-  left-side {
-    transform: translateY(-70px);
-  }
+  
 }
 
 
@@ -199,7 +257,7 @@ c-block-button {
 }
 
 arrow-circle {
-  background-color: white;
+  background-color: rgb(var(--primary-themed-background));
   box-shadow: 0 0 30px 0 rgba(0,0,0,.06);
   border-radius: 50%;
   position: relative;
@@ -246,10 +304,11 @@ view-work c-ripple-button {
 }
 
 @media (max-width: 500px) {
-  view-work, landing-circle-wrapper {
+  view-work {
     display: none;
   }
   component-body {
     margin-bottom: -90px;
   }
 }
+

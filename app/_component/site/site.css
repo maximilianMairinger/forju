@@ -6,12 +6,46 @@ component-body {
   bottom: 0;
 }
 
-/* @font-face {
-  font-family: 'Overpass';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("./../../../res/font/overpass.woff2") format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-} */
+:host {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
 
+c-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 55px;
+  z-index: 101;
+}
+
+
+c-page-manager {
+  opacity: 1;
+}
+
+c-lower-nav {
+  height: 75px;
+  display: block;
+  position: absolute;
+  bottom: 0;
+  z-index: 101;
+  left: 10px;
+  bottom: 10px;
+  right: 10px;
+  position: absolute;
+}
+
+cookie-notice-container {
+  bottom: 16px;
+  right: 0;
+  left: 0;
+  margin: 0 auto;
+  z-index: 420;
+  display: block;
+  position: absolute;
+}

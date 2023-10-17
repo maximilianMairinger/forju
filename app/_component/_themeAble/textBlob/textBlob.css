@@ -5,6 +5,9 @@
   margin-bottom: 20px;
   --body-size: 70%;
   --header-fontsize-factor: 2.5;
+
+  --pop-underline-opacity: 1;
+  --pop-underline-color: rgba(var(--theme), .8);
 }
 
 h1 {
@@ -13,6 +16,13 @@ h1 {
   margin-bottom: .2em;
   margin-top: .15em;
   line-height: 1.13em;
+}
+h1 > span {
+  position: relative;
+}
+
+:host([center]) {
+  text-align: center;
 }
 
 p {
@@ -34,3 +44,20 @@ note-header {
 note-header::selection {
   background: rgba(var(--theme), 0.15);
 }
+
+
+pop-underline {
+  display: none;
+  background-color: var(--pop-underline-color);
+  width: 100%;
+  height: 27px;
+  left: 0;
+  bottom: 0;
+  position: absolute;
+
+}
+
+:host([popUnderline]) pop-underline {
+  display: inline-block;
+}
+

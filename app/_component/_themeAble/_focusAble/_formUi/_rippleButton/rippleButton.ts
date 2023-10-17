@@ -15,12 +15,8 @@ export default class UiButton extends FormUi<Button> {
     const button = new Button()
     super(button)
 
-    this.sra(ce("slot"))
-    
-    const observer = new MutationObserver(this.mutateChildsCb.bind(this))
-    observer.observe(this, { attributes: false, childList: true, subtree: false });
 
-
+    this.moveBody.append(ce("slot"))
 
     this.button = button
     button.userFeedbackMode.focus.set(false)
@@ -45,24 +41,19 @@ export default class UiButton extends FormUi<Button> {
     this.enabled.get(this.button.enabled.set.bind(this.button.enabled))
   }
 
-  private mutateChildsCb() {
-    const childs = this.childNodes as any
-    this.moveBody.append(...childs)
-  }
-
-  connectedCallback() {
-    this.mutateChildsCb()
-  }
 
 
-  
+
+
+
+
   public link: ((() => string) & ((to: null) => this) & ((to: string, domainLevel?: number, push?: boolean, notify?: boolean) => this))
   public addActivationCallback?<CB extends (e: MouseEvent | KeyboardEvent | undefined) => void>(cb: CB): CB
   public removeActivationCallback?<CB extends (e: MouseEvent | KeyboardEvent | undefined) => void>(cb: CB): CB
   public click?<CB extends (e?: MouseEvent | KeyboardEvent) => void>(f: CB): CB
   public click?(e?: MouseEvent | KeyboardEvent): Promise<any[]>
   public hotkey?(key: string): void
-  
+
 
 
   set tabIndex(to: number) {
@@ -78,7 +69,7 @@ export default class UiButton extends FormUi<Button> {
   stl() {
     return super.stl() + require("./rippleButton.css").toString()
   }
-  
+
 }
 
 for (const f of ["link", "addActivationCallback", "removeActivationCallback", "click", "hotkey"]) {

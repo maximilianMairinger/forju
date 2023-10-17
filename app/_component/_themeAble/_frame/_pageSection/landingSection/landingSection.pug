@@ -1,11 +1,16 @@
+c-oval-icon(name="backgroundCircle")
+
 right-side
-  c-big-video
+  c-image(src="officePpl2")
+  c-spike-icon
+  c-fidget.a
+  c-fidget.b
+
 
 left-side
   text-blob
-    c-line-accent
-    c-text-blob(heading="$[ home.landing.heading ]" text="$[ home.landing.text ]")
-    c-block-button(content="$[ home.landing.callToAction ]" link="contact/form")
+    c-text-blob(note="Verein der" heading="Forschenden Jugend" text="Der ehrenamtliche Verein, der Jugendliche, Unternehmen, Hochschulen, Institute und Schulen miteinander verbindet!")
+    c-block-button(content="Kontakt aufnehmen" link="contact")
 
 landing-circle-wrapper
   c-landing-circle
@@ -14,6 +19,6 @@ view-work
   arrow-circle 
     c-ripple-button.rippleButton
     c-arrow-icon
-  c-link(link="services" tabIndex="-1") $[ home.landing.viewWork ]
+  c-link(link="services" tabIndex="-1") So Unterstützen wir
 
   c-button.coverButton(link="services")

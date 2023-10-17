@@ -13,3 +13,6 @@ move-me {
   background-color: transparent;
 }
 
+::slotted(*) {
+  z-index: 1;
+}

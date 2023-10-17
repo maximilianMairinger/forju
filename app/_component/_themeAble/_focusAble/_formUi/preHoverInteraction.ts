@@ -35,7 +35,7 @@ const halfQlance = qlance / 2
 
 export default function(root: HTMLElement, target: HTMLElement, moveElement: HTMLElement, evTarget: HTMLElement) {
 
-  
+
 
   target.css({
     left: -targetOverflow,
@@ -66,7 +66,7 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
 
     root.css({zIndex: 6})
 
-    
+
     target.css({
       left: -targetOverflow,
       top: -targetOverflow,
@@ -82,7 +82,7 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
 
   evTarget.on("mouseleave", mouseLeaveF)
 
-  
+
   let bounds: DOMRect
   let absX: number
   let absY: number
@@ -92,14 +92,14 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
   let qHeight: number
   let qWithWithActiveTargetOverflow: number
   let qHeightWithActiveTargetOverflow: number
-  
+
   const mouseMoveF = (e: MouseEvent) => {
     bounds = root.getBoundingClientRect()
 
     absX = e.pageX - bounds.left
     absY = e.pageY - bounds.top
 
-    
+
     width = bounds.width
     height = bounds.height
     qWidth = width * halfQlance
@@ -121,8 +121,8 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
     }
     else absY -= height - qHeight
 
-    
-    
+
+
     relX = dragImpactEaseFunc(absX / qWithWithActiveTargetOverflow) * overShoot
     relY = dragImpactEaseFunc(absY / qHeightWithActiveTargetOverflow) * overShoot
   }
@@ -139,7 +139,7 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
       height: activeTargetOverflowWidthStr,
       zIndex: 3
     })
-    
+
     mouseMoveF(e)
 
     snapBackRuntime.cancel()
@@ -156,9 +156,9 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
   }
 
   root.on("mouseenter", rootMouseEnterF)
-  
-  
-  
+
+
+
 
   let maxDistance = 0
   let curDistance = 0

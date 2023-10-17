@@ -34,7 +34,7 @@ export default class FocusAble<T extends false | HTMLElement | HTMLAnchorElement
             lastBlurListener = undefined
           }, {once: true})
         })
-        
+
       }, true),
       this.on("mouseup", () => {
         this.addClass("afterClickFocus")
@@ -48,7 +48,7 @@ export default class FocusAble<T extends false | HTMLElement | HTMLAnchorElement
             lastMouseoutListener = undefined
           }, {once: true})
         })
-        
+
 
       }, true)
     )
@@ -72,7 +72,7 @@ export default class FocusAble<T extends false | HTMLElement | HTMLAnchorElement
         }
       }
     }, false)
-    
+
   }
   diableFocusIndecation() {
 
@@ -83,5 +83,5 @@ export default class FocusAble<T extends false | HTMLElement | HTMLAnchorElement
   stl() {
     return super.stl() + require("./focusAble.css").toString()
   }
-  
+
 }

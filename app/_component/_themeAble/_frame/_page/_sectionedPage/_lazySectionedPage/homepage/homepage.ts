@@ -3,6 +3,7 @@ import { Import, ImportanceMap } from "../../../../../../../lib/lazyLoad"
 import PhilosophySection from "../../../../_pageSection/philosophySection/philosophySection"
 import LandingSection from "../../../../_pageSection/landingSection/landingSection"
 import WorkSection from "../../../../_pageSection/workSection/workSection"
+import ServicesSection from "../../../../_pageSection/servicesSection/servicesSection"
 import TeamSection from "../../../../_pageSection/teamSection/teamSection"
 import TeamMemberSection from "../../../../_pageSection/teamMembersSection/teamMembersSection"
 import ContactSection from "../../../../_pageSection/contactSection/contactSection"
@@ -31,6 +32,11 @@ export default class HomePage extends LazySectionedPage {
         key: new Import("", 1, (landingSection: typeof LandingSection) =>
           new landingSection()
         ), val: () => import(/* webpackChunkName: "landingSection" */"../../../../_pageSection/landingSection/landingSection")
+      },
+      {
+        key: new Import("services", 1, (servicesSection: typeof ServicesSection) =>
+          new servicesSection()
+        ), val: () => import(/* webpackChunkName: "servicesSection" */"../../../../_pageSection/servicesSection/servicesSection")
       },
       // {
       //   key: new Import("lines", 1, (linesSection: typeof LinesSection) => 
@@ -89,14 +95,7 @@ export default class HomePage extends LazySectionedPage {
       //     new testSection()
       //   ), val: () => import(/* webpackChunkName: "testSection" */"../../../../_pageSection/testSection/testSection")
       // },
-    ), baselink, sectionChangeCallback, new AliasList(
-      //@ts-ignore
-      new ScrollProgressAliasIndex("services", [
-        new ScrollProgressAlias(0, "services/websites"),
-        new ScrollProgressAlias(subsectionHeight[0], "services/contentCreation"),
-        new ScrollProgressAlias(subsectionHeight[1], "services/socialMedia")
-      ])
-    ))
+    ), baselink, sectionChangeCallback)
 
 
 

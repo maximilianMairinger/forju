@@ -79,7 +79,7 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
     }, false)
 
 
-    
+
 
 
 
@@ -135,7 +135,7 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
     })();
 
 
-    
+
 
     this.userFeedbackMode.ripple.get((mode) => {
       if (mode) {
@@ -166,7 +166,7 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
       }
     }, true)
 
-    
+
     const isFocused = (this as any).isFocused = new Data(false)
     this.on("focusin", () => {(this as any).isFocused.set(true)})
     this.on("focusout", () => {(this as any).isFocused.set(false)})
@@ -192,7 +192,7 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
       })
     }
 
-    
+
 
 
 
@@ -204,7 +204,7 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
     this.rippleElements = ce("button-waves");
     this.moveBody.apd(this.rippleElements);
 
-    
+
   }
   private preHoverAnimations: {disable: () => void, enable: () => void}
 
@@ -233,8 +233,8 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
         return fadeAnim()
       })
     }
-    
-    
+
+
 
     const fadeAnim = async (anim = true) => {
       fadeRippleCb()
@@ -243,11 +243,11 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
         try {
           await rippleWaveElem.anim({opacity: 0}, 500);  
         } catch (error) {
-          
+
         }
         await delay(500)
       }
-      
+
       rippleWaveElemContainer.remove()
     }
     fadeAnim.auto = true;
@@ -305,7 +305,7 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
       x = (e as MouseEvent).pageX - offset.left;
       y = (e as MouseEvent).pageY - offset.top;
 
-      
+
     }
     else {
       x = body.width / 2;
@@ -322,8 +322,8 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
     });
     let rdyToFade = false;
 
-    
-    
+
+
     const cursorPoint = [x, y] as [number, number]
     let maxDistance = Math.max(
       distance(cursorPoint, [0, 0]), 
@@ -334,17 +334,17 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
 
     const scale = maxDistance / ripple.radius
 
-  
-    
-    
+
+
+
     const animProm = rippleWaveElem.anim([{transform: "scale(0)", offset: 0}, {transform: "scale(" + scale + ")"}], {duration: maxDistance * 4, easing: "linear"}).then(fadeisok);
 
     animProm.then(() => {
       if (this.rippleSettled === myRippleSettledProm) this.addClass("rippleSettled")
       rippleSettled()
     })
-    
-    
+
+
 
     return fadeisok
   }
@@ -356,5 +356,5 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
   stl() {
     return super.stl() + require("./formUi.css").toString()
   }
-  
+
 }

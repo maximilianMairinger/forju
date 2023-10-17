@@ -33,7 +33,7 @@ export default class Button extends FocusAble<HTMLAnchorElement> {
       if (enabled) this.enableForce()
       else this.disableForce()
     })
-    
+
 
     if (enabled) this.enableForce()
     else this.disableForce()
@@ -126,7 +126,7 @@ export default class Button extends FocusAble<HTMLAnchorElement> {
       }
 
       return this
-      
+
     }
     else return this._link
   }
@@ -142,7 +142,7 @@ export default class Button extends FocusAble<HTMLAnchorElement> {
     return cb
   }
 
-  
+
   public click<CB extends (e?: MouseEvent | KeyboardEvent) => void>(f: CB): CB
   public click(e?: MouseEvent | KeyboardEvent): Promise<any[]>
   public click(e_f?: MouseEvent | KeyboardEvent | ((e?: MouseEvent | KeyboardEvent) => void)) {
@@ -157,7 +157,7 @@ export default class Button extends FocusAble<HTMLAnchorElement> {
       }
       else return Promise.resolve()
     }
-    
+
   }
   private hotKeyListener: (e: KeyboardEvent) => void
 
@@ -193,5 +193,3 @@ export default class Button extends FocusAble<HTMLAnchorElement> {
 }
 
 declareComponent("button", Button)
-
-

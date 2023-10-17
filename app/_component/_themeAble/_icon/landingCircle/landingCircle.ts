@@ -10,6 +10,10 @@ export default class LandingCircle extends Icon {
 
   }
 
+  stl() {
+    return super.stl() + require("./landingCircle.css").toString()
+  }
+
   pug() {
     return require("./landingCircle.pug").default
   }

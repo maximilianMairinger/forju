@@ -1,0 +1,15 @@
+:host {
+  display: block;
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  --color: rgb(var(--secondary-themed-background));
+  --col: var(--color) 
+}
+
+c-cross-icon {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  --color: var(--col)
+}

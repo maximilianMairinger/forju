@@ -6,12 +6,12 @@ type ReadonlyData<T> = Omit<Data<T>, "set">
 
 export default class EditAble extends FormUi {
 
-  
+
   public isEmpty: ReadonlyData<boolean>
   public value: ReadonlyData<string>
 
   protected placeholderContainer = ce("placeholder-container")
-  
+
   protected placeholderText = ce("placeholder-text")
 
   protected placeholderUp: Data<boolean>
@@ -20,7 +20,7 @@ export default class EditAble extends FormUi {
     inputElem.id = "editAble"
     this.moveBody.apd(this.placeholderContainer.apd(this.placeholderText))
     this.moveBody.apd(inputElem as any)
-    
+
 
     this.userFeedbackMode.ripple.set(false)
 
@@ -37,9 +37,9 @@ export default class EditAble extends FormUi {
       }
     }, false)
 
-    
 
-    
+
+
     const value = (this as any).value = new Data("")
     this.inputElem.on("input", () => {(this.value as Data<string>).set(this.inputElem.value)})
     const isEmpty = (this as any).isEmpty = value.tunnel((v) => v === "")
@@ -49,13 +49,13 @@ export default class EditAble extends FormUi {
       this.placeholderUp.set(!isEmpty || isFocused)
     })
 
-    
-    
+
+
 
 
     let globalAnimDone: Symbol
     this.placeholderUp.get((up) => {
-      
+
 
       let localAnimDone = globalAnimDone = Symbol()
       this.componentBody.removeClass("animDone")
@@ -84,6 +84,5 @@ export default class EditAble extends FormUi {
   stl() {
     return super.stl() + require("./editAble.css").toString()
   }
-  
-}
 
+}
