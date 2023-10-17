@@ -8,8 +8,9 @@ export default class TeamIcon extends HighlightAbleIcon {
   }
 
   pug() {
-    return require("./team.pug").default
+    return require("./teamIcon.pug").default
   }
 }
 
-declareComponent("team-icon", TeamIcon)
+declareComponent("c-team-icon", TeamIcon)
+

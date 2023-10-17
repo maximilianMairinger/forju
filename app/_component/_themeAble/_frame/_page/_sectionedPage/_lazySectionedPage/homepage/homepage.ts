@@ -13,7 +13,7 @@ import LazySectionedPage from "../lazySectionedPage"
 import HightlightAbleIcon from "../../../../../_icon/_highlightAbleIcon/highlightAbleIcon"
 import ThoughtBubbleIcon from "../../../../../_icon/_highlightAbleIcon/thoughtBubble/thoughtBubble"
 import RocketIcon from "../../../../../_icon/_highlightAbleIcon/rocket/rocket"
-import TeamIcon from "../../../../../_icon/_highlightAbleIcon/team/team"
+import TeamIcon from "../../../../../_icon/_highlightAbleIcon/teamIcon/teamIcon"
 import ContactIcon from "../../../../../_icon/_highlightAbleIcon/contact/contact"
 import { AliasList, ScrollProgressAlias, ScrollProgressAliasIndex } from "../../sectionedPage"
 import { Data } from "josm"
@@ -37,6 +37,11 @@ export default class HomePage extends LazySectionedPage {
         key: new Import("services", 1, (servicesSection: typeof ServicesSection) =>
           new servicesSection()
         ), val: () => import(/* webpackChunkName: "servicesSection" */"../../../../_pageSection/servicesSection/servicesSection")
+      },
+      {
+        key: new Import("team", 1, (teamSection: typeof TeamSection) =>
+          new teamSection()
+        ), val: () => import(/* webpackChunkName: "teamSection" */"../../../../_pageSection/teamSection/teamSection")
       },
       // {
       //   key: new Import("lines", 1, (linesSection: typeof LinesSection) => 
