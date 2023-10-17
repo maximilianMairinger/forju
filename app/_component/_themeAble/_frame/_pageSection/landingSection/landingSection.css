@@ -21,8 +21,8 @@ c-oval-icon {
   position: absolute;
   /* left: -100px; */
   width: auto;
-  height: 100%;
-  top: 0;
+  height: 1000px;
+  bottom: -300px;
   left: 0;
   transform: translate(-280px, -558px) scale(2);
 
@@ -46,7 +46,6 @@ component-body {
   width: 100%;
   height: 100%;
   flex-direction: row-reverse;
-  overflow: hidden;
 }
 
 c-line-accent {
@@ -212,6 +211,10 @@ c-big-video {
   
   landing-circle-wrapper {
     display: none;
+  }
+
+  c-oval-icon {
+    height: 1500px;
   }
 }
 

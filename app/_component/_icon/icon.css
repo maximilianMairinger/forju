@@ -1,10 +1,12 @@
 /* There is a bug in chrome which staggers transitions if declared in differnet shadowrrots on tspan... 04/06/2020 */
+/* There is another maybe similar bug that occurs when transition is inherited through a shadowroot (unsure if this is necessary) and onto the svg as well as elements inside it, causing the time to double. Thats why we have a custom variable here instead of inheriting 17/10/2023 */
 
 :host {
   display: inline-block;
   width: 32px;
   height: 32px;
   --color: #000;
+  --transition: unset;
 }
 
 
@@ -12,8 +14,9 @@ svg {
   width: inherit;
   height: inherit;
   display: block;
+  /* transition: var(--transition); */
 }
 
 :host svg *:not(tspan) {
-  transition: inherit
+  transition: var(--transition);
 }

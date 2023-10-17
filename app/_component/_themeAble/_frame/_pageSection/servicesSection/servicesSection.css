@@ -14,8 +14,7 @@ under-section {
 }
 
 c-text-blob {
-  margin: 0 calc(11% - 12px);
-  margin: 100px auto;
+  margin: 100px calc(5% - 12px);
   margin-bottom: 10px;
   --header-fontsize-factor: 3.5;
   
@@ -23,7 +22,7 @@ c-text-blob {
 
 
 .serviceCard {
-  margin: 20px 50px;
+  margin: 20px 30px;
   --padding: 40px;
 }
 
@@ -32,7 +31,7 @@ service-card-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgb(var(--primary-themed-background));
+  background: transparent;
   box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.08);
   width: 100%;
   height: 100%;
@@ -71,4 +70,42 @@ service-card-wrapper p {
   width: 55px;
   height: 45px;
   margin-bottom: 7px;
+  --transition: .4s;
+}
+
+.serviceCard:hover .icon {
+  
+  --color: rgb(var(--primary-theme));
+}
+
+
+
+under-section.b {
+  margin-bottom: 70px;
+}
+
+
+c-oval-icon {
+  --color: rgb(var(--primary-themed-background));
+  position: absolute;
+  /* left: -100px; */
+  width: auto;
+  height: 1000px;
+  bottom: calc(100% - 300px);
+  left: 0;
+  transform: translate(-280px, -558px) scale(2);
+
+}
+
+@media (max-width: 650px) {
+  c-text-blob {
+    --pop-underline-color: transparent;
+  }
+}
+
+
+@media (max-width: 1190px) {
+  c-oval-icon {
+    height: 1500px;
+  }
 }
