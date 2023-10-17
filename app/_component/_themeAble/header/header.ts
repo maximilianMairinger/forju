@@ -1,6 +1,5 @@
 import ThemeAble, { Theme } from "../themeAble"
 import declareComponent from "../../../lib/declareComponent"
-import "../_icon/smallLogo/smallLogo"
 import "../../_themeAble/_focusAble/_button/button"
 import Link from "../link/link"
 import { ElementList } from "extended-dom"
@@ -15,6 +14,7 @@ import keyIndex from "key-index"
 import "xtring"
 import { Data } from "josm"
 import Button from "../../_themeAble/_focusAble/_button/button"
+import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 
 
 
@@ -36,6 +36,7 @@ const pathDisplayHeaderMinMargin = 70
 
 
 export default class Header extends ThemeAble {
+  protected body: BodyTypes
   private pathDisplayElem = this.q("path-display")
   private linkContainerElem = this.q("right-content")
   private leftContent = this.q("left-content")
@@ -84,7 +85,7 @@ export default class Header extends ThemeAble {
     
 
     this.theme.get((to) => {
-      this.logoIcon.theme.set(to)
+      // this.logoIcon.theme.set(to)
 
       if (!this.dontChangeDisplayTheme) this.updateThemeOfPathDisplay(to)
       if (!this.dontChangeLinksTheme) {

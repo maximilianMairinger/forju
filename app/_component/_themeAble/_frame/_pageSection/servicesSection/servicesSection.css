@@ -75,7 +75,7 @@ service-card-wrapper p {
 
 .serviceCard:hover .icon {
   
-  --color: rgb(var(--primary-theme));
+  --color: #00d4c9;
 }
 
 
@@ -108,4 +108,35 @@ c-oval-icon {
   c-oval-icon {
     height: 1500px;
   }
+}
+
+c-fidget {
+  display: block;
+  position: absolute;
+  z-index: 10;
+  pointer-events: none;
+}
+
+c-fidget.a {
+  --color: rgb(var(--primary-theme));
+  top: 180px;
+  margin-left: 800px
+}
+
+@media (max-width: 900px) {
+  c-fidget.a {
+    top: 240px;
+    margin-left: unset;
+    right: 10%;
+  }
+}
+
+@media (max-width: 460px) {
+  c-fidget.a {
+    top: 300px;
+  }
+}
+
+c-fidget.b {
+
 }
