@@ -33,7 +33,7 @@ export default class PageManager extends Manager {
       },
       {
         key: new Import("contact", 10, (contactPage: typeof ContactPage) =>
-            new contactPage()
+            new contactPage("contact", sectionChangeCallback)
         ), val: () => import(/* webpackChunkName: "contactPage" */"../../_page/_sectionedPage/_lazySectionedPage/contactPage/contactPage")
       },
       {

@@ -4,17 +4,100 @@
 }
 
 component-body {
-  height: 500px;
+  min-height: 900px;
   padding: 0 calc(12% - 12px);
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+left-side {
+  display: inline-block;
+}
+
+right-side {
+  flex: 1;
   display: flex;
   align-items: center;
 }
 
 c-text-blob {
   --theme: var(--tertiary-theme);
-  width: 510px;
+  width: 350px;
+  position: relative;
+  float: left;
+  --body-size: 100%;
+}
+
+c-block-button.project {
+  --background: var(--tertiary-theme)
+}
+
+.mitglied {
+  --background: var(--primary-themed-background);
 }
 
 c-block-button {
-  --background: var(--tertiary-theme)
+  margin: 0 5px;
+}
+
+c-block-button:first-of-type {
+  margin-left: 0;
+}
+
+c-block-button:last-of-type {
+  margin-right: 0;
+}
+
+c-block-button {
+  position: relative;
+  float: left;
+}
+
+c-vienna-icon {
+  width: 100%;
+  height: auto;
+  margin-left: 10%;
+}
+
+@media (max-width: 1250px) {
+  c-vienna-icon {
+    width: 70vw;
+    margin-left: 0;
+  }
+  left-side {
+    margin-top: 250px;
+    margin-bottom: 30px;
+    width: 80%;
+  }
+  c-text-blob {
+    width: 100%;
+  }
+  right-side {
+    width: 100%;
+    justify-content: center;
+    height: auto;
+  }
+  component-body {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 1000px) {
+  c-vienna-icon {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  left-side {
+    width: 100%;
+  }
+}
+
+@media (max-width: 460px) {
+  c-block-button {
+    margin: 5px 0;
+    margin-right: 100%;
+  }
 }

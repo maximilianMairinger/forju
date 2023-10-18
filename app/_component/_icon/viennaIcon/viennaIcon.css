@@ -1,0 +1,3 @@
+:host {
+  --color: rgb(var(--primary-themed-background));
+}
