@@ -16,6 +16,7 @@ h1 {
   margin-bottom: .2em;
   margin-top: .15em;
   line-height: 1.13em;
+  display: inline-block;
 }
 h1 > span {
   position: relative;

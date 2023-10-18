@@ -1,0 +1,19 @@
+:host {
+  display: block;
+  position: relative;
+}
+
+component-body {
+  height: 500px;
+  padding: 0 calc(12% - 12px);
+  display: flex;
+  align-items: center;
+}
+
+c-text-blob {
+  --theme: var(--tertiary-theme)
+}
+
+c-block-button {
+  --background: var(--tertiary-theme)
+}

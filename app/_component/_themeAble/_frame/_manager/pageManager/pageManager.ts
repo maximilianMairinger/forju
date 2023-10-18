@@ -2,10 +2,12 @@ import Manager from "../manager";
 import {ImportanceMap, Import} from "../../../../../lib/lazyLoad"
 import NotFoundPage from "../../_page/notFound/notFound"
 import HomePage from "../../_page/_sectionedPage/_lazySectionedPage/homepage/homepage";
+import ContactPage from "../../_page/_sectionedPage/_lazySectionedPage/contactPage/contactPage";
 import { declareComponent } from "../../../../../lib/declareComponent"
 import HighlightAbleIcon from "../../../_icon/_highlightAbleIcon/highlightAbleIcon";
 import PrivacyPage from "../../_page/_blogPage/privacyPage/privacyPage"
 import LegalPage from "../../_page/_blogPage/legalPage/legalPage"
+
 
 
 
@@ -29,11 +31,11 @@ export default class PageManager extends Manager {
             new legalPage()
         ), val: () => import(/* webpackChunkName: "legalPage" */"../../_page/_blogPage/legalPage/legalPage")
       },
-      // {
-      //   key: new Import("contact/form", 10, (contactPage: typeof ContactPage) =>
-      //       new contactPage()
-      //   ), val: () => import(/* webpackChunkName: "contactPage" */"../../_page/contactPage/contactPage")
-      // },
+      {
+        key: new Import("contact", 10, (contactPage: typeof ContactPage) =>
+            new contactPage()
+        ), val: () => import(/* webpackChunkName: "contactPage" */"../../_page/_sectionedPage/_lazySectionedPage/contactPage/contactPage")
+      },
       {
         key: new Import("", 60, (notFoundPage: typeof NotFoundPage) =>
           new notFoundPage()
