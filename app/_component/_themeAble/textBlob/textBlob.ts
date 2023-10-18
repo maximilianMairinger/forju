@@ -9,10 +9,10 @@ export default class TextBlob extends ThemeAble {
     super(false)
   }
   heading(to: string) {
-    this.headerElem.txt(to)
+    this.headerElem.text(to)
   }
   note(to: string) {
-    this.noteElem.txt(to)
+    this.noteElem.text(to)
   }
   //@ts-ignore
   text(): string
@@ -20,7 +20,7 @@ export default class TextBlob extends ThemeAble {
   text(to: string): void
   //@ts-ignore
   text(to?: string) {
-    return this.bodyElem.txt(to)
+    return this.bodyElem.html(to)
   }
 
   public pug(): string {

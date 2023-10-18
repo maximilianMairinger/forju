@@ -1,6 +1,7 @@
 import declareComponent from "../../../../../lib/declareComponent"
 import PageSection from "../pageSection"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
+import "../../../../_themeAble/link/copyLink/copyLink"
 
 export default class GeneralContactSection extends PageSection {
   protected body: BodyTypes

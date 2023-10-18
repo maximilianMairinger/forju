@@ -42,7 +42,7 @@ export default class Header extends ThemeAble {
   private leftContent = this.q("left-content")
   private underlineElem = new SlidyUnderline
   private background = this.q("blurry-background")
-  private logoIcon = this.q("c-small-logo") as Icon
+  private logoIcon = this.q(".logo") as Icon
 
   private pathDisplayLinkIndex = keyIndex((i: number) => {
     const ls = new ElementList<ArrowIcon | Link>(new ArrowIcon, new Link("", "", undefined, true, true, false))

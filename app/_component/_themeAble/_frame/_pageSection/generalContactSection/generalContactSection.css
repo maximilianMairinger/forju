@@ -11,7 +11,8 @@ component-body {
 }
 
 c-text-blob {
-  --theme: var(--tertiary-theme)
+  --theme: var(--tertiary-theme);
+  width: 510px;
 }
 
 c-block-button {

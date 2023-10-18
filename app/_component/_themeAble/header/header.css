@@ -55,11 +55,11 @@ blurry-background.blurry {
   }
 }
 
-c-small-logo {
+.logo {
   opacity: 0;
 }
 
-c-small-logo {
+.logo {
   transition: .25s;
 }
 
@@ -91,8 +91,9 @@ additional-path-display > * {
 
 
 
-left-content > c-small-logo {
+left-content > .logo {
   height: 28px;
+  width: 55px;
   position: relative;
   float: left;
 }
