@@ -21,6 +21,10 @@ export default class ContactCard extends ThemeAble {
     this.body.pic.src(src)
   }
 
+  email(to: string) {
+    this.body.subSubTxt.content(to)
+  }
+
   stl() {
     return super.stl() + require("./contactCard.css").toString()
   }
