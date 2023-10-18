@@ -4,5 +4,19 @@
 }
 
 component-body {
-  
+  padding: 0 calc(12% - 12px);
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 500px;
+  background-color: rgb(var(--primary-themed-background));
 }
+
+c-text-blob {
+  --theme: var(--tertiary-theme);
+  width: 350px;
+  position: relative;
+  float: left;
+  --body-size: 100%;
+}
+

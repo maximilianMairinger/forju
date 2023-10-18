@@ -20,11 +20,6 @@ export default class ContactPage extends LazySectionedPage {
         ), val: () => import(/* webpackChunkName: "generalContactSection" */"../../../../_pageSection/generalContactSection/generalContactSection")
       },
       {
-        key: new Import("project", 1, (projectContactSection: any) =>
-          new projectContactSection()
-        ), val: () => import(/* webpackChunkName: "projectContactSection" */"../../../../_pageSection/projectContactSection/projectContactSection")
-      },
-      {
         key: new Import("praesidium", 1, (praesidiumContactSection: any) =>
           new praesidiumContactSection()
         ), val: () => import(/* webpackChunkName: "praesidiumContactSection" */"../../../../_pageSection/praesidiumContactSection/praesidiumContactSection")

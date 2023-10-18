@@ -77,8 +77,10 @@ c-vienna-icon {
     width: 100%;
     justify-content: center;
     height: auto;
+    margin-bottom: 100px;
   }
   component-body {
+    /* maybe reverse this here */
     flex-direction: column;
   }
 }
