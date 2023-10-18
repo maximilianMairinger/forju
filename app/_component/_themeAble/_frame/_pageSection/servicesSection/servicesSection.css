@@ -146,3 +146,19 @@ c-spike-shadow-icon {
   transform: rotateZ(248deg);
   --color: rgb(239 255 254);
 }
+
+component-body {
+  padding-bottom: 20px;
+}
+under-section.a {
+  padding-bottom: 20px;
+}
+
+@media (max-width: 1439px) {
+  component-body {
+    padding-bottom: 0;
+  }
+  under-section.a {
+    padding-bottom: 0;
+  }
+}

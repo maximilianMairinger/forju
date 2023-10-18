@@ -15,19 +15,15 @@ const formats = [
   "jpg"
 ]
 
-const maxRes = "16588800"
-const fullRes = "3K"
+const maxRes = "4K"
+const fullRes = "2K"
 const prevRes = "PREV"
 
 const resesList = [ 
   prevRes,
   fullRes,
   maxRes
-] as [
-  "PREV", 
-  "3K",
-  "16588800"
-]
+] as const
 
 
 // TODO not dependent on border of image but instead dependent on the image resolution within the borderes (img can be cut off but will still need big res) 
