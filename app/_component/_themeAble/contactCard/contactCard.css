@@ -1,0 +1,64 @@
+:host {
+  display: block;
+  position: relative;
+}
+
+:host {
+  width: calc(150px + 12%);
+  height: auto;
+  position: relative;
+  margin: 20px 50px;
+  min-width: 300px;
+}
+
+c-image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1/1;
+}
+
+image-background {
+  background-color: rgb(var(--primary-themed-background));
+  border-radius: 20px;
+  box-shadow: var(--soft-shadow);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+}
+
+background-block {
+  width: 140px;
+  height: 220px;
+  position: absolute;
+  bottom: 0;
+  right: 30px;
+  background-color: rgb(var(--secondary-themed-background));
+}
+
+c-spike-shadow-icon {
+  position: absolute;
+  --color: rgb(var(--text));
+  width: 300px;
+  height: 300px;
+  transform: rotate(32deg);
+  top: 109px;
+  right: -124px;
+}
+
+h3 {
+  margin-top: 10px;
+  margin-left: 20px;
+  font-size: 19px;
+  margin-bottom: 0px;
+}
+
+p {
+  margin-top: 0;
+  margin-left: 20px;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+

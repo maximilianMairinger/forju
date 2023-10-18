@@ -8,8 +8,9 @@ component-body {
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  height: 500px;
+  min-height: 550px;
   background-color: rgb(var(--primary-themed-background));
+  padding-bottom: 40px;
 }
 
 c-text-blob {
@@ -18,5 +19,52 @@ c-text-blob {
   position: relative;
   float: left;
   --body-size: 100%;
+  min-width: 350px;
 }
 
+c-contact-card {
+  margin-top: 80px;
+}
+
+c-contact-card:first-of-type {
+  margin-left: calc(20% - 100px);
+}
+
+
+@media (max-width: 1280px) {
+  c-contact-card:first-of-type {
+    margin-left: 50px;
+  }
+  c-text-blob {
+    margin-right: 100%;
+    margin-top: 100px;
+  }
+  component-body {
+    flex-wrap: wrap;
+
+  }
+  c-contact-card {
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+
+@media (max-width: 920px) {
+  c-contact-card:first-of-type {
+    margin-left: 0;
+  }
+  c-text-blob {
+    margin-right: 0;
+    margin-top: 100px;
+  }
+  component-body {
+    justify-content: center;
+  }
+  c-contact-card {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+}

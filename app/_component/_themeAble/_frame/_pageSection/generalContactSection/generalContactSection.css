@@ -4,7 +4,7 @@
 }
 
 component-body {
-  min-height: 900px;
+  min-height: 800px;
   padding: 0 calc(12% - 12px);
   display: flex;
   align-items: center;
@@ -66,7 +66,7 @@ c-vienna-icon {
     margin-left: 0;
   }
   left-side {
-    margin-top: 250px;
+    margin-top: 210px;
     margin-bottom: 30px;
     width: 80%;
   }
