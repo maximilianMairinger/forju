@@ -7,6 +7,7 @@
   --display: block;
   position: relative;
   --object-position: 50% 50%;
+  --object-fit: cover;
 }
 
 picture {
@@ -28,7 +29,7 @@ picture:first-of-type {
 img {
   display: var(--display);
   opacity: 0;
-  object-fit: cover;
+  object-fit: var(--object-fit);
   object-position: var(--object-position);
   width: inherit;
   height: inherit;

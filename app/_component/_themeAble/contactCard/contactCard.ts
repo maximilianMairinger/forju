@@ -5,7 +5,7 @@ import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 import keyIndex from "key-index"
 import { latestLatent } from "more-proms"
 import { EventListener } from "extended-dom";
-
+import delay from "tiny-delay"
 
 
 const zIndex = 50
@@ -144,13 +144,18 @@ export default class ContactCard extends ThemeAble {
       
       console.log(this.body.btn.offsetLeft)
 
-      const width = 500
+      const width = 800
       const height = 500
 
       this.css({
         height: this.css("height"),
         width: this.css("width"),
       })
+
+      const ogButtonHeight = this.body.btn.css("height")
+      this.body.btn.css("height", ogButtonHeight)
+      const ogButtonWidth = this.body.btn.css("width")
+      this.body.btn.css("width", ogButtonWidth)
 
       this.body.btn.anim({
         width,
@@ -159,14 +164,38 @@ export default class ContactCard extends ThemeAble {
         marginTop: document.body.clientHeight/2 - height/2 - this.body.btn.getBoundingClientRect().top,
       })
 
-      done.then(() => {
-        this.body.btn.anim({
-          width: "100%",
-          height: "auto",
-          marginLeft: 0,
-          marginTop: 0,
-        })
+      this.body.desc.css("width", this.body.desc.css("width"))
+
+      this.body.desc.anim({
+        left: "53%",
+        translateY: -375 - 81.5 + this.body.desc.height(),
+        scale: 1.2
       })
+
+
+      done.then(async () => {
+        await Promise.all([
+          this.body.btn.anim({
+            width: ogButtonWidth,
+            height: ogButtonHeight,
+            marginLeft: 0,
+            marginTop: 0
+          }),
+          this.body.desc.anim({
+            left: 0,
+            translateY: 0,
+            scale: 1
+          })
+        ])
+
+        this.style.removeProperty("height")
+        this.style.removeProperty("width")
+        this.body.btn.style.removeProperty("height")
+        this.body.btn.style.removeProperty("width")
+        this.body.desc.style.removeProperty("width")
+      })
+
+      
     })
 
     this.body.subSubTxt.addActivationListener((e) => {
