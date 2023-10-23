@@ -31,11 +31,14 @@ function oneOfTheseOnce(...eventListener: EventListener[]) {
   const rmListener = () => {
     for (const ev of eventListener) ev.deactivate()
   }
-  return (func: (e: Event) => boolean | void) => {
-
+  return (func: (e: Event) => boolean | void, nCount = 1) => {
+    let i = 0
     for (const ev of eventListener) {
       const prevListener = ev.listener()
       ev.listener((...a) => {
+        i++
+        if (i < nCount) return
+
         for (const list of prevListener) (list as any)(...a)
         let res = func(...a)
         res = res === undefined ? true : res
@@ -65,12 +68,16 @@ const _blurEverythingInBackground = latestLatent(function blurEverythingInBackgr
 
 
 
-    oneOfTheseOnce(blurElem.on("mousedown"), parent.on("scroll"))((e) => {
-      e.stopPropagation()
-      e.preventDefault()
+    oneOfTheseOnce(blurElem.on("mousedown"), parent.on("scroll"), document.body.on("resize"))((e) => {
+      console.log(e)
+      if (e instanceof Event) {
+        e.stopPropagation()
+        e.preventDefault()
+      }
+      
       const doneWithAnim = blurElem.anim({opacity: 0})
       res({doneWithAnim, except, blurElem})
-    })
+    }, 2)
   })
 })
 
@@ -82,13 +89,17 @@ _blurEverythingInBackground.then(async ({doneWithAnim, except, blurElem}) => {
   blurElem.remove()
 })
 
-async function blurEverythingInBackground(except?: Element, zIndex?: number, zIndexExcept?: number) {
+function blurEverythingInBackground(except?: Element, zIndex?: number, zIndexExcept?: number) {
   let myActiveBlursKey = except ? except : undefined
-  if (activeBlurs.has(myActiveBlursKey)) return
+  if (activeBlurs.has(myActiveBlursKey)) return {canOpen: false}
   activeBlurs.add(myActiveBlursKey)
-
-  await _blurEverythingInBackground(except, zIndex, zIndexExcept)
-  activeBlurs.delete(myActiveBlursKey)
+  return {canOpen: true, done: (async () => {
+    const {doneWithAnim} = await _blurEverythingInBackground(except, zIndex, zIndexExcept)
+    doneWithAnim.then(() => {
+      activeBlurs.delete(myActiveBlursKey)
+    })
+  })()}
+  
 }
 
 
@@ -128,13 +139,43 @@ export default class ContactCard extends ThemeAble {
     })
 
     this.body.btn.click(() => {
-      blurEverythingInBackground(this)
+      const { done, canOpen } = blurEverythingInBackground(this)
+      if (!canOpen) return
+      
+      console.log(this.body.btn.offsetLeft)
+
+      const width = 500
+      const height = 500
+
+      this.css({
+        height: this.css("height"),
+        width: this.css("width"),
+      })
+
+      this.body.btn.anim({
+        width,
+        height,
+        marginLeft: document.body.clientWidth/2 - width/2 - this.body.btn.getBoundingClientRect().left,
+        marginTop: document.body.clientHeight/2 - height/2 - this.body.btn.getBoundingClientRect().top,
+      })
+
+      done.then(() => {
+        this.body.btn.anim({
+          width: "100%",
+          height: "auto",
+          marginLeft: 0,
+          marginTop: 0,
+        })
+      })
     })
 
     this.body.subSubTxt.addActivationListener((e) => {
       e.preventDefault()
       e.stopPropagation()
     })
+
+
+
     
 
   }
