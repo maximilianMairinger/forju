@@ -34,7 +34,7 @@ a {
   user-drag: var(--drag);
 
   min-height: min-content;
-  min-width: max-content;
+  min-width: min-content;
   width: 100%;
   height: 100%;
 }

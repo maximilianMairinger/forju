@@ -65,3 +65,12 @@ p {
 b {
   margin-left: 20px;
 }
+c-ripple-button {
+  display: inline-block;
+  height: auto;
+  width: 100%;
+}
+
+c-ripple-button > * {
+  font-weight: normal;
+}
