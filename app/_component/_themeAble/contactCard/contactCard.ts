@@ -139,13 +139,13 @@ export default class ContactCard extends ThemeAble {
     })
 
     this.body.btn.click(() => {
-      const { done, canOpen } = blurEverythingInBackground(this)
+      const { done, canOpen } = blurEverythingInBackground(this.body.btn)
       if (!canOpen) return
       
       console.log(this.body.btn.offsetLeft)
 
       const width = 800
-      const height = 500
+      const height = 450
 
       this.css({
         height: this.css("height"),
@@ -157,6 +157,9 @@ export default class ContactCard extends ThemeAble {
       const ogButtonWidth = this.body.btn.css("width")
       this.body.btn.css("width", ogButtonWidth)
 
+      this.body.btn.css("cursor", "default")
+
+
       this.body.btn.anim({
         width,
         height,
@@ -164,12 +167,26 @@ export default class ContactCard extends ThemeAble {
         marginTop: document.body.clientHeight/2 - height/2 - this.body.btn.getBoundingClientRect().top,
       })
 
+      const descHeight = this.body.desc.height()
+      this.body.desc.css("height", descHeight)
+      console.log(descHeight)
+
       this.body.desc.css("width", this.body.desc.css("width"))
 
       this.body.desc.anim({
-        left: "53%",
-        translateY: -375 - 81.5 + this.body.desc.height(),
+        left: "47%",
+        height: 0,
+        translateY: -406,
         scale: 1.2
+      })
+
+
+      this.body.pic.anim({
+        translateX: -30
+      })
+
+      this.body.background.anim({
+        translateX: 30
       })
 
 
@@ -183,16 +200,26 @@ export default class ContactCard extends ThemeAble {
           }),
           this.body.desc.anim({
             left: 0,
+            height: descHeight,
             translateY: 0,
             scale: 1
-          })
+          }),
+          this.body.pic.anim({
+            translateX: 0
+          }),
+          this.body.background.anim({
+            translateX: 0
+          }),
         ])
+
+        this.body.btn.css("cursor", "zoom-in")
 
         this.style.removeProperty("height")
         this.style.removeProperty("width")
         this.body.btn.style.removeProperty("height")
         this.body.btn.style.removeProperty("width")
         this.body.desc.style.removeProperty("width")
+        this.body.desc.style.removeProperty("height")
       })
 
       

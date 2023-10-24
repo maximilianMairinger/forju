@@ -83,6 +83,7 @@ p {
 c-ripple-button {
   display: inline-block;
   width: 100%;
+  cursor: zoom-in;
 }
 
 c-ripple-button > * {

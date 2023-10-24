@@ -3,6 +3,7 @@
 }
 
 c-button {
+  cursor: inherit;
   width: inherit;
   height: inherit;
   max-height: inherit;
