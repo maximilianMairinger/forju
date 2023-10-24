@@ -143,6 +143,9 @@ export default class ContactCard extends ThemeAble {
       return confetti.create(this.body.canvas, { resize: true });
     })
 
+    // todo: max size
+    // todo: all interaction lazy load
+
     this.body.btn.click(() => {
       const { done, canOpen } = blurEverythingInBackground(this.body.btn)
       if (!canOpen) return
