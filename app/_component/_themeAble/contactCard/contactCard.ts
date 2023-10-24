@@ -2,10 +2,11 @@ import LinkedList from "fast-linked-list";
 import declareComponent from "../../../lib/declareComponent"
 import ThemeAble from "../themeAble"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
-import keyIndex from "key-index"
+import keyIndex, { memoize } from "key-index"
 import { latestLatent } from "more-proms"
 import { EventListener } from "extended-dom";
-import delay from "tiny-delay"
+import { loadRecord } from "../../_themeAble/_frame/frame"
+import confetti from "canvas-confetti"
 
 
 const zIndex = 50
@@ -138,6 +139,10 @@ export default class ContactCard extends ThemeAble {
       ripple: false
     })
 
+    const initConfetti = memoize((conf: typeof confetti) => {
+      return confetti.create(this.body.canvas, { resize: true });
+    })
+
     this.body.btn.click(() => {
       const { done, canOpen } = blurEverythingInBackground(this.body.btn)
       if (!canOpen) return
@@ -176,7 +181,7 @@ export default class ContactCard extends ThemeAble {
       this.body.desc.anim({
         left: "47%",
         height: 0,
-        translateY: -406,
+        translateY: -386,
         scale: 1.2
       })
 
@@ -188,6 +193,62 @@ export default class ContactCard extends ThemeAble {
       this.body.background.anim({
         translateX: 30
       })
+
+      const confettiLib = new Promise<typeof confetti>((res) => {
+        loadRecord.full.add(() => {
+          res(import(/* webpackChunkName: "canvas-confetti" */"canvas-confetti").then((mod) => mod.default))
+        })
+      })
+      
+
+      confettiLib.then((_confetti) => {
+        let confettiListener = this.body.btn.click(() => {
+          const confetti = initConfetti(_confetti)
+
+          var count = 300;
+          var defaults = {
+            origin: { y: 1.1 }
+          };
+
+          function fire(particleRatio, opts) {
+            confetti({
+              ...defaults,
+              ...opts,
+              particleCount: Math.floor(count * particleRatio)
+            });
+          }
+
+          fire(0.25, {
+            spread: 26,
+            startVelocity: 55,
+          });
+          fire(0.2, {
+            spread: 60,
+          });
+          fire(0.35, {
+            spread: 100,
+            decay: 0.91,
+            scalar: 0.8
+          });
+          fire(0.1, {
+            spread: 120,
+            startVelocity: 25,
+            decay: 0.92,
+            scalar: 1.2
+          });
+          fire(0.1, {
+            spread: 120,
+            startVelocity: 45,
+          });
+        })
+
+        done.then(() => {
+          this.body.btn.removeActivationCallback(confettiListener)
+        })
+      })
+
+      
+
 
 
       done.then(async () => {
@@ -229,11 +290,6 @@ export default class ContactCard extends ThemeAble {
       e.preventDefault()
       e.stopPropagation()
     })
-
-
-
-    
-
   }
 
   personName(to: string) {

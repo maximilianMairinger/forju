@@ -19,6 +19,11 @@ c-image {
   --object-fit: contain;
 }
 
+canvas {
+  width: 100%;
+  height: 100%;
+}
+
 image-background {
   background-color: rgb(var(--primary-themed-background));
   border-radius: 20px;
