@@ -13,6 +13,7 @@ jobs:
     permissions:
       pull-requests: read
     outputs:
+      CD: ${{ steps.filter.outputs.CD }}
       images: ${{ steps.filter.outputs.images }}
       imagesFiles: ${{ steps.filter.outputs.images_files }}
       server: ${{ steps.filter.outputs.server }}
@@ -30,6 +31,8 @@ jobs:
         base: master
         list-files: 'csv'
         filters: |
+          CD:
+            - '.github/workflows/**'
           images:
             - added|modified: 'app/res/img/**'
           server:
@@ -55,21 +58,22 @@ jobs:
     
     steps: 
     - name: "checkout"
-      if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') }}
+      if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') || (needs.detectChanges.outputs.CD == 'true') }}
       uses: actions/checkout@master
 
     - name: Setting up node
-      if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') }}
+      if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') || (needs.detectChanges.outputs.CD == 'true') }}
       uses: actions/setup-node@master
       with:
         node-version: '16.x'
-
+    
     - name: Setting up bun
-      if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') }}
+      if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') || (needs.detectChanges.outputs.CD == 'true') }}
       uses: oven-sh/setup-bun@v1
 
+
     - name: Installing runner dependencies
-      if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') }}
+      if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') || (needs.detectChanges.outputs.CD == 'true') }}
       run: npm i
 
     # - name: set environment variables
@@ -78,11 +82,11 @@ jobs:
     #     GOOGLE_MAPS_API_KEY: '${{ secrets.MAPS_API_KEY }}'
     
     - name: "Building app"
-      if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') }}
+      if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') || (needs.detectChanges.outputs.CD == 'true') }}
       run: npm run buildProdApp --if-present
 
     - name: "Uploading files to remote"
-      if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') }}
+      if: ${{ (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.dependencies == 'true') || (needs.detectChanges.outputs.CD == 'true') }}
       uses: appleboy/scp-action@v0.1.1
       with:
         host: ${{ secrets.HOST }}
@@ -100,17 +104,17 @@ jobs:
     
     steps: 
     - name: "checkout"
-      if: ${{ needs.detectChanges.outputs.server == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      if: ${{ needs.detectChanges.outputs.server == 'true' || needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: actions/checkout@master
 
     - name: Setting up node
-      if: ${{ needs.detectChanges.outputs.server == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      if: ${{ needs.detectChanges.outputs.server == 'true' || needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: actions/setup-node@master
       with:
         node-version: '16.x'
 
     - name: Installing runner dependencies
-      if: ${{ needs.detectChanges.outputs.server == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      if: ${{ needs.detectChanges.outputs.server == 'true' || needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       run: npm i
 
     # - name: set environment variables
@@ -119,11 +123,11 @@ jobs:
     #     GOOGLE_MAPS_API_KEY: '${{ secrets.MAPS_API_KEY }}'
     
     - name: "Building server"
-      if: ${{ needs.detectChanges.outputs.server == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      if: ${{ needs.detectChanges.outputs.server == 'true' || needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       run: npm run buildProdServer --if-present
 
     - name: "Uploading files to remote"
-      if: ${{ needs.detectChanges.outputs.server == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      if: ${{ needs.detectChanges.outputs.server == 'true' || needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: appleboy/scp-action@v0.1.1
       with:
         host: ${{ secrets.HOST }}
@@ -141,17 +145,17 @@ jobs:
     
     steps: 
     - name: "checkout"
-      if: ${{ needs.detectChanges.outputs.replServer == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      if: ${{ needs.detectChanges.outputs.replServer == 'true' || needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: actions/checkout@master
 
     - name: Setting up node
-      if: ${{ needs.detectChanges.outputs.replServer == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      if: ${{ needs.detectChanges.outputs.replServer == 'true' || needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: actions/setup-node@master
       with:
         node-version: '16.x'
 
     - name: Installing runner dependencies
-      if: ${{ needs.detectChanges.outputs.replServer == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      if: ${{ needs.detectChanges.outputs.replServer == 'true' || needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       run: npm i
 
     # - name: set environment variables
@@ -160,11 +164,11 @@ jobs:
     #     GOOGLE_MAPS_API_KEY: '${{ secrets.MAPS_API_KEY }}'
     
     - name: "Building repl server"
-      if: ${{ needs.detectChanges.outputs.replServer == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      if: ${{ needs.detectChanges.outputs.replServer == 'true' || needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       run: npm run buildProdReplServer --if-present
 
     - name: "Uploading files to remote"
-      if: ${{ needs.detectChanges.outputs.replServer == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      if: ${{ needs.detectChanges.outputs.replServer == 'true' || needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: appleboy/scp-action@v0.1.1
       with:
         host: ${{ secrets.HOST }}
@@ -183,17 +187,17 @@ jobs:
     
     steps: 
     - name: "checkout"
-      if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' || needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: actions/checkout@master
 
     - name: Setting up node
-      if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' || needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: actions/setup-node@master
       with:
         node-version: '16.x'
 
     - name: Installing runner dependencies
-      if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' || needs.detectChanges.outputs.dependencies == 'true' }}
+      if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' || needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       run: npm i
 
     # - name: set environment variables
@@ -202,11 +206,11 @@ jobs:
     #     GOOGLE_MAPS_API_KEY: '${{ secrets.MAPS_API_KEY }}'
     
     - name: "Building service worker"
-      if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' }}
+      if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       run: npm run buildProdSw --if-present
 
     - name: "Uploading files to remote"
-      if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' }}
+      if: ${{ needs.detectChanges.outputs.serviceWorker == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: appleboy/scp-action@v0.1.1
       with:
         host: ${{ secrets.HOST }}
@@ -225,35 +229,35 @@ jobs:
 
     steps: 
     - name: "checkout"
-      if: ${{ needs.detectChanges.outputs.images == 'true' }}
+      if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: actions/checkout@master
       with:
         lfs: "true"
 
     - name: Setting up node
-      if: ${{ needs.detectChanges.outputs.images == 'true' }}
+      if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: actions/setup-node@master
       with:
         node-version: '16.x'
 
     - name: Installing runner dependencies
-      if: ${{ needs.detectChanges.outputs.images == 'true' }}
+      if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       run: npm i image-web -g
 
     - name: Setting environment variables
-      if: ${{ needs.detectChanges.outputs.images == 'true' }}
+      if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: allenevans/set-env@v2.0.0
       with:
         UV_THREADPOOL_SIZE: '1' # otherwise may take up too much memory and cause action to be canceled.
 
 
     - name: "Compressing images"
-      if: ${{ needs.detectChanges.outputs.images == 'true' }}
+      if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       # replace the input of the compressImage command (hopefully using image-web) with the image diffs of this commit. Also add legacyLogs option
-      run: "eval `node -e \"let a = JSON.parse(fs.readFileSync('package.json').toString()).scripts.compressImages.split(' '); let i = a.indexOf('image-web'); assert(i !== -1); assert(a[0] === 'image-web' || (a[0] === 'npx' && (a[1] === 'image-web' || (a[1] === '--yes' && a[2] === 'image-web'))); a[i+1] = require('process').argv[1]; console.log(a.join(' ') + (a.includes('--legacyLogs') ? '' : ' --legacyLogs'))\" \"${{ needs.detectChanges.outputs.imagesFiles }}\"`"
+      run: "eval `node -e \"let a = JSON.parse(fs.readFileSync('package.json').toString()).scripts.compressImages.split(' '); let i = a.indexOf('image-web'); assert(i !== -1); assert(a[0] === 'image-web' || (a[0] === 'npx' && (a[1] === 'image-web' || (a[1] === '--yes' && a[2] === 'image-web')))); a[i + 1] = require('process').argv[1]; console.log(a.join(' ') + (a.includes('--legacyLogs') ? '' : ' --legacyLogs'))\" \"${{ needs.detectChanges.outputs.imagesFiles }}\"`"
 
     - name: "Uploading files to remote"
-      if: ${{ needs.detectChanges.outputs.images == 'true' }}
+      if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: appleboy/scp-action@v0.1.1
       with:
         host: ${{ secrets.HOST }}
@@ -273,11 +277,11 @@ jobs:
     
     steps: 
     - name: "checkout"
-      if: ${{ needs.detectChanges.outputs.public == 'true' }}
+      if: ${{ needs.detectChanges.outputs.public == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: actions/checkout@master
 
     - name: Upload public files
-      if: ${{ needs.detectChanges.outputs.public == 'true' }}
+      if: ${{ needs.detectChanges.outputs.public == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: appleboy/scp-action@v0.1.1
       with:
         host: ${{ secrets.HOST }}
@@ -296,11 +300,11 @@ jobs:
     
     steps: 
     - name: "checkout"
-      if: ${{ needs.detectChanges.outputs.dependencies == 'true' }}
+      if: ${{ needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: actions/checkout@master
 
     - name: Upload dependency declaration
-      if: ${{ needs.detectChanges.outputs.dependencies == 'true' }}
+      if: ${{ needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: appleboy/scp-action@v0.1.1
       with:
         host: ${{ secrets.HOST }}
@@ -312,7 +316,7 @@ jobs:
         overwrite: true
 
     - name: Installing dependencies on remote
-      if: ${{ needs.detectChanges.outputs.dependencies == 'true' }}
+      if: ${{ needs.detectChanges.outputs.dependencies == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: appleboy/ssh-action@master
       with: 
         host: ${{ secrets.HOST }}
@@ -333,11 +337,11 @@ jobs:
 
     steps:
     - name: "checkout"
-      if: ${{ needs.detectChanges.outputs.deployOption == 'true' }}
+      if: ${{ needs.detectChanges.outputs.deployOption == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: actions/checkout@master
 
     - name: Upload deploy option files
-      if: ${{ needs.detectChanges.outputs.deployOption == 'true' }}
+      if: ${{ needs.detectChanges.outputs.deployOption == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: appleboy/scp-action@v0.1.1
       with:
         host: ${{ secrets.HOST }}
@@ -350,7 +354,7 @@ jobs:
 
 
     - name: Moving files from temp storage 
-      if: ${{ (needs.detectChanges.outputs.dependencies == 'true') || (needs.detectChanges.outputs.images == 'true') || (needs.detectChanges.outputs.server == 'true') || (needs.detectChanges.outputs.replServer == 'true') || (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.serviceWorker == 'true') || (needs.detectChanges.outputs.public == 'true') }}
+      if: ${{ (needs.detectChanges.outputs.dependencies == 'true') || (needs.detectChanges.outputs.images == 'true') || (needs.detectChanges.outputs.server == 'true') || (needs.detectChanges.outputs.replServer == 'true') || (needs.detectChanges.outputs.app == 'true') || (needs.detectChanges.outputs.serviceWorker == 'true') || (needs.detectChanges.outputs.public == 'true') || (needs.detectChanges.outputs.CD == 'true') }}
       uses: appleboy/ssh-action@master
       with: 
         host: ${{ secrets.HOST }}
@@ -364,7 +368,7 @@ jobs:
 
     
     - name: Restarting server
-      if: ${{ (needs.detectChanges.outputs.deployOption == 'true') || (needs.detectChanges.outputs.server == 'true') || (needs.detectChanges.outputs.replServer == 'true') || (needs.detectChanges.outputs.dependencies == 'true') }}
+      if: ${{ (needs.detectChanges.outputs.deployOption == 'true') || (needs.detectChanges.outputs.server == 'true') || (needs.detectChanges.outputs.replServer == 'true') || (needs.detectChanges.outputs.dependencies == 'true') || (needs.detectChanges.outputs.CD == 'true') }}
       uses: appleboy/ssh-action@master
       with: 
         host: ${{ secrets.HOST }}
