@@ -1,10 +1,11 @@
-// deno-lint-ignore-file 
 import chokidar from "chokidar"
 import { outlineSvg as _outlineSvg } from '@davestewart/outliner'
 import path from "node:path"
 import svgo, { Config } from "svgo"
 import { paramCase } from "change-case"
 import { load as cheerioHTML, Element } from "cheerio"
+import {promises as fs} from "fs"
+declare const Bun: any
 
 type outlineSvg = (content: string) => string
 const outlineSvg = _outlineSvg as outlineSvg
@@ -39,9 +40,9 @@ function unifyAttrbIfPossible($: ReturnType<typeof cheerioHTML>, attrbName: stri
 
 
 async function changeFunc(pth: string, change: boolean) {
-  const stat = await Deno.stat(pth)
-  if (stat.isFile) {
-    const content = await Deno.readTextFile(pth)
+  const stat = await fs.stat(pth)
+  if (stat.isFile()) {
+    const content = await fs.readFile(pth, "utf8")
     if (content === "") return
     if (!pth.endsWith(".svg")) return
   
@@ -61,7 +62,7 @@ async function changeFunc(pth: string, change: boolean) {
 
     if (await fileExists(path.join(iconPath, name))) {
       console.log(`A svg under the name ${name} already exists. Skipping`)
-      Deno.remove(pth)
+      await fs.unlink(pth)
       return
     }
 
@@ -153,12 +154,12 @@ async function changeFunc(pth: string, change: boolean) {
     const parsedTs = tsTemplate({name})
     const parsedCss = cssTemplate({ color, strokeColor, strokeWidth: strokeWidthProps.onlyOneAttrb ? strokeWidthProps.attrb.values().next().value : undefined })
 
-    await Deno.mkdir(path.join(iconPath, `${name}Icon`), { recursive: true })
+    await fs.mkdir(path.join(iconPath, `${name}Icon`), { recursive: true })
     await Promise.all([
-      Deno.writeTextFile(path.join(iconPath, `${name}Icon`, `${name}Icon.pug`), parsedSvg, { createNew: true }),
-      Deno.writeTextFile(path.join(iconPath, `${name}Icon`, `${name}Icon.ts`), parsedTs, { createNew: true }),
-      Deno.writeTextFile(path.join(iconPath, `${name}Icon`, `${name}Icon.css`), parsedCss, { createNew: true }),
-      Deno.remove(pth)
+      fs.writeFile(path.join(iconPath, `${name}Icon`, `${name}Icon.pug`), parsedSvg),
+      fs.writeFile(path.join(iconPath, `${name}Icon`, `${name}Icon.ts`), parsedTs),
+      fs.writeFile(path.join(iconPath, `${name}Icon`, `${name}Icon.css`), parsedCss),
+      fs.unlink(pth)
     ])
     
     
@@ -291,7 +292,7 @@ const parseSvgDecorators = {
 
 const fileExists = async (filename: string): Promise<boolean> => {
   try {
-    await Deno.stat(filename);
+    await fs.access(filename);
     return true;
   } catch (error) {
     return false;

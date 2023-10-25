@@ -3,12 +3,14 @@ import path from "node:path"
 import { paramCase } from "change-case"
 import chokidar from "chokidar"
 import { delay } from "tiny-delay"
-import { LinkedList } from "fast-linked-list"
+import { LinkedList } from "fast-linked-list" 
+import {promises as fs} from "fs"
+declare const Bun: any
 
 console.log("mkComp: Watching...")
 
 async function makeComponent(parentDir: string, name: string) {
-  await Deno.mkdir(path.join(parentDir, name), { recursive: true })
+  await fs.mkdir(path.join(parentDir, name), { recursive: true })
 
   let parentCompName = path.basename(parentDir)
   if (parentCompName.startsWith("_")) parentCompName = parentCompName.slice(1)
@@ -54,9 +56,9 @@ component-body {
 `
 
   await Promise.all([
-    Deno.writeTextFile(path.join(parentDir, name, `${name}.ts`), tsContent),
-    Deno.writeTextFile(path.join(parentDir, name, `${name}.pug`), ""),
-    Deno.writeTextFile(path.join(parentDir, name, `${name}.css`), cssContent),
+    fs.writeFile(path.join(parentDir, name, `${name}.ts`), tsContent),
+    fs.writeFile(path.join(parentDir, name, `${name}.pug`), ""),
+    fs.writeFile(path.join(parentDir, name, `${name}.css`), cssContent),
   ])
 
 }
@@ -65,7 +67,7 @@ component-body {
 const justRemovedList = new LinkedList<{path: string, name: string}>()
 function getNamesByPath<T extends {path: string, name: string}>(ls: LinkedList<T>, _pth: string) {
   const pth = path.resolve(_pth)
-  const matches = []
+  const matches = [] as string[]
   for (let i of ls) {
     if (i.path === pth) matches.push(i.name)
   }
@@ -90,7 +92,7 @@ watcher
 
     const wasRename = await (async () => {
       const possibleJustRemovedNames = getNamesByPath(justRemovedList, parentPath)
-      if (possibleJustRemovedNames.length > 0 && !(await isAsyncIterableEmpty(Deno.readDir(pth)))) {
+      if (possibleJustRemovedNames.length > 0 && (await fs.readdir(pth)).length !== 0) {
         // do checks
         if (!(await fileExists(path.join(pth, `${name}.ts`)))) {
           const doesSomeJustRemovedNameWork = await someAsync(possibleJustRemovedNames, (possibleJustRemovedName) => fileExists(path.join(pth, `${possibleJustRemovedName}.ts`)))
@@ -101,15 +103,15 @@ watcher
 
 
             const handleRenameInTsFile = (async () => {
-              let content = await Deno.readTextFile(path.join(pth, `${oldName}.ts`))
-              const delProm = Deno.remove(path.join(pth, `${oldName}.ts`))
+              let content = await fs.readFile(path.join(pth, `${oldName}.ts`), "utf8")
+              const delProm = fs.unlink(path.join(pth, `${oldName}.ts`))
               content = content.replace(matchPugAndCssRequireRegex, name)
               content = content.replace(matchClassDeclarationRegex, capitalize(name))
               content = content.replace(matchComponentClassNameRegex, capitalize(name))
               content = content.replace(matchComponentTagNameRegex, `c-${paramCase(name)}`)
 
               await Promise.all([
-                Deno.writeTextFile(path.join(pth, `${name}.ts`), content),
+                fs.writeFile(path.join(pth, `${name}.ts`), content),
                 delProm
               ])
             })()
@@ -117,8 +119,8 @@ watcher
       
             await Promise.all([
               handleRenameInTsFile,
-              fileExists(path.join(pth, `${oldName}.css`)).then((exists) => exists ? Deno.rename(path.join(pth, `${oldName}.css`), path.join(pth, `${name}.css`)) : undefined),
-              fileExists(path.join(pth, `${oldName}.pug`)).then((exists) => exists ? Deno.rename(path.join(pth, `${oldName}.pug`), path.join(pth, `${name}.pug`)) : undefined),
+              fileExists(path.join(pth, `${oldName}.css`)).then((exists) => exists ? fs.rename(path.join(pth, `${oldName}.css`), path.join(pth, `${name}.css`)) : undefined),
+              fileExists(path.join(pth, `${oldName}.pug`)).then((exists) => exists ? fs.rename(path.join(pth, `${oldName}.pug`), path.join(pth, `${name}.pug`)) : undefined),
             ])
 
             return true
@@ -131,7 +133,7 @@ watcher
     if (!wasRename) {
       console.log(`No rename for ${name}`)
       await delay(150)
-      if (!(await isAsyncIterableEmpty(Deno.readDir(pth)))) return
+      if ((await fs.readdir(pth)).length !== 0) return
       console.log(`Make component ${name}`)
   
       await makeComponent(parentPath, name)
@@ -163,13 +165,17 @@ async function isAsyncIterableEmpty(ai: AsyncIterable<any>) {
   return true; // if we exited the loop, there were no values so it's empty
 }
 
-async function fileExists(path: string) {
+const fileExists = async (filename: string): Promise<boolean> => {
   try {
-    return (await Deno.stat(path)).isFile
+    await fs.access(filename);
+    return true;
+  } catch (error) {
+    return false;
   }
-  catch(e) {
-    return false
-  }
+};
+
+function isEmpty(a: any[]) {
+  return a.length === 0
 }
 
 
@@ -181,3 +187,4 @@ async function someAsync<T>(arr: Iterable<T> | AsyncIterable<T>, asyncTest: (ite
   }
   return false
 }
+
