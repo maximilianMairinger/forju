@@ -244,7 +244,7 @@ jobs:
       if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       run: |
         npm i image-web -g
-        npx --yes image-web --version#
+        npx --yes image-web --version
 
     - run: "npx --yes image-web --version"
 
