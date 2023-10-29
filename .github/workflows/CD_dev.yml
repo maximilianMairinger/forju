@@ -246,15 +246,9 @@ jobs:
         npm i image-web -g
         npx --yes image-web --version
 
-    - run: "npx --yes image-web --version"
-
-    - name: Setting environment variables
+    - name: Setting environment variables # otherwise may take up too much memory and cause action to be canceled.
       if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
-      uses: allenevans/set-env@v2.0.0
-      with:
-        UV_THREADPOOL_SIZE: '1' # otherwise may take up too much memory and cause action to be canceled.
-    - run: "npx --yes image-web --version"
-
+      run: export UV_THREADPOOL_SIZE="1"
 
     - name: "Compressing images"
       if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
