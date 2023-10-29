@@ -4,7 +4,7 @@
     "mkCompService": "bun run pugToTypes.ts --watch",
     "pugToTypesOnce": "bun run pugToTypes.ts",
     "iconBoilerplateHelperService": "bun run iconBoilerplateHelper.ts",
-    "compressImages": "image-web app/res/img public/res/img/dist --resolutions 4K,2K,PREV --algorithms jpg,webp,avif",
+    "compressImages": "npx --yes image-web app/res/img public/res/img/dist --resolutions 4K,2K,PREV --algorithms jpg,webp,avif",
     "setEnvRepl": "npm run setEnv -- --preset repl",
     "setEnvProd": "npm run setEnv -- --preset prod",
     "setEnv": "node setEnv.js",
