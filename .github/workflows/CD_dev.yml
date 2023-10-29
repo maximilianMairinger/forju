@@ -242,7 +242,9 @@ jobs:
 
     - name: Installing runner dependencies
       if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
-      run: npm i image-web -g
+      run: |
+        npm i image-web -g
+        npx --yes image-web --version
 
     - name: Setting environment variables
       if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
