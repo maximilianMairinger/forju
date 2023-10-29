@@ -9,127 +9,19 @@ import { loadRecord } from "../../_themeAble/_frame/frame"
 import confetti from "canvas-confetti"
 
 
-const zIndex = 50
-const initZIndexStore = keyIndex((el: Element) => el.css("zIndex") as number, WeakMap)
-function mkBlurElem() {
-  const blurElem = ce("blur-elem")
-  blurElem.css({
-    position: "absolute",
-    display: "block",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    zIndex,
-    opacity: 0,
-    pointerEvents: "all",
-    background: "rgba(0, 0, 0, 0.5)"
-  })
-  return blurElem
-}
-
-function oneOfTheseOnce(...eventListener: EventListener[]) {
-  const rmListener = () => {
-    for (const ev of eventListener) ev.deactivate()
-  }
-  return (func: (e: Event) => boolean | void, nCount = 1) => {
-    let i = 0
-    for (const ev of eventListener) {
-      const prevListener = ev.listener()
-      ev.listener((...a) => {
-        i++
-        if (i < nCount) return
-
-        for (const list of prevListener) (list as any)(...a)
-        let res = func(...a)
-        res = res === undefined ? true : res
-        if (res) rmListener()
-      })
-      ev.activate()
-    }
-
-  }
-}
-
-
-const activeBlurs = new Set()
-
-const _blurEverythingInBackground = latestLatent(function blurEverythingInBackground(except?: Element, zIndex: number = 50, zIndexExcept: number = zIndex + 1) {
-  return new Promise<{doneWithAnim: Promise<void>, except: Element | undefined, blurElem: Element}>((res) => {
-    if (except) {
-      initZIndexStore(except)
-      except.css("zIndex", zIndex + 1)
-    }
-    
-    const parent = except ? getScrollParent(except) : document.body
-    const blurElem = mkBlurElem()
-    parent.apd(blurElem)
-    blurElem.anim({opacity: 1})
-
-
-
-
-    oneOfTheseOnce(blurElem.on("mousedown"), parent.on("scroll"), document.body.on("resize"))((e) => {
-      console.log(e)
-      if (e instanceof Event) {
-        e.stopPropagation()
-        e.preventDefault()
-      }
-      
-      const doneWithAnim = blurElem.anim({opacity: 0})
-      res({doneWithAnim, except, blurElem})
-    }, 2)
-  })
-})
-
-_blurEverythingInBackground.then(async ({doneWithAnim, except, blurElem}) => {
-  await doneWithAnim
-  return {except, blurElem}
-}).then(({except, blurElem}) => {
-  if (except) except.css("zIndex", initZIndexStore(except))
-  blurElem.remove()
-})
-
-function blurEverythingInBackground(except?: Element, zIndex?: number, zIndexExcept?: number) {
-  let myActiveBlursKey = except ? except : undefined
-  if (activeBlurs.has(myActiveBlursKey)) return {canOpen: false}
-  activeBlurs.add(myActiveBlursKey)
-  return {canOpen: true, done: (async () => {
-    const {doneWithAnim} = await _blurEverythingInBackground(except, zIndex, zIndexExcept)
-    doneWithAnim.then(() => {
-      activeBlurs.delete(myActiveBlursKey)
-    })
-  })()}
-  
-}
 
 
 
 
 
-function getScrollParent(node: Node, dirs: ("x" | "y")[] = ["y"]) {
-  if (node == null) return document.body
-  if (node instanceof ShadowRoot) return getScrollParent(node.host, dirs)
-  if (!(node instanceof Element)) return getScrollParent(node.parentNode, dirs)
-  
 
-  for (const dir of dirs) {
-    let overflowY = node.css(`overflow${dir.toUpperCase()}` as `overflow${"X" | "Y"}`)
-    let isScrollable = overflowY !== 'visible' && overflowY !== 'hidden'
-    if (isScrollable && node.scrollHeight > node.clientHeight) {
-      return node
-    }
-  }
-
-  return getScrollParent(node.parentNode, dirs)
-}
 
 
 
 
 
 export default class ContactCard extends ThemeAble {
-  protected body: BodyTypes
+  public body: BodyTypes
 
   constructor() {
     super(false)
@@ -139,155 +31,15 @@ export default class ContactCard extends ThemeAble {
       ripple: false
     })
 
-    const initConfetti = memoize((conf: typeof confetti) => {
-      return confetti.create(this.body.canvas, { resize: true });
-    })
-
     // todo: max size
-    // todo: all interaction lazy load
 
-    this.body.btn.click(() => {
-      const { done, canOpen } = blurEverythingInBackground(this.body.btn)
-      if (!canOpen) return
-      
-      console.log(this.body.btn.offsetLeft)
-
-      const width = 800
-      const height = 450
-
-      this.css({
-        height: this.css("height"),
-        width: this.css("width"),
-      })
-
-      const ogButtonHeight = this.body.btn.css("height")
-      this.body.btn.css("height", ogButtonHeight)
-      const ogButtonWidth = this.body.btn.css("width")
-      this.body.btn.css("width", ogButtonWidth)
-
-      this.body.btn.css("cursor", "default")
-
-
-      this.body.btn.anim({
-        width,
-        height,
-        marginLeft: document.body.clientWidth/2 - width/2 - this.body.btn.getBoundingClientRect().left,
-        marginTop: document.body.clientHeight/2 - height/2 - this.body.btn.getBoundingClientRect().top,
-      })
-
-      const descHeight = this.body.desc.height()
-      this.body.desc.css("height", descHeight)
-      console.log(descHeight)
-
-      this.body.desc.css("width", this.body.desc.css("width"))
-
-      this.body.desc.anim({
-        left: "47%",
-        height: 0,
-        translateY: -386,
-        scale: 1.2
-      })
-
-
-      this.body.pic.anim({
-        translateX: -30
-      })
-
-      this.body.background.anim({
-        translateX: 30
-      })
-
-      const confettiLib = new Promise<typeof confetti>((res) => {
-        loadRecord.full.add(() => {
-          res(import(/* webpackChunkName: "canvas-confetti" */"canvas-confetti").then((mod) => mod.default))
-        })
-      })
-      
-
-      confettiLib.then((_confetti) => {
-        let confettiListener = this.body.btn.click(() => {
-          const confetti = initConfetti(_confetti)
-
-          var count = 300;
-          var defaults = {
-            origin: { y: 1.1 }
-          };
-
-          function fire(particleRatio, opts) {
-            confetti({
-              ...defaults,
-              ...opts,
-              particleCount: Math.floor(count * particleRatio)
-            });
-          }
-
-          fire(0.25, {
-            spread: 26,
-            startVelocity: 55,
-          });
-          fire(0.2, {
-            spread: 60,
-          });
-          fire(0.35, {
-            spread: 100,
-            decay: 0.91,
-            scalar: 0.8
-          });
-          fire(0.1, {
-            spread: 120,
-            startVelocity: 25,
-            decay: 0.92,
-            scalar: 1.2
-          });
-          fire(0.1, {
-            spread: 120,
-            startVelocity: 45,
-          });
-        })
-
-        done.then(() => {
-          this.body.btn.removeActivationCallback(confettiListener)
-        })
-      })
-
-      
-
-
-
-      done.then(async () => {
-        await Promise.all([
-          this.body.btn.anim({
-            width: ogButtonWidth,
-            height: ogButtonHeight,
-            marginLeft: 0,
-            marginTop: 0
-          }),
-          this.body.desc.anim({
-            left: 0,
-            height: descHeight,
-            translateY: 0,
-            scale: 1
-          }),
-          this.body.pic.anim({
-            translateX: 0
-          }),
-          this.body.background.anim({
-            translateX: 0
-          }),
-        ])
-
-        this.body.btn.css("cursor", "zoom-in")
-
-        this.style.removeProperty("height")
-        this.style.removeProperty("width")
-        this.body.btn.style.removeProperty("height")
-        this.body.btn.style.removeProperty("width")
-        this.body.desc.style.removeProperty("width")
-        this.body.desc.style.removeProperty("height")
-      })
-
-      
+    
+    loadRecord.full.add(() => {
+      import(/* webpackChunkName: "contactCardInteraction" */"./interaction").then((mod) => mod.default.apply(this))
     })
+    
+
+    
 
     this.body.subSubTxt.addActivationListener((e) => {
       e.preventDefault()
