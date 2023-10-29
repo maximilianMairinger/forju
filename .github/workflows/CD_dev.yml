@@ -242,19 +242,11 @@ jobs:
 
     - name: Installing runner dependencies
       if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
-      run: |
-        npm i image-web -g
-        npx --yes image-web --version
-
-    - run: |
-        "npx --yes image-web --version"
-        "npx --yes image-web --version"
+      run: npm i image-web -g
 
     - name: Setting environment variables # otherwise may take up too much memory and cause action to be canceled.
       if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       run: export UV_THREADPOOL_SIZE="1"
-    - run: "npx --yes image-web --version"
-
 
     - name: "Compressing images"
       if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
