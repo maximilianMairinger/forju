@@ -244,9 +244,11 @@ jobs:
       if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       run: npm i image-web -g
 
-    - name: Setting environment variables # otherwise may take up too much memory and cause action to be canceled.
+    - name: Setting environment variables
       if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
-      run: export UV_THREADPOOL_SIZE="1"
+      uses: allenevans/set-env@v2.0.0
+      with:
+        UV_THREADPOOL_SIZE: '1' # otherwise may take up too much memory and cause action to be canceled.
 
 
     - name: Debug log
@@ -337,11 +339,11 @@ jobs:
 
     steps:
     - name: "checkout"
-      if: ${{ needs.detectChanges.outputs.deployOption == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
+      if: ${{ needs.detectChanges.outputs.deployOption == 'true' }}
       uses: actions/checkout@master
 
     - name: Upload deploy option files
-      if: ${{ needs.detectChanges.outputs.deployOption == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
+      if: ${{ needs.detectChanges.outputs.deployOption == 'true' }}
       uses: appleboy/scp-action@v0.1.1
       with:
         host: ${{ secrets.HOST }}
