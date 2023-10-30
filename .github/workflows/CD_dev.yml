@@ -250,12 +250,12 @@ jobs:
 
 
     - name: Debug log
-      run: "echo eval `node -e \"let a = JSON.parse(fs.readFileSync('package.json').toString()).scripts.compressImages.split(' '); let i = a.indexOf('image-web'); assert(i !== -1); assert(a[0] === 'image-web' || (a[0] === 'npx' && (a[1] === 'image-web' || (a[1] === '--yes' && a[2] === 'image-web')))); a[i + 1] = require('process').argv[1]; console.log(a.join(' ') + (a.includes('--legacyLogs') ? '' : ' --legacyLogs'))\" \"${{ needs.detectChanges.outputs.imagesFiles }}\"`"
+      run: "echo eval `node -e \"let a = JSON.parse(fs.readFileSync('package.json').toString()).scripts.compressImages.split(' '); let i = a.indexOf('image-web'); assert(i !== -1); assert(a[0] === 'image-web' || (a[0] === 'npx' && (a[1] === 'image-web' || ((a[1] === '--yes' || a[1] === '-y') && a[2] === 'image-web')))); let inp = require('process').argv[1]; if (inp !== undefined) a[i + 1] = inp; console.log(a.join(' ') + (a.includes('--legacyLogs') ? '' : ' --legacyLogs'));\" \"${{ needs.detectChanges.outputs.imagesFiles }}\"`"
 
     - name: "Compressing images"
       if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       # replace the input of the compressImage command (hopefully using image-web) with the image diffs of this commit. Also add legacyLogs option
-      run: "eval `node -e \"let a = JSON.parse(fs.readFileSync('package.json').toString()).scripts.compressImages.split(' '); let i = a.indexOf('image-web'); assert(i !== -1); assert(a[0] === 'image-web' || (a[0] === 'npx' && (a[1] === 'image-web' || (a[1] === '--yes' && a[2] === 'image-web')))); a[i + 1] = require('process').argv[1]; console.log(a.join(' ') + (a.includes('--legacyLogs') ? '' : ' --legacyLogs'))\" \"${{ needs.detectChanges.outputs.imagesFiles }}\"`"
+      run: "eval `node -e \"let a = JSON.parse(fs.readFileSync('package.json').toString()).scripts.compressImages.split(' '); let i = a.indexOf('image-web'); assert(i !== -1); assert(a[0] === 'image-web' || (a[0] === 'npx' && (a[1] === 'image-web' || ((a[1] === '--yes' || a[1] === '-y') && a[2] === 'image-web')))); let inp = require('process').argv[1]; if (inp !== undefined) a[i + 1] = inp; console.log(a.join(' ') + (a.includes('--legacyLogs') ? '' : ' --legacyLogs'));\" \"${{ needs.detectChanges.outputs.imagesFiles }}\"`"
 
     - name: "Uploading files to remote"
       if: ${{ needs.detectChanges.outputs.images == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
