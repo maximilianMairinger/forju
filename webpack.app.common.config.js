@@ -13,8 +13,15 @@ module.exports = () => {
             publicPath: "/",
         },
         resolve: {
-            extensions: ['.ts', '.js']
+            extensions: ['.ts', '.js'],
+            fallback: {
+                fs: false,
+                path: false
+            }
         },
+        // stats: {
+        //     errorDetails: true
+        // },
         module: {
             rules: [
                 {

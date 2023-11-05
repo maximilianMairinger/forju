@@ -4,6 +4,8 @@ import LandingSection from "../../../../_pageSection/landingSection/landingSecti
 import WorkSection from "../../../../_pageSection/workSection/workSection"
 import ServicesSection from "../../../../_pageSection/servicesSection/servicesSection"
 import TeamSection from "../../../../_pageSection/teamSection/teamSection"
+import FooterSection from "../../../../_pageSection/footerSection/footerSection"
+
 import TestSection from "../../../../_pageSection/testSection/testSection"
 import LazySectionedPage from "../lazySectionedPage"
 import HightlightAbleIcon from "../../../../../_icon/_highlightAbleIcon/highlightAbleIcon"
@@ -11,8 +13,6 @@ import ThoughtBubbleIcon from "../../../../../_icon/_highlightAbleIcon/thoughtBu
 import RocketIcon from "../../../../../_icon/_highlightAbleIcon/rocket/rocket"
 import TeamIcon from "../../../../../_icon/_highlightAbleIcon/teamIcon/teamIcon"
 import ContactIcon from "../../../../../_icon/_highlightAbleIcon/contact/contact"
-import { AliasList, ScrollProgressAlias, ScrollProgressAliasIndex } from "../../sectionedPage"
-import { Data } from "josm"
 
 
 
@@ -21,7 +21,6 @@ export default class HomePage extends LazySectionedPage {
   public iconIndex: {[key: string]: HightlightAbleIcon}
 
   constructor(baselink: string, sectionChangeCallback?: (section: string) => void) {
-    const subsectionHeight = [new Data(300), new Data(1600)]
 
     super(new ImportanceMap<() => Promise<any>, any>(
       {
@@ -39,6 +38,12 @@ export default class HomePage extends LazySectionedPage {
           new teamSection()
         ), val: () => import(/* webpackChunkName: "teamSection" */"../../../../_pageSection/teamSection/teamSection")
       },
+      {
+        key: new Import("contact", 1, (footerSection: typeof FooterSection) =>
+          new footerSection()
+        ), val: () => import(/* webpackChunkName: "footerSection" */"../../../../_pageSection/footerSection/footerSection")
+      },
+      
       // {
       //   key: new Import("lines", 1, (linesSection: typeof LinesSection) => 
       //     new linesSection()
@@ -96,7 +101,9 @@ export default class HomePage extends LazySectionedPage {
       //     new testSection()
       //   ), val: () => import(/* webpackChunkName: "testSection" */"../../../../_pageSection/testSection/testSection")
       // },
-    ), baselink, sectionChangeCallback)
+    ), baselink, sectionChangeCallback, undefined, {
+      footer: "team"
+    })
 
 
 

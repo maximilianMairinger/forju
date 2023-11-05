@@ -32,8 +32,8 @@ export default class PageManager extends Manager {
         ), val: () => import(/* webpackChunkName: "legalPage" */"../../_page/_blogPage/legalPage/legalPage")
       },
       {
-        key: new Import("contact", 10, (contactPage: typeof ContactPage) =>
-            new contactPage("contact", sectionChangeCallback)
+        key: new Import("contactSite", 10, (contactPage: typeof ContactPage) =>
+            new contactPage("contactSite", sectionChangeCallback)
         ), val: () => import(/* webpackChunkName: "contactPage" */"../../_page/_sectionedPage/_lazySectionedPage/contactPage/contactPage")
       },
       {
