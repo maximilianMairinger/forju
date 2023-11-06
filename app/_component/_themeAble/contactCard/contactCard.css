@@ -5,11 +5,12 @@
 }
 
 :host {
-  width: calc(150px + 12%);
+  width: calc(80px + 18%);
   height: auto;
   position: relative;
   margin: 20px 50px;
-  min-width: 300px;
+  min-width: 290px;
+  max-width: calc(100% - 50px);
 }
 
 c-image {

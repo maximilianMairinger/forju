@@ -96,3 +96,23 @@ contact-card p {
   margin-bottom: 5px;
 }
 
+@media (max-width: 863px) {
+  c-contact-card {
+    width: 50%;
+  }
+}
+
+
+@media (max-width: 650px) {
+  c-contact-card {
+    width: 80%;
+    margin-right: 10%;
+    margin-left: 10%;
+  }
+}
+
+/* @media (max-width: 460px) {
+  c-contact-card {
+    width: 100%;
+  }
+} */

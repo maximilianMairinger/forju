@@ -4,7 +4,6 @@ component-body {
   display: inline-block;
   width: 100%;
   position: relative;
-  min-width: 365px;
   /* todo bug */
   /* overflow: hidden; */
 }
