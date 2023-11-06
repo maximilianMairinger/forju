@@ -43,64 +43,6 @@ export default class HomePage extends LazySectionedPage {
           new footerSection()
         ), val: () => import(/* webpackChunkName: "footerSection" */"../../../../_pageSection/footerSection/footerSection")
       },
-      
-      // {
-      //   key: new Import("lines", 1, (linesSection: typeof LinesSection) => 
-      //     new linesSection()
-      //   ), val: () => import(/* webpackChunkName: "linesSection" */"../../../../_pageSection/linesSection/linesSection")
-      // },
-      // {
-      //   key: new Import("philosophy", 1, (philosophySection: typeof PhilosophySection) =>
-      //     new philosophySection()
-      //   ), val: () => import(/* webpackChunkName: "philosophySection" */"../../../../_pageSection/philosophySection/philosophySection")
-      // },
-      // {
-      //   key: new Import("services", 1, (workSection: typeof WorkSection) => {
-      //     const sec = new workSection()
-      //     for (let i = 0; i < sec.serviceSection.length -1; i++) {
-      //       const subSec = sec.serviceSection[i];
-      //       const heightData = subSec.resizeData().tunnel((rec) => rec.height)
-      //       heightData.get(subsectionHeight[i].set.bind(subsectionHeight[i]), false)
-      //     }
-
-      //     return sec
-      //   }), val: () => import(/* webpackChunkName: "workSection" */"../../../../_pageSection/workSection/workSection")
-      // },
-      // {
-      //   key: new Import("team", 1, (teamSection: typeof TeamSection) =>
-      //     new teamSection()
-      //   ), val: () => import(/* webpackChunkName: "teamSection" */"../../../../_pageSection/teamSection/teamSection")
-      // },
-      // {
-      //   key: new Import("team", 1, (teamMemberSection: typeof TeamMemberSection) =>
-      //     new teamMemberSection()
-      //   ), val: () => import(/* webpackChunkName: "teamMemberSection" */"../../../../_pageSection/teamMembersSection/teamMembersSection")
-      // },
-      // {
-      //   key: new Import("contact", 1, (contactSection: typeof ContactSection) =>
-      //     new contactSection()
-      //   ), val: () => import(/* webpackChunkName: "contactSection" */"../../../../_pageSection/contactSection/contactSection")
-      // },
-      // {
-      //   key: new Import("team2", 1, (testSection: typeof TestSection) =>
-      //     new testSection()
-      //   ), val: () => import(/* webpackChunkName: "testSection" */"../../../../_pageSection/testSection/testSection")
-      // },
-      // {
-      //   key: new Import("team3", 1, (testSection: typeof TestSection) =>
-      //     new testSection()
-      //   ), val: () => import(/* webpackChunkName: "testSection" */"../../../../_pageSection/testSection/testSection")
-      // },
-      // {
-      //   key: new Import("team4", 1, (testSection: typeof TestSection) =>
-      //     new testSection()
-      //   ), val: () => import(/* webpackChunkName: "testSection" */"../../../../_pageSection/testSection/testSection")
-      // },
-      // {
-      //   key: new Import("team5", 1, (testSection: typeof TestSection) =>
-      //     new testSection()
-      //   ), val: () => import(/* webpackChunkName: "testSection" */"../../../../_pageSection/testSection/testSection")
-      // },
     ), baselink, sectionChangeCallback, undefined, {
       footer: "team"
     })
@@ -108,7 +50,6 @@ export default class HomePage extends LazySectionedPage {
 
 
     this.iconIndex = {
-      philosophy: new ThoughtBubbleIcon(),
       services: new RocketIcon(),
       team: new TeamIcon(),
       contact: new ContactIcon()

@@ -1,0 +1,53 @@
+:host {
+  display: block;
+  position: relative;
+}
+
+component-body {
+  height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 0 10%;
+}
+
+c-big-logo-icon {
+  height: 400px;
+  width: 500px;
+  z-index: 1;
+}
+
+c-text-blob {
+  width: 50%;
+  --body-size: 100%;
+  margin-left: 100px;
+  
+}
+
+
+
+
+
+
+
+
+
+
+c-oval-icon {
+  --color: rgb(var(--primary-strongly-themed-background));
+  position: absolute;
+  /* left: -100px; */
+  width: auto;
+  height: 1000px;
+  bottom: -300px;
+  left: 0;
+  transform: translate(-280px, -558px) scale(2);
+
+}
+
+@media (max-width: 1190px) {
+  c-oval-icon {
+    height: 1500px;
+  }
+}

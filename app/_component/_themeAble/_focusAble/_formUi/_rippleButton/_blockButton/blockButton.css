@@ -23,5 +23,5 @@ button-text {
 move-me {
   width: inherit;
   height: inherit;
-  background-color: rgb(var(--background));
+  background-color: var(--background-color);
 }

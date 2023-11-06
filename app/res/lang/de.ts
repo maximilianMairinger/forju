@@ -14,6 +14,7 @@ export default {
     privacy: "Datenschutz",
     legalNotice: "Impressum",
     praesidium: "Präsidium",
-    presse: "Presse"
+    presse: "Presse",
+    us: "Über uns"
   }
 }

@@ -251,13 +251,28 @@ text-blob {
   pointer-events: all;
 }
 
+
+
 c-block-button {
+  --padding: 15px 30px;
+  font-size: 18px;
+  position: relative;
+  float: left;
+}
+
+c-block-button.secondary {
+  --background-color: rgba(0, 0, 0, .05);
+}
+
+c-block-button:not(:first-of-type) {
+  margin-left: 20px;
+}
+
+c-block-button.main {
   --background: var(--primary-theme);
   --text: var(--plain-background);
-  --border: unset;
-  --padding: 15px 50px;
-  font-size: 18px;
 }
+
 
 arrow-circle {
   background-color: rgb(var(--primary-themed-background));

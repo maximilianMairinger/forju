@@ -3,6 +3,7 @@ import {ImportanceMap, Import} from "../../../../../lib/lazyLoad"
 import NotFoundPage from "../../_page/notFound/notFound"
 import HomePage from "../../_page/_sectionedPage/_lazySectionedPage/homepage/homepage";
 import ContactPage from "../../_page/_sectionedPage/_lazySectionedPage/contactPage/contactPage";
+import AboutPage from "../../_page/_sectionedPage/_lazySectionedPage/aboutPage/aboutPage";
 import { declareComponent } from "../../../../../lib/declareComponent"
 import HighlightAbleIcon from "../../../_icon/_highlightAbleIcon/highlightAbleIcon";
 import LegalPage from "../../_page/_blogPage/legalPage/legalPage"
@@ -24,6 +25,11 @@ export default class PageManager extends Manager {
         key: new Import("contactSite", 10, (contactPage: typeof ContactPage) =>
             new contactPage("contactSite", sectionChangeCallback)
         ), val: () => import(/* webpackChunkName: "contactPage" */"../../_page/_sectionedPage/_lazySectionedPage/contactPage/contactPage")
+      },
+      {
+        key: new Import("about", 10, (aboutPage: typeof AboutPage) =>
+            new aboutPage("about", sectionChangeCallback)
+        ), val: () => import(/* webpackChunkName: "aboutPage" */"../../_page/_sectionedPage/_lazySectionedPage/aboutPage/aboutPage")
       },
       {
         key: new Import("impressum", 10, (legalPage: typeof LegalPage) =>
