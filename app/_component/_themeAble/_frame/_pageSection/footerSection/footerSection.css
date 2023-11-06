@@ -53,8 +53,11 @@ h3 {
 
 @media (max-width: 1060px) {
   component-body {
-    height: 500px;
+    height: 550px;
     flex-direction: column;
+  }
+  component-body {
+    padding-bottom: 100px;
   }
   h-col {
     margin: 0 45px;
