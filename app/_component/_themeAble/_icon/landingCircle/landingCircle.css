@@ -1,3 +1,3 @@
 :host {
-  --color: rgb(var(--secondary-themed-background));
+  --color: rgb(var(--secondary-theme-alt));
 }

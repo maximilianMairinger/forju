@@ -3,10 +3,11 @@
   --plain-text: 0, 0, 0;
   --primary-themed-background: 244, 255, 254;
   --primary-strongly-themed-background: 214, 255, 254;
-  --secondary-themed-background: 255, 143, 102;
+  --secondary-themed-background: 255, 241, 236;
   --plain-background: 255, 255, 255;
   --primary-theme: 255, 58, 174;
   --secondary-theme: 254, 97, 39;
+  --secondary-theme-alt: 255, 143, 102;
   --tertiary-theme: 91, 244, 236;
 
   --soft-shadow: 0px 0px 30px 0px rgba(0,0,0,0.08);

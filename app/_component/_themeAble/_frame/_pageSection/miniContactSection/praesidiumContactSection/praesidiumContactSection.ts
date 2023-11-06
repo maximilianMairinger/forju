@@ -1,8 +1,8 @@
-import declareComponent from "../../../../../lib/declareComponent"
-import PageSection from "../pageSection"
+import declareComponent from "../../../../../../lib/declareComponent"
+import MiniContactSection from "../miniContactSection"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 
-export default class PraesidiumContactSection extends PageSection {
+export default class PraesidiumContactSection extends MiniContactSection {
   protected body: BodyTypes
 
   constructor() {

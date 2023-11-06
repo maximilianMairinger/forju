@@ -3,7 +3,7 @@
   position: absolute;
   width: 25px;
   height: 25px;
-  --color: rgb(var(--secondary-themed-background));
+  --color: rgb(var(--secondary-theme-alt));
   --col: var(--color) 
 }
 

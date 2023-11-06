@@ -206,7 +206,7 @@ c-big-video {
 
   c-fidget.a {
 
-    --color: rgb(var(--secondary-themed-background));
+    --color: rgb(var(--secondary-theme-alt));
   }
   
   landing-circle-wrapper {

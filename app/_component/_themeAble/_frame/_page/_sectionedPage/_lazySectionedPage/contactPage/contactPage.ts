@@ -4,9 +4,9 @@ import LazySectionedPage from "../lazySectionedPage"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 import { Import, ImportanceMap } from "../../../../../../../lib/lazyLoad"
 import ThoughtBubbleIcon from "../../../../../_icon/_highlightAbleIcon/thoughtBubble/thoughtBubble"
-import RocketIcon from "../../../../../_icon/_highlightAbleIcon/rocket/rocket"
 import TeamIcon from "../../../../../_icon/_highlightAbleIcon/teamIcon/teamIcon"
 import ContactIcon from "../../../../../_icon/_highlightAbleIcon/contact/contact"
+import FooterSection from "../../../../_pageSection/footerSection/footerSection"
 
 export default class ContactPage extends LazySectionedPage {
   public iconIndex: { [key: string]: HighlightAbleIcon; };
@@ -15,28 +15,34 @@ export default class ContactPage extends LazySectionedPage {
   constructor(baselink: string, sectionChangeCallback?: (section: string) => void) {
     super(new ImportanceMap<() => Promise<any>, any>(
       {
-        key: new Import("", 1, (contactSection: any) =>
+        key: new Import("contact", 1, (contactSection: any) =>
           new contactSection()
         ), val: () => import(/* webpackChunkName: "generalContactSection" */"../../../../_pageSection/generalContactSection/generalContactSection")
       },
       {
         key: new Import("praesidium", 1, (praesidiumContactSection: any) =>
           new praesidiumContactSection()
-        ), val: () => import(/* webpackChunkName: "praesidiumContactSection" */"../../../../_pageSection/praesidiumContactSection/praesidiumContactSection")
+        ), val: () => import(/* webpackChunkName: "praesidiumContactSection" */"../../../../_pageSection/miniContactSection/praesidiumContactSection/praesidiumContactSection")
       },
-      // {
-      //   key: new Import("presse", 1, (presseContactSection: any) =>
-      //     new presseContactSection()
-      //   ), val: () => import(/* webpackChunkName: "presseContactSection" */"../../../../_pageSection/presseContactSection/presseContactSection")
-      // },
-    ), baselink, sectionChangeCallback)
+      {
+        key: new Import("presse", 1, (presseContactSection: any) =>
+          new presseContactSection()
+        ), val: () => import(/* webpackChunkName: "presseContactSection" */"../../../../_pageSection/miniContactSection/presseContactSection/presseContactSection")
+      },
+      {
+        key: new Import("footer", 1, (footerSection: typeof FooterSection) =>
+          new footerSection()
+        ), val: () => import(/* webpackChunkName: "footerSection" */"../../../../_pageSection/footerSection/footerSection")
+      },
+    ), baselink, sectionChangeCallback, undefined, {
+      footer: "presse"
+    })
 
 
 
     this.iconIndex = {
-      philosophy: new ThoughtBubbleIcon(),
-      project: new RocketIcon(),
-      team: new TeamIcon(),
+      praesidium: new ThoughtBubbleIcon(),
+      presse: new TeamIcon(),
       contact: new ContactIcon()
     }
 

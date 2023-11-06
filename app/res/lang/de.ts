@@ -12,6 +12,8 @@ export default {
     websites: "Websites",
     contentCreation: "Inhaltserstellung",
     privacy: "Datenschutz",
-    legalNotice: "Impressum"
+    legalNotice: "Impressum",
+    praesidium: "Präsidium",
+    presse: "Presse"
   }
 }

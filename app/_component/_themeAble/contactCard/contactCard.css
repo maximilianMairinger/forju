@@ -1,6 +1,7 @@
 :host {
   display: block;
   position: relative;
+  --background: var(--primary-themed-background)
 }
 
 :host {
@@ -18,7 +19,7 @@ c-image {
 }
 
 image-background {
-  background-color: rgb(var(--primary-themed-background));
+  background-color: rgb(var(--background));
   border-radius: 20px;
   box-shadow: var(--soft-shadow);
   position: absolute;
@@ -35,7 +36,7 @@ background-block {
   position: absolute;
   bottom: 0;
   right: 30px;
-  background-color: rgb(var(--secondary-themed-background));
+  background-color: rgb(var(--secondary-theme-alt));
 }
 
 c-spike-shadow-icon {

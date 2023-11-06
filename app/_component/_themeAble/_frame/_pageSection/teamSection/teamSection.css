@@ -69,7 +69,7 @@ contact-card background-block {
   position: absolute;
   bottom: 0;
   right: 30px;
-  background-color: rgb(var(--secondary-themed-background));
+  background-color: rgb(var(--secondary-theme-alt));
 }
 
 c-spike-shadow-icon.b {
