@@ -1,8 +1,43 @@
 :host {
   display: block;
   position: relative;
+  background-color: rgb(var(--primary-themed-background));
 }
 
 component-body {
-  height: 800px;
+  height: 500px;
+  padding: 50px calc(5% - 12px);
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+component-body > *:not(:first-child) {
+  margin-left: 50px;
+}
+
+.logo {
+  width: 400px;
+  height: 400px;
+  margin-right: 150px;
+  --accent: rgb(var(--primary-theme));
+}
+
+h-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  min-height: 150px;
+}
+
+h-col > *:not(:first-child) {
+  font-weight: normal;
+}
+h-col > *:not(:first-child) {
+  margin-top: 5px;
+}
+
+h3 {
+  font-size: 1.3em;
 }

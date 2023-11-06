@@ -4,6 +4,7 @@
 }
 component-body {
   min-height: 700px;
+  padding-bottom: 100px;
 }
 
 c-spike-shadow-icon.a {

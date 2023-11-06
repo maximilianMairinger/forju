@@ -17,11 +17,6 @@
   color: rgba(var(--text), .7);
 }
 
-:host a {
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-block;
-}
 
 slot {
   font-weight: inherit;
@@ -50,6 +45,9 @@ a {
   cursor: inherit;
   position: relative;
   transition: color .15s;
+  display: flex;
+  cursor: pointer;
+  text-decoration: none;
 }
 
 c-external-link-icon {

@@ -3,7 +3,7 @@ import ThemeAble, { Theme } from "../themeAble";
 import { Data, DataCollection, DataSubscription } from "josm"
 import * as domain from "../../../lib/domain"
 import delay from "delay"
-// import ExternalLinkIcon from "../_icon/externalLink/externalLink"
+import ExternalLinkIcon from "../_icon/externalLink/externalLink"
 import { Prim, EventListener } from "extended-dom";
 
 import { PrimitiveRecord } from "../../../lib/record";
@@ -17,7 +17,7 @@ export default class Link extends ThemeAble {
   protected slotElem = this.sr.querySelector("slot")
   private slidyWrapper = this.q("slidy-underline-wrapper")
   private slidy = this.slidyWrapper.childs()
-  // private externalIcon = new ExternalLinkIcon()
+  private externalIcon = new ExternalLinkIcon()
 
   public mouseOverAnimation?: () => void
   public mouseOutAnimation?: () => void
@@ -312,8 +312,8 @@ export default class Link extends ThemeAble {
   private updateHref() {
     if (!this.link()) return
     let meta = domain.linkMeta(this.link(), this.domainLevel)
-    // if (!meta.isOnOrigin) this.aElem.apd(this.externalIcon)
-    // else this.externalIcon.remove()
+    if (!meta.isOnOrigin) this.aElem.apd(this.externalIcon)
+    else this.externalIcon.remove()
     this.aElem.href = meta.href
   }
 
