@@ -1,6 +1,7 @@
 :host {
   display: block;
   position: relative;
+  box-sizing: border-box;
 }
 
 component-body {
@@ -8,23 +9,51 @@ component-body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-sizing: border-box;
-  padding: 0 10%;
 }
 
 c-big-logo-icon {
   height: 400px;
-  width: 500px;
+  width: min(500px, 80vw);
   z-index: 1;
+  
 }
 
 c-text-blob {
   width: 50%;
   --body-size: 100%;
   margin-left: 100px;
-  
+  max-width: 90%;
 }
 
+
+@media (max-width: 1350px) {
+  component-body {
+    flex-direction: column;
+    height: max-content;
+    padding-bottom: 100px;
+  }
+
+  c-text-blob {
+    margin-left: 0;
+    width: 80%;
+  }
+}
+
+
+@media (max-width: 555px) {
+  c-big-logo-icon {
+    margin-top: 50px;
+    height: 70vw;
+    
+  }
+}
+
+@media (max-width: 300px) {
+  c-big-logo-icon {
+    width: 240px;
+    height: 210px;
+  }
+}
 
 
 
