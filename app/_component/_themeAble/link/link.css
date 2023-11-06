@@ -5,7 +5,7 @@
 
 :host {
   color: rgb(var(--text));
-  user-select: all;
+  user-select: text;
   display: inline-block;
 }
 
