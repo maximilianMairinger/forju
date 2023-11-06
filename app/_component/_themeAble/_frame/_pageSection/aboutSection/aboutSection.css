@@ -11,11 +11,21 @@ component-body {
   justify-content: center;
 }
 
-c-big-logo-icon {
-  height: 400px;
-  width: min(500px, 80vw);
+.logoBox {
   z-index: 1;
-  
+  margin-bottom: 80px;
+}
+
+c-block-button {
+  --background: var(--primary-theme);
+  --text: var(--plain-background);
+}
+
+c-big-logo-icon {
+  height: 180px;
+  width: min(500px, 80vw);
+  margin-top: 150px;
+  margin-bottom: 10px;
 }
 
 c-text-blob {
@@ -42,8 +52,7 @@ c-text-blob {
 
 @media (max-width: 555px) {
   c-big-logo-icon {
-    margin-top: 50px;
-    height: 70vw;
+    height: 32vw;
     
   }
 }
@@ -51,7 +60,7 @@ c-text-blob {
 @media (max-width: 300px) {
   c-big-logo-icon {
     width: 240px;
-    height: 210px;
+    height: 96px;
   }
 }
 
