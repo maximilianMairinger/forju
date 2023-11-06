@@ -8,7 +8,7 @@ export default class MiniContactSection extends PageSection {
   constructor() {
     super()
 
-
+    this.componentBody.addClass("cardsCount" + this.q("c-contact-card", true).length)
   }
 
   stl() {

@@ -19,7 +19,7 @@ c-text-blob {
   position: relative;
   float: left;
   --body-size: 100%;
-  min-width: 350px;
+  min-width: 250px;
 }
 
 c-contact-card {
@@ -31,27 +31,61 @@ c-contact-card:first-of-type {
 }
 
 
-@media (max-width: 1280px) {
-  c-contact-card:first-of-type {
+@media (max-width: 1180px) {
+  component-body.cardsCount2 c-contact-card:first-of-type {
     margin-left: 50px;
   }
-  c-text-blob {
-    margin-right: 100%;
+  component-body.cardsCount2 c-text-blob {
+    margin-right: 35%;
     margin-top: 100px;
   }
-  component-body {
+  component-body.cardsCount2 {
     flex-wrap: wrap;
-
   }
-  c-contact-card {
+  component-body.cardsCount2 c-contact-card {
     margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+  component-body.cardsCount2 c-contact-card:first-of-type {
+    margin-left: 0;
+  }
+  component-body.cardsCount2 c-contact-card:last-of-type {
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 1080px) {
+  component-body.cardsCount1 c-contact-card:first-of-type {
+    margin-left: 50px;
+  }
+  component-body.cardsCount1 c-text-blob {
+    margin-right: 35%;
+    margin-top: 100px;
+  }
+  component-body.cardsCount1 {
+    flex-wrap: wrap;
+  }
+  component-body.cardsCount1 c-contact-card {
+    margin-top: 20px;
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+  component-body.cardsCount1 c-contact-card:first-of-type {
+    margin-left: 0;
+  }
+  component-body.cardsCount1 c-contact-card:last-of-type {
+    margin-right: 0;
   }
 }
 
 
-@media (max-width: 920px) {
+
+@media (max-width: 810px) {
+  c-text-blob {
+    margin-right: 0 !important;
+    margin-top: 100px;
+  }
   c-contact-card:first-of-type {
     margin-left: 0;
   }
@@ -63,8 +97,24 @@ c-contact-card:first-of-type {
     justify-content: center;
   }
   c-contact-card {
-    margin-left: 0;
-    margin-right: 0;
     margin-bottom: 20px;
   }
+
+  c-contact-card {
+    width: calc(15% + 300px);
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  component-body {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
 }
+
+
+/* @media (max-width: 560px) {
+  c-contact-card {
+    width: 100%
+  }
+} */
