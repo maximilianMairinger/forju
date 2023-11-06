@@ -64,7 +64,7 @@ c-text-blob {
 
 
 c-oval-icon {
-  --color: rgb(var(--primary-strongly-themed-background));
+  --color: rgb(var(--tertiary-strongly-themed-background));
   position: absolute;
   /* left: -100px; */
   width: auto;

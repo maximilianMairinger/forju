@@ -1,7 +1,7 @@
 :host {
   display: block;
   position: relative;
-  background-color: rgb(var(--primary-themed-background));
+  background-color: rgb(var(--tertiary-themed-background));
 }
 
 
@@ -86,7 +86,7 @@ under-section.b {
 
 
 c-oval-icon {
-  --color: rgb(var(--primary-themed-background));
+  --color: rgb(var(--tertiary-themed-background));
   position: absolute;
   /* left: -100px; */
   width: auto;

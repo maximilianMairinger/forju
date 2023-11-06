@@ -1,7 +1,7 @@
 :host {
   display: block;
   position: relative;
-  background-color: rgb(var(--primary-themed-background));
+  background-color: rgb(var(--tertiary-themed-background));
 }
 
 component-body {

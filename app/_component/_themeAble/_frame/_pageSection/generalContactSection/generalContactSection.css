@@ -34,7 +34,7 @@ c-block-button.project {
 }
 
 .mitglied {
-  --background: var(--primary-themed-background);
+  --background: var(--tertiary-themed-background);
 }
 
 c-block-button {

@@ -1,7 +1,7 @@
 :host {
   display: block;
   position: relative;
-  --background: var(--primary-themed-background)
+  --background: var(--tertiary-themed-background)
 }
 
 :host {

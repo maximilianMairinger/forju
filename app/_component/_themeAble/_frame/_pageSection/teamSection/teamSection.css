@@ -14,7 +14,7 @@ c-spike-shadow-icon.a {
   width: 460px;
   height: 460px;
   transform: rotateZ(248deg);
-  --color: rgb(var(--primary-strongly-themed-background));
+  --color: rgb(var(--tertiary-strongly-themed-background));
 }
 
 under-section {
@@ -52,7 +52,7 @@ contact-card c-image {
 }
 
 contact-card image-background {
-  background-color: rgb(var(--primary-themed-background));
+  background-color: rgb(var(--tertiary-themed-background));
   border-radius: 20px;
   box-shadow: var(--soft-shadow);
   position: absolute;

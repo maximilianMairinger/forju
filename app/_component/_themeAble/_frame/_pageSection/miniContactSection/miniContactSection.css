@@ -9,7 +9,7 @@ component-body {
   align-items: center;
   box-sizing: border-box;
   min-height: 550px;
-  background-color: rgb(var(--primary-themed-background));
+  background-color: rgb(var(--tertiary-themed-background));
   padding-bottom: 40px;
 }
 
