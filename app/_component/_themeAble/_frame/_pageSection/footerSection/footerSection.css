@@ -13,22 +13,27 @@ component-body {
   align-items: center;
 }
 
-component-body > *:not(:first-child) {
-  margin-left: 50px;
-}
+
 
 .logo {
   width: 400px;
-  height: 400px;
-  margin-right: 150px;
+  height: 300px;
+  margin-right: calc(18% - 150px);
   --accent: rgb(var(--primary-theme));
 }
+
+content-body {
+  display: flex;
+  flex-direction: row;
+}
+
 
 h-col {
   display: flex;
   flex-direction: column;
-  min-width: 200px;
+  min-width: 9vw;
   min-height: 150px;
+  margin-left: 50px;
 }
 
 h-col > *:not(:first-child) {
@@ -41,3 +46,40 @@ h-col > *:not(:first-child) {
 h3 {
   font-size: 1.3em;
 }
+
+
+
+
+@media (max-width: 1060px) {
+  component-body {
+    flex-direction: column;
+  }
+  h-col {
+    margin: 0 45px;
+    min-width: 0;
+  }
+  .logo {
+    width: min(483px, 95%);
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 560px) {
+  content-body {
+    flex-direction: column;
+    width: 100%;
+  }
+  component-body {
+    height: 800px;
+  }
+  h-col {
+    width: 100%;
+    margin-left: 6%;
+    margin-top: 20px;
+    min-height: unset;
+  }
+  .logo {
+    height: 50vw;
+  }
+}
+
