@@ -97,7 +97,6 @@
     "@types/audio-play": "^2.3.0",
     "@types/multimap": "^1.1.2",
     "ajaon": "^1.5.11",
-    "animated-scroll-to": "^2.3.0",
     "animation-frame-delta": "^2.8.6",
     "audio-loader": "^1.0.3",
     "audio-play": "^2.3.1",
