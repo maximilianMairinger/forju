@@ -1,6 +1,5 @@
 import Page from "../page";
 import * as domain from "./../../../../../lib/domain"
-import scrollTo from "animated-scroll-to";
 import WaapiEasing from "waapi-easing";
 import { PriorityPromise, ResourcesMap } from "../../../../../lib/lazyLoad";
 import PageSection from "../../_pageSection/pageSection";
@@ -10,7 +9,6 @@ import { constructIndex } from "key-index"
 import HightlightAbleIcon from "../../../_icon/_highlightAbleIcon/highlightAbleIcon"
 import localSettings from "./../../../../../lib/localSettings"
 const SyncProm = require("sync-p")
-const syncPromAll = require("sync-p/all")
 
 
 
@@ -369,17 +367,14 @@ export default abstract class SectionedPage extends Page {
         let ls = this.on("keydown", (e) => {
           e.stopImmediatePropagation()
         })
-        
-        await scrollTo(scrollToPos, {
-          cancelOnUserAction: true,
-          verticalOffset: this.verticalOffset,
+
+        debugger
+        await this.scroll({y: scrollToPos + this.verticalOffset}, {
           speed: scrollAnimationSpeed,
-          elementToScroll: this,
           easing
-        })
-  
+        }, false)
+
         ls.deactivate()
-  
       }
       else {
         this.scrollTop = this.verticalOffset + scrollToPos
@@ -936,13 +931,12 @@ export default abstract class SectionedPage extends Page {
       this.switchSectionElem(section)
 
 
-      await scrollTo(section.offsetTop, {
-        cancelOnUserAction: true,
-        verticalOffset,
+
+      debugger
+      await this.scroll({y: section.offsetTop + verticalOffset}, {
         speed,
-        elementToScroll: this,
         easing
-      })
+      }, false)
 
       
       
