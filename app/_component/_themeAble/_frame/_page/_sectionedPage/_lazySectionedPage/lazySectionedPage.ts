@@ -1,7 +1,5 @@
 import SectionedPage, { QuerySelector, AliasList, scrollToPadding } from "../sectionedPage";
 import lazyLoad, { ImportanceMap, ResourcesMap } from "../../../../../../lib/lazyLoad";
-import LoadingIndecator from "../../../../../_indecator/loadingIndecator/loadingIndecator";
-import * as domain from "../../../../../../lib/domain";
 import constructAttachToPrototype from "attatch-to-prototype";
 
 export default abstract class LazySectionedPage extends SectionedPage {
