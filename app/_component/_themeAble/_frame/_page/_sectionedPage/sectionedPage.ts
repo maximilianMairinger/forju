@@ -368,7 +368,6 @@ export default abstract class SectionedPage extends Page {
           e.stopImmediatePropagation()
         })
 
-        debugger
         await this.scroll({y: scrollToPos + this.verticalOffset}, {
           speed: scrollAnimationSpeed,
           easing
@@ -932,7 +931,6 @@ export default abstract class SectionedPage extends Page {
 
 
 
-      debugger
       await this.scroll({y: section.offsetTop + verticalOffset}, {
         speed,
         easing
