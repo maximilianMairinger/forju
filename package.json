@@ -14,16 +14,16 @@
     "build": "     concurrently \"npm run buildProdServer\"    \"npm run buildProdApp\"                    \"npm run buildProdSw\"      \"npm run buildProdReplServer\"                                                                                                  -n \"serv,_app,sewo,rese\"                -c \"bgBlue.bold,bgMagenta.bold,bgGreenBright.bold,bgCyan.bold\"",
     "start": "wait-on server/dist && node ./server/dist/server.js",
     "startRepl": "wait-on replServer/dist && node ./replServer/dist/server.js",
-    "buildProdSw": "rollup --config rollup.sw.prod.config.js",
-    "buildProdServer": "rollup --config rollup.server.prod.config.js",
+    "buildProdSw": "rollup --config rollup.sw.prod.config.mjs",
+    "buildProdServer": "rollup --config rollup.server.prod.config.mjs",
     "buildProdApp": "npm run pugToTypesOnce && webpack --config webpack.app.prod.config.js",
     "buildProdReplApp": "webpack --config webpack.replApp.prod.config.js",
-    "buildProdReplServer": "rollup --config rollup.replServer.prod.config.js",
-    "buildDevSw": "rollup --config rollup.sw.dev.config.js -w",
-    "buildDevServer": "rollup --config rollup.server.dev.config.js -w",
+    "buildProdReplServer": "rollup --config rollup.replServer.prod.config.mjs",
+    "buildDevSw": "rollup --config rollup.sw.dev.config.mjs -w",
+    "buildDevServer": "rollup --config rollup.server.dev.config.mjs -w",
     "buildDevApp": "npm run pugToTypesOnce && webpack --config webpack.app.dev.config.js",
-    "buildDevReplApp": "webpack --config webpack.replApp.dev.config.js",
-    "buildDevReplServer": "rollup --config rollup.replServer.dev.config.js -w"
+    "buildDevReplApp": "webpack --config webpack.replApp.dev.config.mjs",
+    "buildDevReplServer": "rollup --config rollup.replServer.dev.config.mjs -w"
   },
   "repository": {
     "type": "git",
