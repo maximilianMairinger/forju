@@ -5,6 +5,7 @@ on:
     branches:
     - master
 
+    
 jobs:
   # JOB to run change detection
   detectChanges:
