@@ -113,14 +113,14 @@ export default class Image extends Component {
   }
 
   private newLoadedPromise(resolution: typeof resesList[number]) {
-    this.loaded[resolution] = new ResablePromise((res, rej) => {
+    this.loaded[resolution] = new ResablePromise<void>((res, rej) => {
       this.elems[resolution].img.onload = () => {
         res();
       }
       this.elems[resolution].img.onerror = () => {
         (rej as any)(new Error("Image failed to load. Url: " + this.elems[resolution].img.src));
       }
-    })
+    }) as any
   }
 
   private wasAtStageIndex = {}
