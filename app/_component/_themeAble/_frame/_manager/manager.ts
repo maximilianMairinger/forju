@@ -1,5 +1,5 @@
 import Frame from "./../frame";
-import LoadingIndecator from "../../../_indecator/loadingIndecator/loadingIndecator";
+import LoadingIndecator from "../../../_indicator/loadingIndicator/loadingIndicator";
 import * as domain from "../../../../lib/domain";
 import lazyLoad, { ImportanceMap, Import, ResourcesMap, PriorityPromise } from "../../../../lib/lazyLoad";
 import SectionedPage from "../_page/_sectionedPage/sectionedPage";

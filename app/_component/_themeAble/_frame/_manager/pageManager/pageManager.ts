@@ -7,6 +7,7 @@ import AboutPage from "../../_page/_sectionedPage/_lazySectionedPage/aboutPage/a
 import { declareComponent } from "../../../../../lib/declareComponent"
 import HighlightAbleIcon from "../../../_icon/_highlightAbleIcon/highlightAbleIcon";
 import LegalPage from "../../_page/_blogPage/legalPage/legalPage"
+import GhostBlogPage from "../../_page/_blogPage/ghostBlogPage/ghostBlogPage"
 
 
 
@@ -35,6 +36,11 @@ export default class PageManager extends Manager {
         key: new Import("impressum", 10, (legalPage: typeof LegalPage) =>
             new legalPage()
         ), val: () => import(/* webpackChunkName: "legalPage" */"../../_page/_blogPage/legalPage/legalPage")
+      },
+      {
+        key: new Import("blog", 10, (ghostBlogPage: typeof GhostBlogPage) =>
+            new ghostBlogPage()
+        ), val: () => import(/* webpackChunkName: "ghostBlogPage" */"../../_page/_blogPage/ghostBlogPage/ghostBlogPage")
       },
       {
         key: new Import("", 60, (notFoundPage: typeof NotFoundPage) =>

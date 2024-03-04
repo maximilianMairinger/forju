@@ -1,8 +1,7 @@
 import Component from "../component"
 import declareComponent from "./../../lib/declareComponent"
 import { loadRecord } from "../_themeAble/_frame/frame"
-import { Data } from "josm"
-import ResablePromise from "../../lib/resablePromise"
+import { ResablePromise } from "more-proms"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 
 const unionSymbol = "@"
@@ -114,14 +113,14 @@ export default class Image extends Component {
   }
 
   private newLoadedPromise(resolution: typeof resesList[number]) {
-    this.loaded[resolution] = new ResablePromise((res, rej) => {
+    this.loaded[resolution] = new ResablePromise<void>((res, rej) => {
       this.elems[resolution].img.onload = () => {
         res();
       }
       this.elems[resolution].img.onerror = () => {
         (rej as any)(new Error("Image failed to load. Url: " + this.elems[resolution].img.src));
       }
-    })
+    }) as any
   }
 
   private wasAtStageIndex = {}
@@ -136,7 +135,7 @@ export default class Image extends Component {
     const wasLoaded = loadingCache[src] && loadingCache[src][loadStageAtCall] && loadingCache[src][loadStageAtCall][res]
     
 
-    if (this.loaded[res].setteled) this.newLoadedPromise(res)
+    if (this.loaded[res].settled) this.newLoadedPromise(res)
 
     
 

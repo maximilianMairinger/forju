@@ -2,10 +2,7 @@ import setup from "./setup"
 
 
 
-setup("forju").then(async ({app, db}) => {
+setup().then(async (app) => {
 
-  
-  app.post("/echo", (req, res) => {
-    res.send(req.body)
-  })
+
 })

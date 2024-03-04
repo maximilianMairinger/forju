@@ -123,7 +123,7 @@ const publicPath = "./public"
 
 export default function (dbName_DBConfig: string | DBConfig, indexUrl?: string): Promise<{ db: MongoDB.Db, app: Awaited<ReturnType<typeof configureExpressApp>> }>
 export default function (dbName_DBConfig?: undefined | null, indexUrl?: string): ReturnType<typeof configureExpressApp>;
-export default function (dbName_DBConfig?: string | null | undefined | DBConfig, indexUrl: string = "/"): any {
+export default function (dbName_DBConfig?: string | null | undefined | DBConfig, indexUrl: string = "*"): any {
   const app = configureExpressApp(indexUrl, publicPath)
 
   if (dbName_DBConfig) {

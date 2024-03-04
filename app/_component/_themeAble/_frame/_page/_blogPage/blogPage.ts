@@ -7,10 +7,10 @@ import { dirString, domainIndex } from "../../../../../lib/domain";
 
 export default abstract class BlogPage extends Page {
 
-  constructor(content: string | HTMLElement[]) {
+  constructor(content?: string | HTMLElement[]) {
     super()
     
-    this.body.slotElem.apd(...(content instanceof Array ? content : [content]))
+    if (content !== undefined) this.body.slotElem.apd(...(content instanceof Array ? content : [content]))
   }
 
 
