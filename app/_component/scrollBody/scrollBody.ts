@@ -12,6 +12,7 @@ import { nextFrame } from "animation-frame-delta";
 const easing = new WAAPIEasing("easeInOut").function
 const wrapperElemName = "scroll-body-element-wrapper"
 
+
 export default class ScrollBody extends Component<false> {
   protected body: BodyTypes
   
@@ -30,8 +31,6 @@ export default class ScrollBody extends Component<false> {
 
   constructor() {
     super(false)
-
-    
 
   }
 
@@ -58,7 +57,19 @@ export default class ScrollBody extends Component<false> {
     })
   }
 
+  private _animationDurationPx = 200
+  public animationDurationPx(to: number) {
+    this._animationDurationPx = +to
+  }
+
+  private _propagateFullViewProgressAttr: string
+  propagateFullViewProgressAttr(attr: string) {
+    this._propagateFullViewProgressAttr = attr
+  }
+
   async childAddedCallback(child: Element) {
+
+    const probRange = inRange(0, 1)
     
     await nextFrame()
     await delay(0)
@@ -67,17 +78,42 @@ export default class ScrollBody extends Component<false> {
     if (this.scrollEnabled.x.get()) dirs.push("x")
     if (this.scrollEnabled.y.get()) dirs.push("y")
 
+
+    const mkPropagateFullViewProgressData = (progFix: string) => {
+      const attr = this._propagateFullViewProgressAttr + progFix
+      const propagateFullViewProgressData = this._propagateFullViewProgressAttr !== undefined && child[attr] !== undefined ? new Data(0) : undefined
+      if (propagateFullViewProgressData !== undefined) {
+        propagateFullViewProgressData.get((prog) => {
+          child[attr](prog)
+        }, false)
+      }
+      return propagateFullViewProgressData
+    }
+
+    const propagateFullViewProgressDatas = {} as {x: Data<number>, y: Data<number>}
+
+    if (dirs.length === 1) {
+      propagateFullViewProgressDatas[dirs[0]] = mkPropagateFullViewProgressData("")
+    }
+    else {
+      for (const dir of dirs) {
+        propagateFullViewProgressDatas[dir] = mkPropagateFullViewProgressData(dir.toUpperCase())
+      }
+    }
     
+
+
+    // that we use a datacollection here is a dirty fix. If we dont then somehow the this.body.scrollBody.scrollData(false, dir) subscription in anim will not work
     new DataCollection(this.fadeInOnScrollData).get((fadeInOnScroll) => {
       
       if (fadeInOnScroll) {
         dirs.map((dir) => {
-
+          const propagateFullViewProgressData = propagateFullViewProgressDatas[dir]
           
           
   
           
-          const animationDurationPx = 200
+          const animationDurationPx = this._animationDurationPx
           
           
           const wid = dir === "x" ? "Width" : "Height"
@@ -88,7 +124,7 @@ export default class ScrollBody extends Component<false> {
 
 
             const width = this[`offset${wid}`]
-            
+
             const scrollPosRight = scrollPosLeft + width
             const isOnScreen = scrollPosLeft + animationDurationPx <= rightOfElem && scrollPosRight - animationDurationPx >= leftOfElem
             if (isOnScreen) {
@@ -112,13 +148,10 @@ export default class ScrollBody extends Component<false> {
             return 0
           }
 
-          const animProg = this.scrollData(false, dir).tunnel(f)
 
 
-
-
-            
-
+          
+          const animProg = this.body.scrollBody.scrollData(false, dir).tunnel(f)
           child.anim([
             {offset: 0, opacity: .1, scale: .9}, 
             {offset: 1, opacity: 1, scale: .999}
@@ -128,6 +161,31 @@ export default class ScrollBody extends Component<false> {
           this.updateFadeInOnScrollChildAnimLs.push(() => {
             animProg.set(f(this[`scroll${dir === "x" ? "Left" : "Top"}`]))
           })
+        
+          
+
+          if (propagateFullViewProgressData !== undefined) {
+            this.body.scrollBody.scrollData(false, dir).get((scrollProg) => {
+
+              const leftOfElem = (child as HTMLElement)[dir === "x" ? "offsetLeft" : "offsetTop"]
+              const widthOfElem = (child as HTMLElement)[dir === "x" ? "offsetWidth" : "offsetHeight"]
+              const rightOfElem = (child as HTMLElement)[dir === "x" ? "offsetLeft" : "offsetTop"] + widthOfElem
+              const widthOfContainer = this[`offset${wid}`]
+
+              const widthWhereElemIsVis = widthOfContainer + widthOfElem 
+              
+
+              propagateFullViewProgressData.set(probRange((scrollProg - leftOfElem) / widthWhereElemIsVis))
+            })
+          }
+
+          
+
+
+
+            
+
+          
         })
         
       }
@@ -255,7 +313,7 @@ export default class ScrollBody extends Component<false> {
               marginEnd.set(scrollAbleLength + paddingEnd)
             })
             
-            return this.scrollData(end, dir).scrollTrigger(!end ? marginStart : marginEnd)
+            return this.body.scrollBody.scrollData(end, dir).scrollTrigger(!end ? marginStart : marginEnd)
           })
           
            
@@ -311,7 +369,7 @@ export default class ScrollBody extends Component<false> {
   }
 
   private scrollForwards(directionSign: 1 | -1 = 1, dir?: "x" | "y", diff_toNext?: number | true) {
-    const currentScrollPos = this.scrollData(false, dir)
+    const currentScrollPos = this.body.scrollBody.scrollData(false, dir)
     const hasScrollSnap = this.hasAttribute("scrollSnap")
     
     let toNext = diff_toNext === true ? true : hasScrollSnap
@@ -362,7 +420,7 @@ export default class ScrollBody extends Component<false> {
         const sub = this.on(`scroll`, ({velocity}) => {
           if (velocity[dir] !== 0) curDir = velocity[dir] > 0 ? 1 : -1
         }, {velocity: true, direction: dir})
-        nextScrollIdle(this, dir, 1000)().then(() => {
+        nextScrollIdle(this.body.scrollBody, dir, 1000)().then(() => {
           sub.deactivate()
           this.scrollForwards(curDir, dir)
         })
@@ -374,18 +432,18 @@ export default class ScrollBody extends Component<false> {
     dir = this.getScrollDefault(dir)
     const hasScrollSnap = this.hasAttribute("scrollSnap")
     if (hasScrollSnap) {
-      this.css("scrollSnapType" as any, "none")
+      this.body.scrollBody.css("scrollSnapType" as any, "none")
     }
     if (coord < 0) coord = 0
     const dirLen = dirToLenIndex[dir]
-    const maxScroll = this.scrollLengthData()[dirLen].get() - this[`offset${capitalize(dirLen)}`]
+    const maxScroll = this.body.scrollBody.scrollLengthData()[dirLen].get() - this[`offset${capitalize(dirLen)}`]
     if (coord > maxScroll) coord = maxScroll
 
-    const scrollProm = this.scroll(dir !== undefined ? {[dir]: coord} as {x: number} | {y: number} : coord, {speed: 700, easing})
+    const scrollProm = this.body.scrollBody.scroll(dir !== undefined ? {[dir]: coord} as {x: number} | {y: number} : coord, {speed: 700, easing})
     if (hasScrollSnap) {
       scrollProm.then(async () => {
         await delay(100)
-        this.css("scrollSnapType" as any, "")
+        this.body.scrollBody.css("scrollSnapType" as any, "")
       })
     }
     return scrollProm
@@ -477,3 +535,10 @@ function nextScrollIdle(elem: Element, dir?: "x" | "y" | "one", timeout?: number
   return dataNextTrue(isScrollIdle(elem, dir, timeout))
 }
 
+function inRange(bot: number, top: number) {
+  return function(val: number) {
+    if (val < bot) return bot
+    else if (val > top) return top
+    else return val
+  }
+}
