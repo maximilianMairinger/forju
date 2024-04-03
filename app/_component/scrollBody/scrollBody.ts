@@ -32,6 +32,10 @@ export default class ScrollBody extends Component<false> {
   constructor() {
     super(false)
 
+
+    this.body.scrollBody.scrollData(false, "x").scrollTrigger(0).on("forward", () => {
+      console.log("forwards")
+    })
   }
 
   wrapChilds(...nodes: Element[]) {
@@ -57,7 +61,7 @@ export default class ScrollBody extends Component<false> {
     })
   }
 
-  private _animationDurationPx = 200
+  private _animationDurationPx = 300
   public animationDurationPx(to: number) {
     this._animationDurationPx = +to
   }
@@ -313,7 +317,8 @@ export default class ScrollBody extends Component<false> {
               marginEnd.set(scrollAbleLength + paddingEnd)
             })
             
-            return this.body.scrollBody.scrollData(end, dir).scrollTrigger(!end ? marginStart : marginEnd)
+            debugger
+            return this.body.scrollBody.scrollData(end, dir).scrollTrigger(!end ? marginStart.tunnel((q) => q+1) : marginEnd.tunnel((q) => q-1))
           })
           
            

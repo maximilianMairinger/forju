@@ -30,4 +30,5 @@ c-spike-shadow-icon.a {
 
 c-scroll-body {
   --fade-rgb-values: var(--secondary-themed-background);
+  --innerPadding: 15px 0;
 }

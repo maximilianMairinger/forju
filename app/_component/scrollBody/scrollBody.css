@@ -5,6 +5,7 @@
   flex-direction: row;
   flex-wrap: nowrap;
   position: relative;
+  --innerPadding: 0px;
 }
 
 scroll-body {
@@ -13,6 +14,7 @@ scroll-body {
   height: 100%;
   flex-direction: row;
   flex-wrap: nowrap;
+  padding: var(--innerPadding);
 }
 
 :host([scrollSnap][x]) scroll-body {
