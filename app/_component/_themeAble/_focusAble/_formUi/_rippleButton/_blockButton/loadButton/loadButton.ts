@@ -55,13 +55,13 @@ export default class LoadButton extends BlockButton {
   private checkIcon = new CheckIcon().addClass("buttonAccent")
 
   private moveText() {
-    return this.textElem.anim({
+    return this.mySlotElem.anim({
       translateX: -8
     })
   }
 
   private moveTextBack() {
-    return this.textElem.anim({
+    return this.mySlotElem.anim({
       translateX: .1
     })
   }
