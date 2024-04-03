@@ -9,7 +9,7 @@ import { PrimElem, Token, VariableLibrary } from "extended-dom";
 
 //@ts-ignore
 export default class UiButton extends FormUi<Button> {
-  protected button: Button
+  public button: Button
 
   constructor() {
     const button = new Button()

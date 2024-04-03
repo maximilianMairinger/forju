@@ -8,7 +8,6 @@ export default class FooterSection extends PageSection {
   constructor() {
     super()
 
-
   }
 
   stl() {
