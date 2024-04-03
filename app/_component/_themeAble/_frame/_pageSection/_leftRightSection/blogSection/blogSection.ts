@@ -10,17 +10,20 @@ export default class BlogSection extends LeftRightSection {
   constructor() {
     super(1010)
 
-    for (const btn of this.q("c-ripple-button", true)) {
+    for (const btn of this.q("c-scroll-body").childs("c-ripple-button", true)) {
+      console.log(btn)
       this.styleRippleButton(btn as UiButton)
     }
   }
 
   styleRippleButton(btn: UiButton) {
+    // debugger
     btn.userFeedbackMode({
       ripple: false,
       hover: false,
       focus: true,
-      preHover: false
+      preHover: false,
+      enabled: false
     })
 
     btn.button.on("focus", () => {

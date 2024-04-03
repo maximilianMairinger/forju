@@ -1,6 +1,6 @@
 import delay from "delay";
 import { ElementList, EventListener } from "extended-dom";
-import { Data, DataBase } from "josm";
+import { Data, DataBase, DataCollection } from "josm";
 import declareComponent from "../../../../lib/declareComponent";
 import Button from "../_button/button";
 import FocusAble from "../focusAble"
@@ -28,7 +28,8 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
     hover: boolean,
     focus: boolean | "direct",
     active: boolean,
-    enabled: boolean
+    enabled: boolean,
+    preHover: boolean
   }>
 
 
@@ -48,14 +49,21 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
       ripple: true,
       hover: true,
       active: false,
-      enabled: true
+      enabled: true,
+      preHover: true
     })
 
     this.addClass("rippleSettled")
     this.moveBody.apd(this.focusManElem)
 
     this.enabled = new Data(true) as Data<boolean>
-    this.enabled.get((enabled) => {
+
+    const wantToUsePreHoverAnim = new Data(true)
+    new DataCollection(this.userFeedbackMode.preHover, this.enabled).get((preHover, enabled) => {
+      wantToUsePreHoverAnim.set(preHover && enabled)
+    })
+
+    wantToUsePreHoverAnim.get((enabled) => {
       if (enabled) {
         if (this.preHoverAnimations) this.preHoverAnimations.enable()
       }
@@ -96,24 +104,11 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
 
       const preLs = [] as EventListener[]
       preLs.add(this.on("mousedown", (e) => {
-        if (!touched) {
-          if (this.validMouseButtons.has(e.button)) {
-            this.initRipple(e);
-          }
-        }
+        if (this.validMouseButtons.has(e.button)) {
+          this.initRipple(e);
+        }        
       }, {capture: true}))
 
-      let touched = false
-      preLs.add(this.on("touchend", () => {
-        touched = true
-        delay(100).then(() => {
-          touched = false
-        })
-      }, {capture: true}))
-
-      preLs.add(this.on("touchstart", (e) => {
-        this.initRipple(e);
-      }, {capture: true}))
 
 
 
@@ -189,6 +184,7 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
     if (window.matchMedia && window.matchMedia("(hover:hover)").matches) {
       import("./preHoverInteraction").then(({default: f}) => {
         this.preHoverAnimations = f(root as any, hovPreDet, this.moveBody as any, this.componentBody as any)
+        if (!this.userFeedbackMode.preHover.get()) this.preHoverAnimations.disable()
       })
     }
 

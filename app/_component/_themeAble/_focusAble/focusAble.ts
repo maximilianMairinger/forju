@@ -74,9 +74,6 @@ export default class FocusAble<T extends false | HTMLElement | HTMLAnchorElement
     }, false)
 
   }
-  diableFocusIndecation() {
-
-  }
   public pug(): string {
     return require("./focusAble.pug").default
   }
