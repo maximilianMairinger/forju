@@ -12,6 +12,9 @@ import { nextFrame } from "animation-frame-delta";
 const easing = new WAAPIEasing("easeInOut").function
 const wrapperElemName = "scroll-body-element-wrapper"
 
+const inAnimMarkerMargin = .9
+const minScrollJumpToNext = 200
+
 
 export default class ScrollBody extends Component<false> {
   protected body: BodyTypes
@@ -111,7 +114,7 @@ export default class ScrollBody extends Component<false> {
     new DataCollection(this.fadeInOnScrollData).get((fadeInOnScroll) => {
       
       if (fadeInOnScroll) {
-        dirs.map((dir) => {
+        const inAnimDatas = dirs.map((dir) => {
           const propagateFullViewProgressData = propagateFullViewProgressDatas[dir]
           
           
@@ -121,6 +124,10 @@ export default class ScrollBody extends Component<false> {
           
           
           const wid = dir === "x" ? "Width" : "Height"
+
+          const inAnimData = new Data(false)
+
+          
 
           const f = (scrollPosLeft: number) => {
             const leftOfElem = (child as HTMLElement)[dir === "x" ? "offsetLeft" : "offsetTop"]
@@ -132,19 +139,24 @@ export default class ScrollBody extends Component<false> {
             const scrollPosRight = scrollPosLeft + width
             const isOnScreen = scrollPosLeft + animationDurationPx <= rightOfElem && scrollPosRight - animationDurationPx >= leftOfElem
             if (isOnScreen) {
+              inAnimData.set(false)
               return 1
             }
 
             const isInBeforeAnim = scrollPosRight > leftOfElem && scrollPosRight < leftOfElem + animationDurationPx
             if (isInBeforeAnim) {
-              return (scrollPosRight - leftOfElem) / animationDurationPx
+              const r = (scrollPosRight - leftOfElem) / animationDurationPx
+              inAnimData.set(r <= inAnimMarkerMargin)
+              return r
             }
 
 
             
             const isInAfterAnim = scrollPosLeft > rightOfElem - animationDurationPx && scrollPosLeft < rightOfElem
             if (isInAfterAnim) {
-              return (rightOfElem - scrollPosLeft) / animationDurationPx
+              const r = (rightOfElem - scrollPosLeft) / animationDurationPx
+              inAnimData.set(r <= inAnimMarkerMargin)
+              return r 
             }
 
             
@@ -183,14 +195,21 @@ export default class ScrollBody extends Component<false> {
             })
           }
 
-          
-
-
-
             
 
-          
+          return inAnimData
         })
+
+        const inAnimDataAggregate = new Data() 
+        new DataCollection(...inAnimDatas).get((...inAnimDatas) => {
+          inAnimDataAggregate.set(inAnimDatas.some((x) => x))
+        })
+
+        inAnimDataAggregate.get((inAnim) => {
+          child[inAnim ? "addClass" : "removeClass"]("scrollBodyInFadeAnim")
+          child.css("pointerEvents", inAnim ? "none" : "")
+        })
+        
         
       }
     }, true)
@@ -317,7 +336,6 @@ export default class ScrollBody extends Component<false> {
               marginEnd.set(scrollAbleLength + paddingEnd)
             })
             
-            debugger
             return this.body.scrollBody.scrollData(end, dir).scrollTrigger(!end ? marginStart.tunnel((q) => q+1) : marginEnd.tunnel((q) => q-1))
           })
           
@@ -392,7 +410,7 @@ export default class ScrollBody extends Component<false> {
     if (toNext) {
       
       const myWidth = this.css("width" as any)
-      const scrollSnapPos = this.childs(1, true).map((child) => {
+      let scrollSnapPos = this.childs(1, true).map((child) => {
         let v: number
         const align = child.css("scrollSnapAlign" as any)
         if (align === "start") v = (child as HTMLElement)[dir === "x" ? "offsetLeft" : "offsetTop"]
@@ -404,14 +422,31 @@ export default class ScrollBody extends Component<false> {
 
 
       const currentScrollPosVal = currentScrollPos.get()
-      const nextSnapPos = directionSign === 1 ? scrollSnapPos.find((({v, containerWidth}) => v > (currentScrollPosVal + containerWidth + 1))) : (() => {
-        for (let i = scrollSnapPos.length-1; i >= 0; i--) {
-          const {v, containerWidth} = scrollSnapPos[i]
-          if (v < (currentScrollPosVal + containerWidth - 1)) return scrollSnapPos[i]
+
+      do {
+        let ind: number
+        const nextSnapPos = directionSign === 1 ? scrollSnapPos.find((({v, containerWidth}, i) => {
+          ind = i
+          return v > (currentScrollPosVal + containerWidth + 1)
+        })) : (() => {
+          for (let i = scrollSnapPos.length-1; i >= 0; i--) {
+            ind = i
+            const {v, containerWidth} = scrollSnapPos[i]
+            if (v < (currentScrollPosVal + containerWidth - 1)) return scrollSnapPos[i]
+          }
+        })()
+        if (nextSnapPos !== undefined) diff = nextSnapPos.v - (currentScrollPosVal + nextSnapPos.containerWidth)
+        else break
+
+        if (scrollSnapPos.length > ind + 1) {
+          console.log("skipping")
+          scrollSnapPos = scrollSnapPos.slice(ind+1)
         }
-      })()
-      if (nextSnapPos !== undefined) diff = nextSnapPos.v - (currentScrollPosVal + nextSnapPos.containerWidth)
+        else break
+      } while (Math.abs(diff) < minScrollJumpToNext)
     }
+
+    if (diff === undefined) return
 
 
     const scrollProm = this.scrollToCoord(currentScrollPos.get() + diff, dir)
