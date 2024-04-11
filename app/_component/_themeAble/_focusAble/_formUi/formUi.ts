@@ -178,15 +178,19 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
       }
     }, true)
     this.componentBody.prepend(hovPreDet);
-    const root = ce("root-bounds")
-    this.apd(root);
+    
 
-    if (window.matchMedia && window.matchMedia("(hover:hover)").matches) {
-      import("./preHoverInteraction").then(({default: f}) => {
-        this.preHoverAnimations = f(root as any, hovPreDet, this.moveBody as any, this.componentBody as any)
-        if (!this.userFeedbackMode.preHover.get()) this.preHoverAnimations.disable()
-      })
-    }
+    setTimeout(() => {
+      if (window.matchMedia && window.matchMedia("(hover:hover)").matches && this.userFeedbackMode.preHover.get()) {
+        import("./preHoverInteraction").then(({default: f}) => {
+          const root = ce("root-bounds");
+          this.apd(root);
+          this.preHoverAnimations = f(root as any, hovPreDet, this.moveBody as any, this.componentBody as any)
+          if (!this.userFeedbackMode.preHover.get()) this.preHoverAnimations.disable()
+        })
+      }
+    })
+    
 
 
 

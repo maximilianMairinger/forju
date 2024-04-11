@@ -129,7 +129,7 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
 
   evTarget.on("mousemove", mouseMoveF)
 
-  const mouseEneterF = (e) => {
+  const mouseEnterF = (e) => {
     root.css({zIndex: -1})
 
     target.css({
@@ -146,7 +146,7 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
     followRuntime.resume()
   }
 
-  evTarget.on("mouseenter", mouseEneterF)
+  evTarget.on("mouseenter", mouseEnterF)
 
   const rootMouseEnterF = () => {
     root.css({zIndex: -1})
@@ -202,7 +202,7 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
     disable() {
       evTarget.off("mouseleave", mouseLeaveF)
       evTarget.off("mousemove", mouseMoveF)
-      evTarget.off("mouseenter", mouseEneterF)
+      evTarget.off("mouseenter", mouseEnterF)
       root.off("mouseenter", rootMouseEnterF)
       mouseLeaveF()
       target.css({pointerEvents: "none"})
@@ -210,7 +210,7 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
     enable() {
       evTarget.on("mouseleave", mouseLeaveF)
       evTarget.on("mousemove", mouseMoveF)
-      evTarget.on("mouseenter", mouseEneterF)
+      evTarget.on("mouseenter", mouseEnterF)
       root.on("mouseenter", rootMouseEnterF)
       target.css({pointerEvents: "all"})
     }

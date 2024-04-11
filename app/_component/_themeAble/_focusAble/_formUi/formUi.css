@@ -112,6 +112,7 @@ button-waves {
   top: 0;
   left: 0;
   z-index: 2;
+  pointer-events: none;
 }
 
 button-wave-container {
