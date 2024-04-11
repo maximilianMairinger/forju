@@ -215,7 +215,8 @@ export default class Image extends Component {
             biggestLoadedRes = key
           }
         }
-        this.loadSrc(src, biggestLoadedRes as any)
+        
+        this.loadSrc(src, isExplicitSrc ? "" : biggestLoadedRes as any)
 
         if (this.currentLoadStage === 0 && !isExplicitSrc) {
           loadRecord.full.add(() => {

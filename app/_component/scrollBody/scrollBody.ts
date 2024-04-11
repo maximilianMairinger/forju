@@ -12,7 +12,7 @@ import { nextFrame } from "animation-frame-delta";
 const easing = new WAAPIEasing("easeInOut").function
 const wrapperElemName = "scroll-body-element-wrapper"
 
-const inAnimMarkerMargin = .9
+const inAnimMarkerMargin = .8
 const minScrollJumpToNext = 200
 
 
@@ -229,9 +229,6 @@ export default class ScrollBody extends Component<false> {
       const added = []
       e.forEach((e) => {
         added.push(...e.addedNodes)
-        e.removedNodes.forEach((node) => {
-          node.parent(true).remove()
-        })
       })
       this.wrapChilds(...added)
       added.forEach((child) => {
