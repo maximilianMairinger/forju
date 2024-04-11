@@ -22,8 +22,7 @@ export default class BlogSection extends LeftRightSection {
       ripple: false,
       hover: false,
       focus: true,
-      preHover: false,
-      enabled: false
+      preHover: false
     })
 
     btn.button.on("focus", () => {

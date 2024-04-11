@@ -32,3 +32,11 @@ c-scroll-body {
   --fade-rgb-values: var(--secondary-themed-background);
   --innerPadding: 15px 0;
 }
+
+c-block-button {
+  --background-color: rgb(var(--primary-theme));
+}
+
+c-ripple-button, c-parallax-img-card {
+  border-radius: 15px;
+}
