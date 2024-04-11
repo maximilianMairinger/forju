@@ -13,6 +13,11 @@ export default abstract class BlogPage extends Page {
     if (content !== undefined) this.body.slotElem.apd(...(content instanceof Array ? content : [content]))
   }
 
+  protected async navigationCallback() {
+    // todo: multiple blogs appended
+    this.scrollTop = 0
+  }
+
 
   stl() {
     return super.stl() + require("./blogPage.css").toString()

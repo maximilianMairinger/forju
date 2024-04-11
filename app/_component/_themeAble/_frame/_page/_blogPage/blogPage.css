@@ -170,7 +170,7 @@ img{
   box-shadow: var(--medium-shadow);
   z-index: 1;
   background: white;
-  border-radius: 2vw;
+  border-radius: 20px;
   max-height: 80vh;
   object-fit: cover;
   object-position: center;
