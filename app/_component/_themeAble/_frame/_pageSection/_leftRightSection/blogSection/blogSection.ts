@@ -3,21 +3,49 @@ import UiButton from "../../../../_focusAble/_formUi/_rippleButton/rippleButton"
 import LeftRightSection from "../leftRightSection"
 import "./../../../../link/link"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
+import { ghostApi } from "../../../../../../lib/ghostApi"
+import ParallaxImgCard from "../../../../../parallaxImgCard/parallaxImgCard";
+import RippleButton from "../../../../_focusAble/_formUi/_rippleButton/rippleButton"
 
 export default class BlogSection extends LeftRightSection {
   protected body: BodyTypes
 
   constructor() {
-    super(1010)
+    super(1010);
 
-    for (const btn of this.q("c-scroll-body").childs("c-ripple-button", true)) {
-      console.log(btn)
-      this.styleRippleButton(btn as UiButton)
-    }
+
+
+
+    (async () => {
+      const blogs = await ghostApi.posts.browse({
+        formats: "html",
+        limit: 15,
+        filter: "tag:forju+tag:scienceBlog",
+        include: "authors"
+      })
+
+      this.body.scrollBody.innerHTML = ""
+
+      for (let i = 0; i < 10; i++) {
+        for (const blog of blogs) {
+          console.log(blog.title)
+          const card = new ParallaxImgCard()
+          card.imgSrc(blog.feature_image)
+          card.heading(blog.title)
+          card.desc(blog.excerpt)
+  
+          const btn = new RippleButton()
+          btn.link(`blog/${blog.slug}`)
+          this.styleRippleButton(btn)
+          btn.append(card)
+          this.body.scrollBody.append(btn)
+        }
+      }
+      
+    })()
   }
 
   styleRippleButton(btn: UiButton) {
-    // debugger
     btn.userFeedbackMode({
       ripple: false,
       hover: false,
@@ -28,11 +56,6 @@ export default class BlogSection extends LeftRightSection {
     btn.button.on("focus", () => {
       this.body.scrollBody.scrollToElem(btn)
     })
-
-    // const bubble = btn.children[0] as NewsBubble
-
-    // bubble.body.link.noTabIndex()
-    // bubble.body.link.eventTarget(btn)
   }
 
 

@@ -40,6 +40,13 @@ export default class ParallaxImgCard extends Component {
     })
   }
 
+  heading(txt: string | Data<string>) {
+    this.body.heading.txt(txt as Data<string>)
+  }
+  desc(txt: string | Data<string>) {
+    this.body.desc.txt(txt as Data<string>)
+  }
+
   x() {
     this.curDir.set("x")
   }
@@ -49,7 +56,7 @@ export default class ParallaxImgCard extends Component {
 
   
 
-  src(to: string) {
+  imgSrc(to: string) {
     this.body.img.src(to)
   }
 

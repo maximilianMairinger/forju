@@ -6,7 +6,7 @@ import Image from "../../../../../image/image"
 import GhostContentAPI, {PostOrPage} from '@tryghost/content-api'
 import {lang} from "../../../../../../lib/lang"
 import {Data} from "josm";
-import {api} from "../../../../../../lib/ghostApi";
+import {ghostApi} from "../../../../../../lib/ghostApi";
 import "../../../../link/link"
 
 
@@ -80,7 +80,7 @@ export default class GhostBlogPage extends BlogPage {
     if (this.cache[this.domainFrag]) return true
     let blogData: PostOrPage
     try {
-      blogData = await api.posts.read({slug: this.domainFrag}, {formats: ['html', 'plaintext']})
+      blogData = await ghostApi.posts.read({slug: this.domainFrag}, {formats: ['html', 'plaintext']})
     } catch (e) {
       return false
     }

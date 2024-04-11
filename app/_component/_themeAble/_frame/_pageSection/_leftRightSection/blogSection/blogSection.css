@@ -40,3 +40,7 @@ c-block-button {
 c-ripple-button, c-parallax-img-card {
   border-radius: 15px;
 }
+
+c-parallax-img-card {
+  --skeleton-color: rgb(var(--secondary-strongly-themed-background)) !important;
+}

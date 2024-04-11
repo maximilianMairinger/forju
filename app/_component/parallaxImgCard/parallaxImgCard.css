@@ -5,6 +5,10 @@
   height: 400px;
   overflow: hidden;
   border-radius: 15px;
+  --skeleton-color: rgb(230, 230, 230);
+  --skeleton-txt-color: rgb(var(--primary-text));
+
+  --color: white;
 }
 
 component-body {
@@ -31,9 +35,8 @@ grad-overlay {
   background: linear-gradient(12deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 50%);
   transition: .3s;
 }
-
-h2 {
-  color: white;
+h2 { 
+  color: var(--color);
   font-size: 1.5em;
   position: absolute;
   margin: 0;
@@ -44,7 +47,7 @@ h2 {
 
 desc-text {
   position: absolute;
-  color: white;
+  color: var(--color);
   font-size: 1em;
   bottom: 25px;
   left: 22px;
@@ -77,4 +80,17 @@ component-body:hover h2 {
 component-body:hover desc-text {
   opacity: 1;
   bottom: calc(40% - 2.5em);
+}
+
+component-body {
+  background-color: var(--skeleton-color);
+}
+
+:host(.loading) {
+  /* pointer-events: none; */
+  --color: var(--skeleton-txt-color);
+}
+
+:host(.loading) grad-overlay {
+  display: none;
 }
