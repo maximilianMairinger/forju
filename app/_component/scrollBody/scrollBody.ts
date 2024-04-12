@@ -109,13 +109,36 @@ export default class ScrollBody extends Component<false> {
     }
     
 
+    
+    for (const dir of dirs) {
+      
+      const propagateFullViewProgressData = propagateFullViewProgressDatas[dir]
+      if (propagateFullViewProgressData !== undefined) {
+        const wid = dir === "x" ? "Width" : "Height"
+
+        this.body.scrollBody.scrollData(false, dir).get((scrollProg) => {
+
+          const leftOfElem = (child as HTMLElement)[dir === "x" ? "offsetLeft" : "offsetTop"]
+          const widthOfElem = (child as HTMLElement)[dir === "x" ? "offsetWidth" : "offsetHeight"]
+          const rightOfElem = (child as HTMLElement)[dir === "x" ? "offsetLeft" : "offsetTop"] + widthOfElem
+          const widthOfContainer = this[`offset${wid}`]
+
+          const widthWhereElemIsVis = widthOfContainer + widthOfElem 
+          const scrollProgRight = scrollProg + widthOfContainer
+          
+          propagateFullViewProgressData.set(probRange((scrollProgRight - leftOfElem) / widthWhereElemIsVis))
+        })
+      }
+    }
+    
+
 
     // that we use a datacollection here is a dirty fix. If we dont then somehow the this.body.scrollBody.scrollData(false, dir) subscription in anim will not work
     new DataCollection(this.fadeInOnScrollData).get((fadeInOnScroll) => {
       
       if (fadeInOnScroll) {
         const inAnimDatas = dirs.map((dir) => {
-          const propagateFullViewProgressData = propagateFullViewProgressDatas[dir]
+          
           
           
   
@@ -177,25 +200,6 @@ export default class ScrollBody extends Component<false> {
           this.updateFadeInOnScrollChildAnimLs.push(() => {
             animProg.set(f(this[`scroll${dir === "x" ? "Left" : "Top"}`]))
           })
-        
-          
-
-          if (propagateFullViewProgressData !== undefined) {
-            this.body.scrollBody.scrollData(false, dir).get((scrollProg) => {
-
-              const leftOfElem = (child as HTMLElement)[dir === "x" ? "offsetLeft" : "offsetTop"]
-              const widthOfElem = (child as HTMLElement)[dir === "x" ? "offsetWidth" : "offsetHeight"]
-              const rightOfElem = (child as HTMLElement)[dir === "x" ? "offsetLeft" : "offsetTop"] + widthOfElem
-              const widthOfContainer = this[`offset${wid}`]
-
-              const widthWhereElemIsVis = widthOfContainer + widthOfElem 
-              
-
-              propagateFullViewProgressData.set(probRange((scrollProg - leftOfElem) / widthWhereElemIsVis))
-            })
-          }
-
-            
 
           return inAnimData
         })

@@ -26,20 +26,19 @@ export default class BlogSection extends LeftRightSection {
 
       this.body.scrollBody.innerHTML = ""
 
-      for (let i = 0; i < 10; i++) {
-        for (const blog of blogs) {
-          console.log(blog.title)
-          const card = new ParallaxImgCard()
-          card.imgSrc(blog.feature_image)
-          card.heading(blog.title)
-          card.desc(blog.excerpt)
-  
-          const btn = new RippleButton()
-          btn.link(`blog/${blog.slug}`)
-          this.styleRippleButton(btn)
-          btn.append(card)
-          this.body.scrollBody.append(btn)
-        }
+      
+      for (const blog of blogs) {
+        const card = new ParallaxImgCard()
+        card.imgSrc(blog.feature_image)
+        card.heading(blog.title)
+        card.desc(blog.excerpt)
+
+        const btn = new RippleButton()
+        btn.link(`blog/${blog.slug}`)
+        this.styleRippleButton(btn);
+        (btn as any).relativeScrollProg = card.relativeScrollProg.bind(card)
+        btn.append(card)
+        this.body.scrollBody.append(btn)
       }
       
     })()

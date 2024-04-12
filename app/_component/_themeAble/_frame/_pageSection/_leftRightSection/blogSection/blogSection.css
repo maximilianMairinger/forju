@@ -5,6 +5,7 @@
 
 component-body {
   background-color: rgb(var(--secondary-themed-background));
+  min-height: 600px;
 }
 
 component-body right-side {
@@ -43,4 +44,11 @@ c-ripple-button, c-parallax-img-card {
 
 c-parallax-img-card {
   --skeleton-color: rgb(var(--secondary-strongly-themed-background)) !important;
+}
+
+c-block-button.themed {
+  --background-color: rgb(var(--secondary-theme));
+}
+c-text-blob {
+  --theme: var(--secondary-theme);
 }
