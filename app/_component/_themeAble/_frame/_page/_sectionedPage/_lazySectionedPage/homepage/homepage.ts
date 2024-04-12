@@ -10,7 +10,7 @@ import FooterSection from "../../../../_pageSection/footerSection/footerSection"
 import TestSection from "../../../../_pageSection/testSection/testSection"
 import LazySectionedPage from "../lazySectionedPage"
 import HightlightAbleIcon from "../../../../../_icon/_highlightAbleIcon/highlightAbleIcon"
-import ThoughtBubbleIcon from "../../../../../_icon/_highlightAbleIcon/thoughtBubble/thoughtBubble"
+import ThoughtBubbleIcon from "../../../../../_icon/_highlightAbleIcon/thoughtBubbleIcon/thoughtBubbleIcon"
 import RocketIcon from "../../../../../_icon/_highlightAbleIcon/rocket/rocket"
 import TeamIcon from "../../../../../_icon/_highlightAbleIcon/teamIcon/teamIcon"
 import ContactIcon from "../../../../../_icon/_highlightAbleIcon/contact/contact"
@@ -58,7 +58,8 @@ export default class HomePage extends LazySectionedPage {
     this.iconIndex = {
       services: new RocketIcon(),
       team: new TeamIcon(),
-      contact: new ContactIcon()
+      contact: new ContactIcon(),
+      blog: new ThoughtBubbleIcon()
     }
   }
 
