@@ -8,6 +8,8 @@
 
   --pop-underline-opacity: 1;
   --pop-underline-color: rgba(var(--theme), .8);
+
+  --widthOfHeading: unset;
 }
 
 h1 {
@@ -17,6 +19,7 @@ h1 {
   margin-top: .15em;
   line-height: 1.13em;
   display: inline-block;
+  width: var(--widthOfHeading);
 }
 h1 > span {
   position: relative;
