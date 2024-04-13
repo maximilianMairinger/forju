@@ -8,13 +8,25 @@ import {lang} from "../../../../../../lib/lang"
 import {Data} from "josm";
 import {ghostApi} from "../../../../../../lib/ghostApi";
 import "../../../../link/link"
+import "../../../../../image/image" 
+import "../../../../textBlob/textBlob"
+import TextBlob from "../../../../textBlob/textBlob"
 
 
 function parseHTML(html: string) {
+  console.log(html)
   html = html
   // @ts-ignore
       .replaceAll("<a href", "<c-link link")
-      .replaceAll("<\/a>", "<\/c-link>");
+      .replaceAll("<\/a>", "<\/c-link>")
+      .replaceAll("<img", "<c-image")
+      .replaceAll("<\/img>", "<\/c-image>")
+      .replaceAll(/<h2.*?>/gi, "<c-text-blob class='h1' header='")
+      .replaceAll("</h1>", "'></c-text-blob>")
+      .replaceAll(/\<h2.*\>/g, "<c-text-blob class='h2' header='")
+      .replaceAll("</h2>", "'></c-text-blob>")
+
+  console.log(html)
   let parser = new DOMParser();
   let htmlDOM = parser.parseFromString(html, 'text/html');
   htmlDOM.querySelectorAll(".kg-gallery-image").forEach((img) => {
@@ -49,12 +61,14 @@ export default class GhostBlogPage extends BlogPage {
 
     lang({links: {[query]: blogData.title}})
 
+    
+    const headingElem = new TextBlob()
+    headingElem.heading(blogData.title)
 
-    const imgElem = ce("img")
-    imgElem.src = blogData.feature_image
+    const imgElem = new Image(blogData.feature_image)
 
-    this.body.slotElem.apd(
-      ce("h1").txt(blogData.title), 
+    HTMLElement.prototype.apd.call(this, 
+      headingElem, 
       imgElem,
       parseHTML(blogData.html)
     )

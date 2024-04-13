@@ -7,10 +7,8 @@ import { dirString, domainIndex } from "../../../../../lib/domain";
 
 export default abstract class BlogPage extends Page {
 
-  constructor(content?: string | HTMLElement[]) {
+  constructor() {
     super()
-    
-    if (content !== undefined) this.body.slotElem.apd(...(content instanceof Array ? content : [content]))
   }
 
   protected async navigationCallback() {
@@ -20,7 +18,7 @@ export default abstract class BlogPage extends Page {
 
 
   stl() {
-    return super.stl() + require("./blogPage.css").toString()
+    return super.stl() + require("./blogPage.less").toString()
   }
   pug() {
     return require("./blogPage.pug").default
