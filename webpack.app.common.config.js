@@ -25,6 +25,10 @@ module.exports = () => {
         module: {
             rules: [
                 {
+                    test: /\.less$/i,
+                    use: ["to-string-loader", "css-loader", "less-loader"],
+                },
+                {
                     test: /([a-zA-Z0-9\s_\\.\-\(\):])+\.static\.([a-zA-Z0-9])+$/,
                     use: 'raw-loader',
                 },

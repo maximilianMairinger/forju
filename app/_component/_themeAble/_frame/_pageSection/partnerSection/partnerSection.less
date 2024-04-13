@@ -1,0 +1,108 @@
+component-body {
+  background-color: #ebf2f1;
+  
+  padding-bottom: 50px;
+  padding-top: 50px;
+  background-color: rgb(var(--secondary-themed-background));
+}
+
+
+under-section {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+under-section.a {
+  padding-bottom: 20px;
+}
+
+c-text-blob {
+  margin: 0 calc(5% - 12px);
+  margin-top: 50px;
+  margin-bottom: 10px;
+  --header-fontsize-factor: 3.5;
+  --theme: var(--secondary-theme);
+}
+
+
+c-ripple-button {
+  width: 250px;
+  height: 250px;
+  margin: 15px;
+}
+
+c-ripple-button c-image {
+  border-radius: 20px;
+  overflow: none;
+}
+
+
+
+
+component-body:not(.sideLayout) {
+  under-section.b {
+    box-sizing: border-box;
+    padding-left: calc(5% - 12px); 
+    padding-right: calc(5% - 12px); 
+  }  
+}
+
+component-body.sideLayout {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+component-body.sideLayout {
+  under-section {
+    width: 50%;
+    flex-grow: 1;
+    min-width: 300px;
+  }
+  under-section.b {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 300px;
+  }
+}
+
+
+
+
+
+
+
+c-fidget {
+  display: block;
+  position: absolute;
+  z-index: 10;
+  pointer-events: none;
+}
+
+c-fidget.a {
+  top: 80px;
+  margin-left: 400px;
+  --color: rgb(var(--secondary-theme));
+}
+
+@media (max-width: 600px) {
+  c-fidget.a {
+    top: 50px;
+    margin-left: 300px;
+  }
+} 
+
+component-body.headerTooSmall {
+  c-text-blob {
+    width: min-content;
+  }
+
+  c-fidget.a {
+    margin-left: 200px;
+  }
+} 
+
+
