@@ -3,6 +3,7 @@ import { Import, ImportanceMap } from "../../../../../../../lib/lazyLoad"
 import LandingSection from "../../../../_pageSection/landingSection/landingSection"
 import WorkSection from "../../../../_pageSection/workSection/workSection"
 import ServicesSection from "../../../../_pageSection/servicesSection/servicesSection"
+import PartnerSection from "../../../../_pageSection/partnerSection/partnerSection"
 import TeamSection from "../../../../_pageSection/teamSection/teamSection"
 import FooterSection from "../../../../_pageSection/footerSection/footerSection"
 
@@ -37,6 +38,11 @@ export default class HomePage extends LazySectionedPage {
         key: new Import("team", 1, (teamSection: typeof TeamSection) =>
           new teamSection()
         ), val: () => import(/* webpackChunkName: "teamSection" */"../../../../_pageSection/teamSection/teamSection")
+      },
+      {
+        key: new Import("partner", 1, (partnerSection: typeof PartnerSection) =>
+          new partnerSection()
+        ), val: () => import(/* webpackChunkName: "partnerSection" */"../../../../_pageSection/partnerSection/partnerSection")
       },
       {
         key: new Import("contact", 1, (footerSection: typeof FooterSection) =>
