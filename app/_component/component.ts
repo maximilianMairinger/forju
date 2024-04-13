@@ -14,7 +14,6 @@ export default abstract class Component<T extends HTMLElement | HTMLAnchorElemen
   constructor(bodyExtension?: T, indexName = true) {
     super();
     this.sr = this.attachShadow({mode: "open"});
-
     
     if (bodyExtension !== false) {
       //@ts-ignore
