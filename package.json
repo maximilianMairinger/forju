@@ -97,6 +97,7 @@
   },
   "dependencies": {
     "@sindresorhus/to-milliseconds": "^2.0.0",
+    "@tryghost/content-api": "^1.11.20",
     "@types/audio-play": "^2.3.2",
     "@types/multimap": "^1.1.4",
     "ajaon": "^1.5.11",
