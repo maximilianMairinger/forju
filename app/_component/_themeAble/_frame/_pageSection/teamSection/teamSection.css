@@ -34,7 +34,7 @@ under-section.b {
 c-text-blob {
   margin: 100px 0;
   margin-bottom: 10px;
-  --header-fontsize-factor: 3.5;
+  --header-fontsize: 3.5em;
   --theme: var(--tertiary-theme);
 }
 

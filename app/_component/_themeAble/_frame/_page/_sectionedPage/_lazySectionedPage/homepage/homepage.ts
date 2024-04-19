@@ -1,7 +1,7 @@
 import declareComponent from "../../../../../../../lib/declareComponent"
 import { Import, ImportanceMap } from "../../../../../../../lib/lazyLoad"
 import LandingSection from "../../../../_pageSection/landingSection/landingSection"
-import WorkSection from "../../../../_pageSection/workSection/workSection"
+
 import ServicesSection from "../../../../_pageSection/servicesSection/servicesSection"
 import BlogSection from "../../../../_pageSection/_leftRightSection/blogSection/blogSection"
 import TeamSection from "../../../../_pageSection/teamSection/teamSection"

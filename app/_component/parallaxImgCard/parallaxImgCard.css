@@ -32,6 +32,11 @@ image-container:hover {
   transform: scale(1.02);
 }
 
+c-image {
+  min-width: 100%;
+  min-height: 100%;
+}
+
 :host([x]) c-image, :host(:not([y])) c-image {
   height: 100%;
   width: max-content;

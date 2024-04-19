@@ -3,7 +3,7 @@ import ThemeAble from "../themeAble";
 
 export default class TextBlob extends ThemeAble {
   private noteElem = this.q("note-header")
-  private headerElem = this.q("h1 span")
+  public readonly headerElem = this.q("h1 span")
   private bodyElem = this.q("p")
   constructor() {
     super(false)

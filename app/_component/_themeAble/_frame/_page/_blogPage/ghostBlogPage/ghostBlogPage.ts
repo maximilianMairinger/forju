@@ -11,43 +11,36 @@ import "../../../../link/link"
 import "../../../../../image/image" 
 import "../../../../textBlob/textBlob"
 import TextBlob from "../../../../textBlob/textBlob"
+import AT from "../../../../../../lib/formatTime"
+import PersonCircle from "../../../../../personCircle/personCircle"
 
 
 function parseHTML(html: string) {
-  console.log(html)
   html = html
-  // @ts-ignore
-      .replaceAll("<a href", "<c-link link")
-      .replaceAll("<\/a>", "<\/c-link>")
-      .replaceAll("<img", "<c-image")
-      .replaceAll("<\/img>", "<\/c-image>")
-      .replaceAll(/<h2.*?>/gi, "<c-text-blob class='h1' header='")
-      .replaceAll("</h1>", "'></c-text-blob>")
-      .replaceAll(/\<h2.*\>/g, "<c-text-blob class='h2' header='")
-      .replaceAll("</h2>", "'></c-text-blob>")
+    //@ts-ignore
+    .replaceAll("'", "&apos;")
+    .replaceAll(/<(?:a.*? href=(?:"|')(.*?)(?:"|').*?>)(.*?)<\/a>/gi, "<c-link link='$1'>$2</c-link>")
+    .replaceAll(/<(?:img.*? src=(?:"|')(.*?)(?:"|').*?>)(.*?)<\/img>/gi, "<c-image src='$1'></c-image>")
+    .replaceAll(/<(?:h(1|2|3|4|5|6|7).*?>)(.*?)<\/h.>/gi, "<c-text-blob popunderline='' class='h$1' heading='$2'></c-text-blob>")
 
-  console.log(html)
-  let parser = new DOMParser();
-  let htmlDOM = parser.parseFromString(html, 'text/html');
-  htmlDOM.querySelectorAll(".kg-gallery-image").forEach((img) => {
-    let ratio = parseInt(img.childs().getAttribute("width"), 10) / parseInt(img.childs().getAttribute("height"), 10);
-    img.css({"flex": ratio + "1 0"});
-  });
+  return html
+  // console.log(html)
+  // let parser = new DOMParser();
+  // let htmlDOM = parser.parseFromString(html, 'text/html');
+  // htmlDOM.querySelectorAll(".kg-gallery-image").forEach((img) => {
+  //   let ratio = parseInt(img.childs().getAttribute("width"), 10) / parseInt(img.childs().getAttribute("height"), 10);
+  //   img.css({"flex": ratio + "1 0"});
+  // });
   
-  return (htmlDOM.firstChild as HTMLElement).innerHTML;
+  // return (htmlDOM.firstChild as HTMLElement).innerHTML;
 }
 
 
 
 export default class GhostBlogPage extends BlogPage {
 
+  private async setBlogFromQuery(query: string) {
 
-  private blogLoaded = false;
-
-  private async setBlog(query: string) {
-    if (this.blogLoaded) {
-      this.componentBody.scrollTop = 0
-    }
 
     // let blogData: Required<PostOrPage> = {
     //   title: "My Title",
@@ -56,34 +49,48 @@ export default class GhostBlogPage extends BlogPage {
     //   html: `<h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p>`,
     // } as any
 
-    const blogData = this.cache[query]
+    const blogData = this.cache.get(query)
 
 
     lang({links: {[query]: blogData.title}})
 
     
     const headingElem = new TextBlob()
+    headingElem.setAttribute("popunderline", "")
+    headingElem.addClass("title")
     headingElem.heading(blogData.title)
+    headingElem.note(AT.formatDate(new Date(blogData.published_at)))
+
+    const author = new PersonCircle()    
+    author.src(blogData.primary_author.profile_image)
+    author.heading(blogData.primary_author.name)
+    author.subText(blogData.primary_author.location)
+    headingElem.text(author as any)
+    
 
     const imgElem = new Image(blogData.feature_image)
+    imgElem.addClass("title")
 
-    HTMLElement.prototype.apd.call(this, 
-      headingElem, 
-      imgElem,
+    const titleContainer = ce("title-container")
+    titleContainer.apd(headingElem as any, imgElem)
+
+    this.setBlog( 
+      titleContainer,
       parseHTML(blogData.html)
     )
 
-
-    this.blogLoaded = true;
+    this.addHooksToChilds([headingElem as any as Element, imgElem])
   }
 
   private setBlogFromUrl(id: string) {
     this.domainLevel = this.domainFrag.length
 
-    return this.setBlog(id)
+    return this.setBlogFromQuery(id)
   }
 
-  private cache: { [slug in string]: PostOrPage } = {}
+
+
+  private cache = new Map<string, PostOrPage>()
   private domainFrag: string
   private splitDomain: string[]
 
@@ -91,14 +98,14 @@ export default class GhostBlogPage extends BlogPage {
 
     this.splitDomain = domainFragment.split(domain.dirString)
     this.domainFrag = this.splitDomain.last
-    if (this.cache[this.domainFrag]) return true
+    if (this.cache.has(this.domainFrag)) return true
     let blogData: PostOrPage
     try {
-      blogData = await ghostApi.posts.read({slug: this.domainFrag}, {formats: ['html', 'plaintext']})
+      blogData = await ghostApi.posts.read({slug: this.domainFrag}, {formats: ['html'], include: ['authors']})
     } catch (e) {
       return false
     }
-    this.cache[this.domainFrag] = blogData
+    this.cache.set(this.domainFrag, blogData)
     return true
   }
 

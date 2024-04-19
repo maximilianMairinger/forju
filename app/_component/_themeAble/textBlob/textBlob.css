@@ -1,17 +1,17 @@
 :host {
-  --font-size: 16px;
+  font-size: 16px;
   --theme: var(--primary-theme);
   display: inline-block;
   margin-bottom: 20px;
   --body-size: 70%;
-  --header-fontsize-factor: 2.5;
+  --header-fontsize: 2.5em;
 
   --pop-underline-opacity: 1;
   --pop-underline-color: rgba(var(--theme), .8);
 }
 
 h1 {
-  font-size: calc(var(--font-size) * var(--header-fontsize-factor));
+  font-size: var(--header-fontsize);
   position: relative;
   margin-bottom: .2em;
   margin-top: .15em;
@@ -28,14 +28,12 @@ h1 > span {
 
 p {
   margin-top: 0;
-  font-size: var(--font-size);
   position: relative;
   width: var(--body-size);
   margin-bottom: 0;
 }
 
 note-header {
-  font-size: var(--font-size);
   font-weight: bold;
   color: rgb(var(--theme));
   position: relative;

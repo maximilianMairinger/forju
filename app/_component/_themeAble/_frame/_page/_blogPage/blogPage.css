@@ -1,0 +1,120 @@
+component-body {
+  display: flex;
+  justify-content: center;
+  min-height: 100%;
+  background-color: rgb(var(--tertiary-themed-background));
+
+  --oversized: max(min(85vw, 170%), 100%);
+}
+
+content-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+blog-content {
+  margin-top: 200px;
+  transition: .3s margin-top;
+  width: calc(15% + 450px);
+  height: max-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+bottom-spacer {
+  height: 100px;
+  display: block;
+}
+
+@media (max-width: 620px) {
+  blog-content {
+    margin-top: 80px;
+    width: 88%; /* 100 - (6 * 2) */
+  }
+}
+
+
+
+
+
+
+
+
+/* BLOG POST */
+
+
+title-container {
+  width: var(--oversized);
+  position: relative;
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+title-container c-text-blob {
+  width: max(20%, 340px);
+  min-width: min-content;
+  flex-grow: 1;
+}
+
+title-container c-image {
+  width: max(60%, 200px);
+  flex-grow: 1;
+}
+
+
+
+c-text-blob {
+  margin-bottom: 0;
+}
+
+c-text-blob.title {
+  padding-left: 40px;
+  box-sizing: border-box;
+  
+  --header-fontsize: 3.5em;
+}
+  
+
+c-image {
+  width: 100%;
+  border-radius: 15px;
+  box-shadow: 20px 20px 0px 0px rgba(0, 0, 0, 0.2);
+}
+
+c-image.title {
+  aspect-ratio: 10 / 9;
+  max-height: 600px;
+  margin-bottom: 30px
+}
+
+/* the biggest heading in an article is h2, as h1 is reserved for the title, and it has .title as class */
+c-text-blob.h2 {
+  margin-top: 1em;
+}
+
+
+
+
+
+/* ::slotted(c-image.title)::after {
+  content: "";
+  --offset: -30px;
+  background-color: black;
+  position: absolute;
+  top: var(--offset);
+  right: var(--offset);
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+} */
+
+
+
+
+
