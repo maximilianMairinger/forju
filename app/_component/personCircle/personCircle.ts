@@ -11,7 +11,9 @@ export default class PersonCircle extends Component {
 
   }
 
-
+  link(link: string) {
+    this.body.btn.link(link)
+  }
 
   src(src: string) {
     this.body.img.src(src)

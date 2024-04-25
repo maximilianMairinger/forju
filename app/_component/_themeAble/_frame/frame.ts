@@ -64,13 +64,19 @@ export default abstract class Frame extends ThemeAble<HTMLElement> {
     return super.stl() + require("./frame.css").toString()
   }
   public async minimalContentPaint(): Promise<void> {
+    console.log("start minimal", this)
     await this.minimalRec()()
+    console.log("end minimal", this)
   }
   public async fullContentPaint(): Promise<void> {
+    console.log("start content", this)
     await this.contentRec()()
+    console.log("end content", this)
   }
   public async completePaint(): Promise<void> {
+    console.log("start full", this)
     await this.fullRec()()
+    console.log("end full", this)
   }
 
   protected activationCallback?(active: boolean): void

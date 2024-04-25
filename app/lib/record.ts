@@ -1,3 +1,5 @@
+import delay from "tiny-delay"
+
 export abstract class Record<T, R> {
   protected recordLs: T[]
 
@@ -48,6 +50,9 @@ export class InstanceRecord extends Record<F, () => Promise<any>> {
   record() {
     return this._record((record) => function batchLoad() {
       let ret = Promise.all(record.call())
+      let retHasSettled = false
+      ret.finally(() => {retHasSettled = true})
+      delay(3000).then(() => {if (!retHasSettled) console.error("Took too long to load")})
       record.clear()
       return ret
     })

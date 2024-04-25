@@ -78,6 +78,7 @@ c-text-blob.title {
   box-sizing: border-box;
   
   --header-fontsize: 3.5em;
+  margin-bottom: 30px;
 }
   
 
@@ -90,7 +91,7 @@ c-image {
 c-image.title {
   aspect-ratio: 10 / 9;
   max-height: 600px;
-  margin-bottom: 30px
+  margin-bottom: 30px;
 }
 
 /* the biggest heading in an article is h2, as h1 is reserved for the title, and it has .title as class */

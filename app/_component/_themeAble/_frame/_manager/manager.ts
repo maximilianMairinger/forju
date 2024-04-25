@@ -13,6 +13,9 @@ import HighlightAbleIcon from "../../_icon/_highlightAbleIcon/highlightAbleIcon"
 import { Data } from "josm";
 import { linkRecord } from "../../link/link";
 import * as isSafari from "is-safari"
+import { PrimitiveRecord } from "../../../../lib/record";
+import keyIndex from "key-index";
+import { latestLatent } from "more-proms";
 
 
 
@@ -109,12 +112,13 @@ export default abstract class Manager extends Frame {
     this.resourcesMap = resourcesMap
     this.domainSubscription = domain.get(this.domainLevel, this.setDomain.bind(this), false, "")
   }
+  private linkRecording: () => {
+    link: string;
+    level: number;
+  }[]
   private async setDomain(to: string) {
-    const linkRecording = linkRecord.record()
+    this.linkRecording = linkRecord.record()
     await this.setElem(to)
-    this.currentPageFullyLoaded.then(() => {
-      this.preloadLinks(linkRecording())
-    })
   }
 
   private scrollEventListener: EventListener
@@ -123,9 +127,18 @@ export default abstract class Manager extends Frame {
   private currentPageFullyLoaded: Promise<any>
 
   async minimalContentPaint() {
-    await this.setDomain(this.domainSubscription.domain)
     await super.minimalContentPaint()
+    await this.setDomain(this.domainSubscription.domain)
   }
+
+  async fullContentPaint() {
+    await super.fullContentPaint()
+    // todo
+      // this.preloadLinks(this.linkRecording())
+    
+  }
+
+
 
 
   async preloadLinks(links: {link: string, level: number}[]) {
@@ -369,50 +382,54 @@ export default abstract class Manager extends Frame {
     }
   }
 
-  private async setElem(fullDomain: string) {
-    let nextPageToken = Symbol("nextPageToken")
-    this.nextPageToken = nextPageToken;
-    const { to, pageProm, fullDomainHasTrailingSlash, suc } = await this.findSuitablePage(fullDomain)
-    if (this.nextPageToken !== nextPageToken) return
-    
-    this.currentPageFullyLoaded = new Promise((doneLoading) => {
-      domain.set(domain.dirString + suc.domain + (fullDomainHasTrailingSlash && suc.domain !== "" ? domain.dirString : ""), suc.level, false).then(() => {
+  private setElem = latestLatent(keyIndex(this.findSuitablePage.bind(this)) as (fullDomain: string) => Promise<{
+    to: any;
+    pageProm: PriorityPromise<any>;
+    fullDomainHasTrailingSlash: boolean;
+    suc: {
+        domain: string;
+        page: any;
+        level: any;
+    };
+  }>).then(({ to, pageProm, fullDomainHasTrailingSlash, suc }) => {
+    domain.set(domain.dirString + suc.domain + (fullDomainHasTrailingSlash && suc.domain !== "" ? domain.dirString : ""), suc.level, false).then(async () => {
 
-        pageProm.priorityThen(() => {
-          if (this.currentUrl !== to) {
-            this.currentUrl = to;
-            let page = this.currentPage;
-            (async () => {
-              if (this.pageChangeCallback) {
-                try {
-                  if ((page as SectionedPage).sectionList) {
-                    (page as SectionedPage).sectionList.tunnel(e => e.filter(s => s !== "")).get((sectionListNested) => {
-                      let ob = {} as any
-                      for (let e of sectionListNested) {
-                        let ic = (page as SectionedPage).iconIndex[e]
-                        while (!ic) {
-                          if (e === "") break
-                          e = e.substr(0, e.lastIndexOf("/"))
-                          ic = (page as SectionedPage).iconIndex[e]
-                        }
-                        ob[e] = ic
+      await pageProm.priorityThen(() => {
+        if (this.currentUrl !== to) {
+          this.currentUrl = to;
+          let page = this.currentPage;
+          (async () => {
+            if (this.pageChangeCallback) {
+              try {
+                if ((page as SectionedPage).sectionList) {
+                  (page as SectionedPage).sectionList.tunnel(e => e.filter(s => s !== "")).get((sectionListNested) => {
+                    let ob = {} as any
+                    for (let e of sectionListNested) {
+                      let ic = (page as SectionedPage).iconIndex[e]
+                      while (!ic) {
+                        if (e === "") break
+                        e = e.substr(0, e.lastIndexOf("/"))
+                        ic = (page as SectionedPage).iconIndex[e]
                       }
-                      
-                      this.pageChangeCallback(to, ob, page.domainLevel)
-                    })
-                  }
-                  else this.pageChangeCallback(to, [], page.domainLevel)
+                      ob[e] = ic
+                    }
+                    
+                    this.pageChangeCallback(to, ob, page.domainLevel)
+                  })
                 }
-                catch(e) {}
+                else this.pageChangeCallback(to, [], page.domainLevel)
               }
-            })()
-          }
-        }, "completePaint")
-  
-        this.swapFrame(suc.page)
-      }).then(doneLoading)
+              catch(e) {}
+            }
+          })()
+        }
+      }, "completePaint")
+
+      this.swapFrame(suc.page)
+      
     })
-  }
+  })
+
 
   protected async activationCallback(active: boolean) {
     if (this.currentPage) if (this.currentPage.active !== active) this.currentPage.vate(active as any)

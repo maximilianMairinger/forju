@@ -61,13 +61,14 @@ export default class GhostBlogPage extends BlogPage {
     headingElem.heading(blogData.title)
     headingElem.note(AT.formatDate(new Date(blogData.published_at)))
 
-    const author = new PersonCircle()    
-    author.src(blogData.primary_author.profile_image)
+    const author = new PersonCircle()  
+    author.src(blogData.primary_author.profile_image ?? "unknownAvatarDepthRect")
     author.heading(blogData.primary_author.name)
     author.subText(blogData.primary_author.location)
+    author.link(blogData.primary_author.website ?? "")
     headingElem.text(author as any)
     
-
+    console.log(blogData.feature_image)
     const imgElem = new Image(blogData.feature_image)
     imgElem.addClass("title")
 
