@@ -1,3 +1,5 @@
+import { MultiMap } from "more-maps"
+
 const loadStates = ["minimalContentPaint", "fullContentPaint", "completePaint"] as ["minimalContentPaint", "fullContentPaint", "completePaint"]
 const defaultPreloadToLoadStatus = loadStates[1]
 
@@ -124,41 +126,8 @@ export class BidirectionalMap<K, V> extends Map<K, V> {
   }
 }
 
-class MultiKeyMap<K, V> {
-  private index = keyIndex<K, V[]>(() => [])
-  constructor(...index: {key: K, val: V}[]) {
-    for (const e of index) {
-      this.index(e.key).add(e.val)
-    }
-  }
-  add(key: K, val: V) {
-    this.index(key).add(val)
-  }
-  getAll(key: K) {
-    return this.index(key)
-  }
-  get(key: K, atIndex: number = 0) {
-    return this.getAll(key)[atIndex]
-  }
-  
-  has(key: K) {
-    return !!this.getAll(key)
-  }
-  forEach(cb: (key: K, vals: V[]) => void) {
-    for (let e of this.index.entries()) {
-      // @ts-ignore
-      cb(...e)
-    }
-  }
-  *[Symbol.iterator](): IterableIterator<[key: K, vals: V[]]> {
-    return this.index.entries()
-  }
-  entries() {
-    return this[Symbol.iterator]()
-  }
-}
 
-export class ResourcesMap extends MultiKeyMap<string, PriorityPromise> {
+export class ResourcesMap extends MultiMap<string, PriorityPromise> {
   public fullyLoaded: Promise<any>
   public anyLoaded: Promise<any>
   public loadedIndex: BidirectionalMap<string, any>

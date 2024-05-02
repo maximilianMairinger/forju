@@ -6,6 +6,7 @@ import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 import { ghostApi } from "../../../../../../lib/ghostApi"
 import ParallaxImgCard from "../../../../../parallaxImgCard/parallaxImgCard";
 import RippleButton from "../../../../_focusAble/_formUi/_rippleButton/rippleButton"
+import { loadRecord } from "../../../frame";
 
 export default class BlogSection extends LeftRightSection {
   protected body: BodyTypes
@@ -16,7 +17,7 @@ export default class BlogSection extends LeftRightSection {
 
 
 
-    (async () => {
+    loadRecord.full.add(async () => {
       const blogs = await ghostApi.posts.browse({
         formats: "html",
         limit: 15,
@@ -40,8 +41,7 @@ export default class BlogSection extends LeftRightSection {
         btn.append(card)
         this.body.scrollBody.append(btn)
       }
-      
-    })()
+    })
   }
 
   styleRippleButton(btn: UiButton) {

@@ -5,6 +5,7 @@ import declareComponent from "../../../../lib/declareComponent";
 import Button from "../_button/button";
 import FocusAble from "../focusAble"
 import { Theme } from "../../themeAble"
+import { loadRecord } from "../../_frame/frame";
 
 if (window.TouchEvent === undefined) window.TouchEvent = class SurelyNotTouchEvent {} as any
 
@@ -180,9 +181,9 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
     this.componentBody.prepend(hovPreDet);
     
 
-    setTimeout(() => {
+    loadRecord.content.add(async () => {
       if (window.matchMedia && window.matchMedia("(hover:hover)").matches && this.userFeedbackMode.preHover.get()) {
-        import("./preHoverInteraction").then(({default: f}) => {
+        await import("./preHoverInteraction").then(({default: f}) => {
           const root = ce("root-bounds");
           this.apd(root);
           this.preHoverAnimations = f(root as any, hovPreDet, this.moveBody as any, this.componentBody as any)

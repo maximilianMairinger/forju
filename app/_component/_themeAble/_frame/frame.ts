@@ -1,15 +1,19 @@
 import ThemeAble, { Theme } from "../themeAble";
-import { InstanceRecord } from "../../../lib/record";
+import { StackedAsyncTaskRecord } from "../../../lib/record";
 import { Data } from "josm";
 
+const resolveAddOnEmpty = (func: Function) => {
+  func()
+}
+
 export const loadRecord = {
-  minimal: new InstanceRecord(() => {}),
-  content: new InstanceRecord(() => {}),
-  full: new InstanceRecord(() => {})
+  minimal: new StackedAsyncTaskRecord(resolveAddOnEmpty),
+  content: new StackedAsyncTaskRecord(resolveAddOnEmpty),
+  full: new StackedAsyncTaskRecord(resolveAddOnEmpty)
 }
 
 
-type Recording = () => () => Promise<any>
+type Recording = () => Promise<unknown[]>
 
 
 
@@ -64,19 +68,13 @@ export default abstract class Frame extends ThemeAble<HTMLElement> {
     return super.stl() + require("./frame.css").toString()
   }
   public async minimalContentPaint(): Promise<void> {
-    console.log("start minimal", this)
-    await this.minimalRec()()
-    console.log("end minimal", this)
+    await this.minimalRec()
   }
   public async fullContentPaint(): Promise<void> {
-    console.log("start content", this)
-    await this.contentRec()()
-    console.log("end content", this)
+    await this.contentRec()
   }
   public async completePaint(): Promise<void> {
-    console.log("start full", this)
-    await this.fullRec()()
-    console.log("end full", this)
+    await this.fullRec()
   }
 
   protected activationCallback?(active: boolean): void

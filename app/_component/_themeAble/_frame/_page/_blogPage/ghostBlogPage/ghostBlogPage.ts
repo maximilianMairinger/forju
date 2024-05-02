@@ -68,7 +68,6 @@ export default class GhostBlogPage extends BlogPage {
     author.link(blogData.primary_author.website ?? "")
     headingElem.text(author as any)
     
-    console.log(blogData.feature_image)
     const imgElem = new Image(blogData.feature_image)
     imgElem.addClass("title")
 
