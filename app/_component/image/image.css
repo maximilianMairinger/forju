@@ -18,11 +18,13 @@ picture {
   left: 0;
   overflow: hidden;
   border-radius: inherit;
+  padding: inherit;
 }
 picture:first-of-type {
   position: relative;
   top: initial;
   left: initial;
+  padding: unset;
 }
 
 img {

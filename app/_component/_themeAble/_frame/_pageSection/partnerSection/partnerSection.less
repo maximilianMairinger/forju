@@ -37,10 +37,17 @@ c-ripple-button {
   margin: 15px;
 }
 
-c-ripple-button c-image {
+c-ripple-button > * {
   border-radius: 20px;
   overflow: none;
+  background-color: white;
+  width: 230px;
+  height: 230px;
+  aspect-ratio: 1/1;
+  padding: 10px;
+  // box-sizing: border-box;
 }
+
 
 
 
@@ -63,20 +70,35 @@ component-body.sideLayout {
 }
 
 component-body.sideLayout {
+
   under-section {
     width: 50%;
     flex-grow: 1;
-    min-width: 300px;
+    // min-width: 300px;
+    min-width: min-content;
   }
   under-section.a {
+    width: 40%;
     justify-content: flex-start;
   }
   under-section.b {
+    width: 60%;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    height: 300px;
+    min-height: 300px;
+    flex-wrap: nowrap;
+  }
+  @media (max-width: 1000px) {
+    under-section.b {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    under-section.a, under-section.b {
+      width: 100%;
+    }
+    
   }
   // text-blob {
   //   width: 100%;
@@ -97,8 +119,8 @@ c-fidget {
 }
 
 c-fidget.a {
-  top: 80px;
-  margin-left: 400px;
+  top: 25px;
+  margin-left: 350px;
   --color: rgb(var(--secondary-theme));
 }
 
