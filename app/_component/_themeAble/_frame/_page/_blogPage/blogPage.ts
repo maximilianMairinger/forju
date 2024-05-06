@@ -36,7 +36,6 @@ export default abstract class BlogPage extends Page {
 
 
   protected async navigationCallback() {
-    // todo: multiple blogs appended
     this.scrollTop = 0
   }
 

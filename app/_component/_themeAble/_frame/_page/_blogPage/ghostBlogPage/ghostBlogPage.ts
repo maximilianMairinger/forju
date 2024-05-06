@@ -13,9 +13,10 @@ import "../../../../textBlob/textBlob"
 import TextBlob from "../../../../textBlob/textBlob"
 import AT from "../../../../../../lib/formatTime"
 import PersonCircle from "../../../../../personCircle/personCircle"
+import keyIndex from "key-index"
 
 
-function parseHTML(html: string) {
+function parseContentHTML(html: string) {
   html = html
     //@ts-ignore
     .replaceAll("'", "&apos;")
@@ -39,9 +40,7 @@ function parseHTML(html: string) {
 
 export default class GhostBlogPage extends BlogPage {
 
-  private async setBlogFromQuery(query: string) {
-
-
+  private parseBlogPostToHTML(slug: string, blogData: PostOrPage) {
     // let blogData: Required<PostOrPage> = {
     //   title: "My Title",
     //   published_at: new Date().toISOString(),
@@ -49,10 +48,7 @@ export default class GhostBlogPage extends BlogPage {
     //   html: `<h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p>`,
     // } as any
 
-    const blogData = this.cache.get(query)
-
-
-    lang({links: {[query]: blogData.title}})
+    lang({links: {[slug]: blogData.title}})
 
     
     const headingElem = new TextBlob()
@@ -74,30 +70,39 @@ export default class GhostBlogPage extends BlogPage {
     const titleContainer = ce("title-container")
     titleContainer.apd(headingElem as any, imgElem)
 
-    this.setBlog( 
-      titleContainer,
-      parseHTML(blogData.html)
-    )
+    
 
     this.addHooksToChilds([headingElem as any as Element, imgElem])
-  }
 
+    return [ 
+      titleContainer,
+      ce("content-inner-container").apd(parseContentHTML(blogData.html))
+    ]
+  }
+  domainFragmentToLoadUid = true
+
+  private async setBlogFromQuery(query: string) {
+    this.setBlog(...this.cache.get(query))
+  }
+  public domainLevel = 1
+  // private allDomainFragments: string[]
   private setBlogFromUrl(id: string) {
-    this.domainLevel = this.domainFrag.length
+    // this.domainLevel = this.allDomainFragments.length
 
     return this.setBlogFromQuery(id)
   }
 
 
 
-  private cache = new Map<string, PostOrPage>()
+  private cache = new Map<string, ReturnType<typeof this.parseBlogPostToHTML>>()
   private domainFrag: string
-  private splitDomain: string[]
 
   async tryNavigationCallback(domainFragment: string) {
-
-    this.splitDomain = domainFragment.split(domain.dirString)
-    this.domainFrag = this.splitDomain.last
+    const splitDomain = domainFragment.split(domain.dirString)
+    // it is important to set this to a local variable. As two tryNavigations can be called (by preloading)
+    // at the same time, and then the latent cache set would be a race condition depending on which blog 
+    // loads first and who set this.domainFrag.
+    const slug = this.domainFrag = splitDomain.last
     if (this.cache.has(this.domainFrag)) return true
     let blogData: PostOrPage
     try {
@@ -105,11 +110,21 @@ export default class GhostBlogPage extends BlogPage {
     } catch (e) {
       return false
     }
-    this.cache.set(this.domainFrag, blogData)
+    this.cache.set(slug, this.parseBlogPostToHTML(slug, blogData))
     return true
   }
 
+  private loadStages = keyIndex((id: unknown) => {
+    return 
+  })
+
+  public async minimalContentPaint(loadUid: string) {
+    await super.minimalContentPaint(loadUid)
+    console.log("load ghost", loadUid)
+  }
+
   navigationCallback() {
+    super.navigationCallback()
     return this.setBlogFromUrl(this.domainFrag)
   }
 

@@ -113,7 +113,7 @@ export default class Site extends Component {
 
     this.apd(pageManager)
     pageManager.activate()
-    pageManager.minimalContentPaint().then(() => {
+    pageManager.minimalContentPaint(undefined).then(() => {
       // @ts-ignore
       const themeSubHeader = new DataSubscription(new Data(undefined), (theme) => {
         header.theme.set(theme as any)
@@ -133,8 +133,8 @@ export default class Site extends Component {
       pageManager.addThemeIntersectionListener(header, themeSubHeader.data.bind(themeSubHeader))    
       // pageManager.addThemeIntersectionListener(lowerNav, themeSubLowerNav.data.bind(themeSubLowerNav))
       
-      pageManager.fullContentPaint().then(() => {
-        pageManager.completePaint().then(() => {
+      pageManager.fullContentPaint(undefined).then(() => {
+        pageManager.completePaint(undefined).then(() => {
 
         })
       })

@@ -125,8 +125,8 @@ export default abstract class Manager extends Frame {
 
   private async setDomain(to: string) {
     const prom = this.setElem(to)
-    const { pageProm } = await prom
-    pageProm.priorityThen(() => {}, "completePaint").then(() => {
+    const { pageProm, suc } = await prom
+    pageProm.priorityThen(suc.domain, () => {}, "completePaint").then(() => {
       this.preloadLinks(linkRecord.doneRecording())
     })
   }
@@ -135,24 +135,25 @@ export default abstract class Manager extends Frame {
   private domainSubscription: domain.DomainSubscription
 
 
-  async minimalContentPaint() {
+  async minimalContentPaint(loadId: string) {
+    // debugger
     // console.log("start minimal")
     await this.setElem(this.domainSubscription.domain)
-    await super.minimalContentPaint()
+    await super.minimalContentPaint(loadId)
   }
 
-  async fullContentPaint(): Promise<void> {
+  async fullContentPaint(loadId: string): Promise<void> {
     // console.log("start content")
-    await (await this.findSuitablePage(this.domainSubscription.domain)).pageProm.priorityThen(() => {}, "fullContentPaint")
-    await super.fullContentPaint();
+    await (await this.findSuitablePage(this.domainSubscription.domain)).pageProm.priorityThen(this.lastFoundPageParams.suc.domain, () => {}, "fullContentPaint")
+    await super.fullContentPaint(loadId);
   }
 
-  async completePaint() {
+  async completePaint(loadId: string) {
     // console.log("start complete")
     
-    await (await this.findSuitablePage(this.domainSubscription.domain)).pageProm.priorityThen(() => {}, "completePaint")
+    await (await this.findSuitablePage(this.domainSubscription.domain)).pageProm.priorityThen(this.lastFoundPageParams.suc.domain, () => {}, "completePaint")
     this.preloadLinks(linkRecord.doneRecording())
-    await super.completePaint();
+    await super.completePaint(loadId);
   }
 
 
@@ -171,9 +172,10 @@ export default abstract class Manager extends Frame {
       
     }
 
-    const el = await Promise.all(toBePreloadedLocally.map(async (url) => 
-      (await this.findSuitablePage(url)).pageProm.imp
-    ))
+    const el = await Promise.all(toBePreloadedLocally.map(async (url) => {
+      const page = await this.findSuitablePage(url)
+      return {domainFrag: page.suc.domain, imp: page.pageProm.imp}
+    }))
     await this.importanceMap.whiteList(el, "minimalContentPaint")
     
     
@@ -335,17 +337,8 @@ export default abstract class Manager extends Frame {
     if (to) domain.set(to, this.domainLevel, push)
     else return this.currentUrl
   }
-  private findSuitablePage = keyIndex(this._findSuitablePage.bind(this)) as (fullDomain: string) => Promise<{
-    to: any;
-    pageProm: PriorityPromise<any>;
-    fullDomainHasTrailingSlash: boolean;
-    suc: {
-        domain: string;
-        page: any;
-        level: any;
-    };
-  }>
-  private async _findSuitablePage(fullDomain: string) {
+
+  private async findSuitablePage(fullDomain: string) {
     let to: any = fullDomain
 
     if (fullDomain.startsWith(domain.dirString)) to = to.slice(1)
@@ -384,10 +377,11 @@ export default abstract class Manager extends Frame {
       while(pageProm !== undefined) {
         nthTry++
         let suc: boolean
+        
         if (this.domainNeedsSomeSubDomain.has(pageProm.imp) && rootDomainFragment.length === 0) {
           suc = false
         }
-        else suc = await pageProm.priorityThen(async (page: Page | SectionedPage) => {
+        else suc = await pageProm.priorityThen(undefined, async (page: Page | SectionedPage) => {
           sucPage = page
           page.domainLevel = domainLevel
           domainFragment = rootDomainFragment === "" ? page.defaultDomain : rootDomainFragment
@@ -405,7 +399,9 @@ export default abstract class Manager extends Frame {
       }
     }
 
-    return { to, pageProm, fullDomainHasTrailingSlash, suc: {
+
+    
+    return this.lastFoundPageParams = { to, pageProm, fullDomainHasTrailingSlash, suc: {
         domain: sucDomainFrag,
         page: sucPage,
         level: sucDomainLevel
@@ -413,14 +409,16 @@ export default abstract class Manager extends Frame {
     }
   }
 
+  private lastFoundPageParams: { to: string, pageProm: PriorityPromise<any>, fullDomainHasTrailingSlash: boolean, suc: { domain: string, page: any, level: number } }
 
-  private setElem = latestLatent(this.findSuitablePage).then(async ({ to, pageProm, fullDomainHasTrailingSlash, suc }) => {
-    // dont await this, setElem may be by domain.set itself (from e.g. link) and we would be waiting for ourselves here, this call is just here to fixup the set domain with the corrected one (e.g. default subdomain added)
+
+  private setElem = latestLatent(this.findSuitablePage.bind(this)).then(async ({ to, pageProm, fullDomainHasTrailingSlash, suc }) => {
+    // dont await this, setElem may be called by domain.set itself (from e.g. link) and we would be waiting for ourselves here, this call is just here to fixup the set domain with the corrected one (e.g. default subdomain added)
 
     domain.set(domain.dirString + suc.domain + (fullDomainHasTrailingSlash && suc.domain !== "" ? domain.dirString : ""), suc.level, false)
 
 
-    await pageProm.priorityThen(() => {
+    await pageProm.priorityThen(suc.domain, () => {
 
       if (this.currentUrl !== to) {
         this.currentUrl = to;

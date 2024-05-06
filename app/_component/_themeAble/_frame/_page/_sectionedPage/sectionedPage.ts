@@ -227,7 +227,9 @@ export default abstract class SectionedPage extends Page {
   
         let prom = Promise.resolve(elem)
         //@ts-ignore
-        prom.priorityThen = prom.then
+        prom.priorityThen = (to: string, cb: (value: any) => any) => {
+          return prom.then(cb)
+        }
         //@ts-ignore
         map.set(name, prom)
       }

@@ -1,6 +1,7 @@
 import ThemeAble, { Theme } from "../themeAble";
 import { StackedAsyncTaskRecord } from "../../../lib/record";
 import { Data } from "josm";
+import keyIndex from "key-index";
 
 const resolveAddOnEmpty = (func: Function) => {
   func()
@@ -12,9 +13,16 @@ export const loadRecord = {
   full: new StackedAsyncTaskRecord(resolveAddOnEmpty)
 }
 
-
+type ID = unknown
 type Recording = () => Promise<unknown[]>
 
+function makeRec() {
+  return {
+    minimal: loadRecord.minimal.record(),
+    content: loadRecord.content.record(),
+    full: loadRecord.full.record()
+  }
+}
 
 
 export default abstract class Frame extends ThemeAble<HTMLElement> {
@@ -24,20 +32,21 @@ export default abstract class Frame extends ThemeAble<HTMLElement> {
   public readonly active: boolean;
   public readonly initiallyActivated: boolean
 
-  private minimalRec: Recording
-  private contentRec: Recording
-  private fullRec: Recording
+  private records = new Map<unknown, {
+    minimal: Recording,
+    content: Recording,
+    full: Recording
+  }>()
+
+
 
   constructor(theme: Theme) {
-    const minimal = loadRecord.minimal.record()
-    const content = loadRecord.content.record()
-    const full = loadRecord.full.record()
+    const initRec = makeRec()
     super(undefined, theme)
     this.accentTheme = new Data("primary") as Data<"primary" | "secondary">
 
-    this.minimalRec = minimal
-    this.contentRec = content
-    this.fullRec = full
+    this.records.set(undefined, initRec)
+
 
     
 
@@ -63,19 +72,61 @@ export default abstract class Frame extends ThemeAble<HTMLElement> {
 
     if (this.activationCallback) return this.activationCallback(activate)
   }
+  public domainFragmentToLoadUid?: boolean | ((domainFrag: string) => ID)
   
   stl() {
     return super.stl() + require("./frame.css").toString()
   }
-  public async minimalContentPaint(): Promise<void> {
-    await this.minimalRec()
+  public async minimalContentPaint(loadUid: string): Promise<void> {
+    await this.records.get(loadUid).minimal()
   }
-  public async fullContentPaint(): Promise<void> {
-    await this.contentRec()
+  public async fullContentPaint(loadUid: string): Promise<void> {
+    await this.records.get(loadUid).content()
   }
-  public async completePaint(): Promise<void> {
-    await this.fullRec()
+  public async completePaint(loadUid: string): Promise<void> {
+    await this.records.get(loadUid).full()
   }
+
+
+
+
+  private firstTryNav = true
+  public async tryNavigate(domainFragment?: string) {
+    let res = true
+    const loadUid = this.domainFragmentToLoadUid !== undefined ? this.domainFragmentToLoadUid === true ? domainFragment : (this as any).domainFragmentToLoadUid(domainFragment) : undefined
+    if (this.firstTryNav) {
+      this.firstTryNav = false
+      if (loadUid !== undefined) {
+        this.records.set(loadUid, this.records.get(undefined))
+        this.records.delete(undefined)
+      }
+    }
+    else {
+      if (!this.records.has(loadUid)) this.records.set(loadUid, makeRec())
+    }
+
+    if (this.tryNavigationCallback) {
+      let acRes = await this.tryNavigationCallback(domainFragment)
+      if (acRes === undefined) acRes = true
+      if (!acRes) res = false
+    }
+    
+    
+    if (!res) {
+      // clear them from stack
+      const rec = this.records.get(loadUid)
+      this.records.delete(loadUid)
+      rec.minimal()
+      rec.content()
+      rec.full()
+    }
+    return res
+  }
+
+  /**
+   * @return resolve Promise as soon as you know if the navigation will be successful or not. Dont wait for swap animation etc
+   */
+  protected tryNavigationCallback?(domainFragment: string): boolean | void | Promise<boolean | void>
 
   protected activationCallback?(active: boolean): void
   protected initialActivationCallback?(): void
