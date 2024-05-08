@@ -268,12 +268,12 @@ export default abstract class SectionedPage extends Page {
     domain.set(name, this.domainLevel, false)
   }
 
-  private curSectionProm: Promise<{ pageSection: PageSection, fragments: { rootElem: string, closeUp: string } }>
+  private curSectionPromMap: Map<string, Promise<{ pageSection: PageSection, fragments: { rootElem: string, closeUp: string } }>> = new Map
   protected currentDomainFragment: string
   private verticalOffset: number
-  tryNavigationCallback(domainFragment: string) {
+  tryNavigationCallback(ogDomainFragment: string) {
 
-    domainFragment = this.merge(domainFragment)
+    let domainFragment = this.merge(ogDomainFragment)
     
     //@ts-ignore
     let fragments: {
@@ -309,12 +309,11 @@ export default abstract class SectionedPage extends Page {
 
 
     const m = this.sectionIndex.get(this.currentDomainFragment = domainFragment, this.currentlyActiveSectionIdIndex = this.currentSectionIdStore.get() === fragments.rootElem ? this.currentSectionIdIndexStore.get() : 0)
-    this.curSectionProm = new Promise((res) => {
+    this.curSectionPromMap.set(ogDomainFragment, new Promise((res) => {
       if (m) m.then((pageSection) => {
         res({pageSection, fragments})
       })
-      
-    })
+    }))
 
     this.lastTriedNavigationSectionIndex = this.sectionList.get().indexOf(domainFragment)
 
@@ -328,7 +327,7 @@ export default abstract class SectionedPage extends Page {
   private lastLocalScrollProgressStoreSubstription: DataSubscription<[number]>
   private confirmedLastScrollProgress = 0
 
-  async navigationCallback() {
+  async navigationCallback(loadId: string) {
     let resFunc: Function
     const funcProm = new Promise<void>((r) => {resFunc = r})
     let active = this.active
@@ -338,7 +337,7 @@ export default abstract class SectionedPage extends Page {
 
 
 
-    let { pageSection: section, fragments } = await this.curSectionProm
+    let { pageSection: section, fragments } = await this.curSectionPromMap.get(loadId)
 
     this.activateSectionName(fragments.closeUp)
     this.currentlyActiveSectionRootName = fragments.rootElem
@@ -430,33 +429,45 @@ export default abstract class SectionedPage extends Page {
 
     isInWantedPos.then(() => {
       const scrollTop = this.scrollTop - this.componentBody.css("marginTop")
-      const nextSib = section.nextSibling as HTMLElement
+      const nextSection = section.nextSibling as HTMLElement
+      if (nextSection === null) return // This can only happen when this is the last section and the initial one (as showSection() must have been called already by the init function, otherwise we would still have the loading section). In this case we dont need to do anything.
       
-      let isAboveCurrent = wantedPos < this.lastTriedNavigationSectionIndex
-      
-      const sectionWillTemper = isAboveCurrent && this.confirmedLastScrollProgress < 0 && nextSib && nextSib.offsetTop && nextSib.offsetTop > scrollTop && nextSib.offsetTop < scrollTop + window.innerHeight
-      let sideEffect: number
-      if ((section as any).showSection !== undefined) {
-        const _sideEffect = section.showSection()
-         
-        if (_sideEffect !== undefined) {
-          sideEffect = _sideEffect as any
-        }
+      const isAboveCurrent = wantedPos < this.lastTriedNavigationSectionIndex
+
+      // we use nextSection here because we havent appended the section yet
+      const completelyScrolledBy = nextSection.offsetTop < scrollTop
+
+      let subSideEffect = section.showSection()
+      if (subSideEffect === undefined) subSideEffect = 0
+      const totalSideEffect = section.offsetHeight + section.css("marginTop") + section.css("marginBottom") + subSideEffect
+
+      if (isAboveCurrent && !completelyScrolledBy) {
+        this.scrollTop += totalSideEffect
       }
-      else section.show()
+      
+      // const sectionWillTemper = isAboveCurrent && this.confirmedLastScrollProgress < 0 && nextSib && nextSib.offsetTop && nextSib.offsetTop > scrollTop && nextSib.offsetTop < scrollTop + window.innerHeight
+      // let sideEffect: number
+      // if ((section as any).showSection !== undefined) {
+      //   const _sideEffect = section.show()
+         
+      //   if (_sideEffect !== undefined) {
+      //     sideEffect = _sideEffect as any
+      //   }
+      // }
+      // else section.show()
       
       // console.log(section.offsetTop) // This is important. It forces the section to be rendered.
-      if (sideEffect) {
-        lastHeight = sideEffect
-      }
-      else {
-        lastHeight = section.offsetHeight + section.css("marginTop") + section.css("marginBottom") - lastHeight 
-        if (sectionWillTemper) this.scrollTop += lastHeight
-      }
+      // if (sideEffect) {
+      //   lastHeight = sideEffect
+      // }
+      // else {
+      //   lastHeight = section.offsetHeight + section.css("marginTop") + section.css("marginBottom") - lastHeight 
+      //   if (sectionWillTemper) this.scrollTop += lastHeight
+      // }
 
 
-      justBeforeInWantedPosScrollPos = this.scrollTop
-      justBeforeInWantedPosScrollHeight = this.scrollHeight
+      // justBeforeInWantedPosScrollPos = this.scrollTop
+      // justBeforeInWantedPosScrollHeight = this.scrollHeight
       
       // calculateDimensionsAndRender()
       // compensateResizeScrollDiffFromInit(section.offsetHeight)
