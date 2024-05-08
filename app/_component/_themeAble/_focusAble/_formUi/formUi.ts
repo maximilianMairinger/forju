@@ -179,9 +179,10 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
       }
     }, true)
     this.componentBody.prepend(hovPreDet);
-    
+
 
     loadRecord.content.add(async () => {
+      await delay(0)
       if (window.matchMedia && window.matchMedia("(hover:hover)").matches && this.userFeedbackMode.preHover.get()) {
         await import("./preHoverInteraction").then(({default: f}) => {
           const root = ce("root-bounds");
