@@ -118,7 +118,10 @@ export default abstract class Frame extends ThemeAble<HTMLElement> {
         if (tryRet === undefined || !!tryRet) res = true
         else res = false
       }
-      catch(e) {res = false}
+      catch(e) {
+        console.error("Non standard tryNavigationCallback fail. Caused by", e)
+        res = false
+      }
       
     }
 
@@ -141,7 +144,6 @@ export default abstract class Frame extends ThemeAble<HTMLElement> {
     return res
   }
   public attachStructureCallback?(domainFragment: unknown): void
-
   /**
    * @return resolve Promise as soon as you know if the navigation will be successful or not. Dont wait for swap animation etc
    */

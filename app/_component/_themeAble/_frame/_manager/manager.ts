@@ -241,8 +241,6 @@ export default abstract class Manager extends Frame {
     this.wantedFrame = to;
     let from = this.currentPage;
 
-    
-    
 
     if (from === to) {
       //Focus even when it is already the active frame
@@ -419,11 +417,9 @@ export default abstract class Manager extends Frame {
     domain.set(domain.dirString + suc.domain + (fullDomainHasTrailingSlash && suc.domain !== "" ? domain.dirString : ""), suc.level, false)
 
 
-    await pageProm.priorityThen(suc.domain, () => {
-
+    await pageProm.priorityThen(suc.domain, (page: Page) => {
       if (this.currentUrl !== to) {
         this.currentUrl = to;
-        let page = this.currentPage;
         (async () => {
           if (this.pageChangeCallback) {
             try {
