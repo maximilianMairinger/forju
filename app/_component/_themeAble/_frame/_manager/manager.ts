@@ -138,22 +138,23 @@ export default abstract class Manager extends Frame {
   async minimalContentPaint(loadId: string) {
     // debugger
     // console.log("start minimal")
-    await this.setElem(this.domainSubscription.domain)
     await super.minimalContentPaint(loadId)
+    await this.setElem(this.domainSubscription.domain)
   }
 
   async fullContentPaint(loadId: string): Promise<void> {
     // console.log("start content")
-    await (await this.findSuitablePage(this.domainSubscription.domain)).pageProm.priorityThen(this.lastFoundPageParams.suc.domain, () => {}, "fullContentPaint")
     await super.fullContentPaint(loadId);
+    await (await this.findSuitablePage(this.domainSubscription.domain)).pageProm.priorityThen(this.lastFoundPageParams.suc.domain, () => {}, "fullContentPaint")
+    
   }
 
   async completePaint(loadId: string) {
     // console.log("start complete")
-    
+    await super.completePaint(loadId);
     await (await this.findSuitablePage(this.domainSubscription.domain)).pageProm.priorityThen(this.lastFoundPageParams.suc.domain, () => {}, "completePaint")
     this.preloadLinks(linkRecord.doneRecording())
-    await super.completePaint(loadId);
+    
   }
 
 
@@ -228,7 +229,7 @@ export default abstract class Manager extends Frame {
    * Swaps to given Frame
    * @param to frame to be swapped to
    */
-  private async swapFrame(to: Page): Promise<void> {
+  private async swapFrame(to: Page, domainFrag: string): Promise<void> {
     if (this.busySwaping) {
       console.warn("was busy, unable to execute pageswap")
       // maybe retry, or cancel ...
@@ -246,7 +247,7 @@ export default abstract class Manager extends Frame {
     if (from === to) {
       //Focus even when it is already the active frame
       if (!this.preserveFocus) to.focus()
-      to.navigate()
+      to.navigate(domainFrag)
       this.busySwaping = false
       return
     }
@@ -259,7 +260,7 @@ export default abstract class Manager extends Frame {
     
     if (from !== undefined) from.deactivate()
     if (this.active) {
-      to.navigate()
+      to.navigate(domainFrag)
       to.activate()
     }
 
@@ -322,7 +323,7 @@ export default abstract class Manager extends Frame {
       to.css("zIndex", 0)
       this.busySwaping = false;
       if (this.wantedFrame !== to) {
-        await this.swapFrame(this.wantedFrame);
+        await this.swapFrame(this.wantedFrame, domainFrag);
         return
       }
     })()
@@ -450,7 +451,7 @@ export default abstract class Manager extends Frame {
       }
     }, "minimalContentPaint")
 
-    this.swapFrame(suc.page)
+    this.swapFrame(suc.page, suc.domain)
     return { to, pageProm, fullDomainHasTrailingSlash, suc }
       
   })

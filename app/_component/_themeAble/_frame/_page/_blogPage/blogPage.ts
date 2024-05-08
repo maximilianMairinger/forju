@@ -35,7 +35,7 @@ export default abstract class BlogPage extends Page {
 
 
 
-  protected async navigationCallback() {
+  protected async navigationCallback(loadId: unknown) {
     this.scrollTop = 0
   }
 

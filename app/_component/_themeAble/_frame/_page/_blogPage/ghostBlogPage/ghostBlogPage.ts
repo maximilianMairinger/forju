@@ -79,18 +79,14 @@ export default class GhostBlogPage extends BlogPage {
       ce("content-inner-container").apd(parseContentHTML(blogData.html))
     ]
   }
+  // this is important for frame, so that it knows that each sub domainFragment should be treated as a unique load 
+  // process with a seperate loadUid, where loadUid === domainFragment. 
   domainFragmentToLoadUid = true
 
   private async setBlogFromQuery(query: string) {
     this.setBlog(...this.cache.get(query))
   }
   public domainLevel = 1
-  // private allDomainFragments: string[]
-  private setBlogFromUrl(id: string) {
-    // this.domainLevel = this.allDomainFragments.length
-
-    return this.setBlogFromQuery(id)
-  }
 
 
 
@@ -99,33 +95,43 @@ export default class GhostBlogPage extends BlogPage {
 
   async tryNavigationCallback(domainFragment: string) {
     const splitDomain = domainFragment.split(domain.dirString)
-    // it is important to set this to a local variable. As two tryNavigations can be called (by preloading)
-    // at the same time, and then the latent cache set would be a race condition depending on which blog 
-    // loads first and who set this.domainFrag.
-    const slug = this.domainFrag = splitDomain.last
+    const slug = splitDomain.last
     if (this.cache.has(this.domainFrag)) return true
     let blogData: PostOrPage
     try {
-      blogData = await ghostApi.posts.read({slug: this.domainFrag}, {formats: ['html'], include: ['authors']})
+      blogData = await ghostApi.posts.read({ slug }, {formats: ['html'], include: ['authors']})
     } catch (e) {
       return false
     }
+    
+    return {slug, blogData}
+  }
+  
+  attachStructureCallback({blogData, slug}: {blogData: PostOrPage, slug: string}) {
     this.cache.set(slug, this.parseBlogPostToHTML(slug, blogData))
-    return true
   }
 
-  private loadStages = keyIndex((id: unknown) => {
-    return 
-  })
 
   public async minimalContentPaint(loadUid: string) {
     await super.minimalContentPaint(loadUid)
-    console.log("load ghost", loadUid)
+    console.log("minimal", loadUid)
   }
 
-  navigationCallback() {
-    super.navigationCallback()
-    return this.setBlogFromUrl(this.domainFrag)
+  public async fullContentPaint(loadUid: string) {
+    await super.fullContentPaint(loadUid)
+    console.log("content", loadUid)
+  }
+
+  public async completePaint(loadUid: string) {
+    await super.completePaint(loadUid)
+    
+    console.log("complete", loadUid)
+  }
+
+  navigationCallback(loadId: string) {
+    super.navigationCallback(loadId)
+    // debugger
+    return this.setBlogFromQuery(loadId)
   }
 
   stl() {

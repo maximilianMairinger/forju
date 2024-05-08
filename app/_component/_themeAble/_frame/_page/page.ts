@@ -14,13 +14,13 @@ export default abstract class Page extends Frame {
 
   }
   
-  public navigate() {
-    if (this.navigationCallback) this.navigationCallback()
+  public navigate(loadId: string) {
+    if (this.navigationCallback) this.navigationCallback(loadId)
   }
 
 
   
-  protected navigationCallback?(): Promise<void>
+  protected navigationCallback?(loadId: unknown): Promise<void>
   protected initialActivationCallback?(): boolean | void | Promise<boolean | void>
   stl() {
     return super.stl() + require("./page.css").toString()

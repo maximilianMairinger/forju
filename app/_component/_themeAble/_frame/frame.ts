@@ -14,7 +14,7 @@ export const loadRecord = {
 }
 
 type ID = unknown
-type Recording = () => Promise<unknown[]>
+type Recording = ReturnType<typeof loadRecord.minimal.record>
 
 function makeRec() {
   return {
@@ -87,14 +87,17 @@ export default abstract class Frame extends ThemeAble<HTMLElement> {
     await this.records.get(loadUid).full()
   }
 
-
-
+  //  TODO dont memoize this, as temporary network errors can later be resolved. TryNav can be network dependent, like for ghostBlogPage.
+  public tryNavigate = keyIndex(this._tryNavigate.bind(this)) as typeof this["_tryNavigate"]
 
   private firstTryNav = true
-  public async tryNavigate(domainFragment?: string) {
-    let res = true
+  public async _tryNavigate(domainFragment?: string) {
+    // if (domainFragment === 'willkommen-wissenschaftler-von-morgen') debugger
+    
     const loadUid = this.domainFragmentToLoadUid !== undefined ? this.domainFragmentToLoadUid === true ? domainFragment : (this as any).domainFragmentToLoadUid(domainFragment) : undefined
+    let myRecords: {minimal: Recording, content: Recording, full: Recording}
     if (this.firstTryNav) {
+      myRecords = this.records.get(undefined)
       this.firstTryNav = false
       if (loadUid !== undefined) {
         this.records.set(loadUid, this.records.get(undefined))
@@ -102,14 +105,29 @@ export default abstract class Frame extends ThemeAble<HTMLElement> {
       }
     }
     else {
-      if (!this.records.has(loadUid)) this.records.set(loadUid, makeRec())
+      if (!this.records.has(loadUid)) this.records.set(loadUid, myRecords = makeRec())
+      else myRecords = this.records.get(loadUid)
     }
 
-    if (this.tryNavigationCallback) {
-      let acRes = await this.tryNavigationCallback(domainFragment)
-      if (acRes === undefined) acRes = true
-      if (!acRes) res = false
+    let res = true
+    let tryRet: unknown
+    if (this.tryNavigationCallback !== undefined) {
+      
+      try {
+        tryRet = await this.tryNavigationCallback(domainFragment) as boolean
+        if (tryRet === undefined || !!tryRet) res = true
+        else res = false
+      }
+      catch(e) {res = false}
+      
     }
+
+    if (this.attachStructureCallback !== undefined && res) {
+      for (const key in myRecords) loadRecord[key as "minimal"].record(myRecords[key])
+      this.attachStructureCallback(tryRet !== undefined ? tryRet : domainFragment)
+    }
+
+
     
     
     if (!res) {
@@ -122,11 +140,12 @@ export default abstract class Frame extends ThemeAble<HTMLElement> {
     }
     return res
   }
+  public attachStructureCallback?(domainFragment: unknown): void
 
   /**
    * @return resolve Promise as soon as you know if the navigation will be successful or not. Dont wait for swap animation etc
    */
-  protected tryNavigationCallback?(domainFragment: string): boolean | void | Promise<boolean | void>
+  protected tryNavigationCallback?(domainFragment: string): boolean | unknown | void | Promise<boolean | unknown | void>
 
   protected activationCallback?(active: boolean): void
   protected initialActivationCallback?(): void

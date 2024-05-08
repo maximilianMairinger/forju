@@ -1,5 +1,5 @@
 import delay from "tiny-delay"
-import LinkedList from "fast-linked-list"
+import LinkedList, { Token } from "fast-linked-list"
 
 
 
@@ -30,21 +30,23 @@ export class AsyncTaskRecord<Q, R extends Promise<Q> | Q = Promise<Q> | Q, T ext
 }
 
 
-function makeStackedRecord(MyRecord: typeof Record): {new<T>(resolveAddOnEmpty?: (val: any) => void): {add: Record<T>["add"], record: () => Record<T>["doneRecording"]}}
-function makeStackedRecord(MyRecord: typeof TaskRecord): {new<T>(resolveAddOnEmpty?: (val: any) => void): {add: TaskRecord<T>["add"], record: () => TaskRecord<T>["doneRecording"]}}
-function makeStackedRecord(MyRecord: typeof AsyncTaskRecord): {new<T>(resolveAddOnEmpty?: (val: any) => void): {add: AsyncTaskRecord<T>["add"], record: () => AsyncTaskRecord<T>["doneRecording"]}}
+function makeStackedRecord(MyRecord: typeof Record): {new<T>(resolveAddOnEmpty?: (val: any) => void): {add: Record<T>["add"], record: (doneRecordingCbToBringToTop?: (() => any) & { token: Token }) => (Record<T>["doneRecording"] & { token: Token })}}
+function makeStackedRecord(MyRecord: typeof TaskRecord): {new<T>(resolveAddOnEmpty?: (val: any) => void): {add: TaskRecord<T>["add"], record: (doneRecordingCbToBringToTop?: (() => any) & { token: Token }) => (TaskRecord<T>["doneRecording"] & { token: Token })}}
+function makeStackedRecord(MyRecord: typeof AsyncTaskRecord): {new<T>(resolveAddOnEmpty?: (val: any) => void): {add: AsyncTaskRecord<T>["add"], record: (doneRecordingCbToBringToTop?: (() => any) & { token: Token }) => (AsyncTaskRecord<T>["doneRecording"] & { token: Token })}}
 function makeStackedRecord(MyRecord: {new<T>(): {add: any, doneRecording: any}}): any {
   return class StackedNewRecord<T> {
     constructor(private resolveAddOnEmpty?: (val: T) => void) {
 
     }
     private records = new LinkedList<any>()
-    record() {
-      const tok = this.records.push(new MyRecord<T>())
+    record(doneRecordingCbToBringToTop?: (() => void) & { token: Token }) {
+      const tok = doneRecordingCbToBringToTop === undefined ? this.records.push(new MyRecord<T>()) : this.records.pushToken(doneRecordingCbToBringToTop.token)
       const doneRecording = () => {
         tok.remove()
+        // make two callbacks here. One for stop recording and the other to resolve.
         return tok.value.doneRecording()
       }
+      doneRecording.token = tok
       return doneRecording
     }
     add(val: T) {
