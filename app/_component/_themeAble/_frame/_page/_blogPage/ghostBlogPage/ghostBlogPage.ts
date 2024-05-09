@@ -70,13 +70,13 @@ export default class GhostBlogPage extends BlogPage {
     const titleContainer = ce("title-container")
     titleContainer.apd(headingElem as any, imgElem)
 
-    
+    const contentContainer = ce("content-inner-container").apd(parseContentHTML(blogData.html))
 
-    this.addHooksToChilds([headingElem as any as Element, imgElem])
+    this.addHooksToChilds([...titleContainer.children, ...contentContainer.children])
 
     return [ 
       titleContainer,
-      ce("content-inner-container").apd(parseContentHTML(blogData.html))
+      contentContainer
     ]
   }
   // this is important for frame, so that it knows that each sub domainFragment should be treated as a unique load 
@@ -114,23 +114,18 @@ export default class GhostBlogPage extends BlogPage {
 
   public async minimalContentPaint(loadUid: string) {
     await super.minimalContentPaint(loadUid)
-    console.log("minimal", loadUid)
   }
 
   public async fullContentPaint(loadUid: string) {
     await super.fullContentPaint(loadUid)
-    console.log("content", loadUid)
   }
 
   public async completePaint(loadUid: string) {
     await super.completePaint(loadUid)
-    
-    console.log("complete", loadUid)
   }
 
   navigationCallback(loadId: string) {
     super.navigationCallback(loadId)
-    // debugger
     return this.setBlogFromQuery(loadId)
   }
 
