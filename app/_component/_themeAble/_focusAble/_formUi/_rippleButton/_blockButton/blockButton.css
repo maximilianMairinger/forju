@@ -8,15 +8,11 @@
   width: fit-content;
 }
 
-button-text {
-  display: block;
-  font-size: 1em;
-  margin: auto 0;
-  padding: var(--padding);
-  text-align: center;
-  font-weight: bold;
 
-  box-sizing: border-box;
+:host(.themed) {
+  --background-color: rgb(var(--primary-theme));
+  --text: var(--plain-background); 
+  --focus: var(--primary-theme);
 }
 
 
@@ -25,3 +21,18 @@ move-me {
   height: inherit;
   background-color: var(--background-color);
 }
+
+slot {
+  overflow: hidden;
+  display: block;
+  font-size: 1em;
+  margin: auto 0;
+  padding: var(--padding);
+  text-align: center;
+  font-weight: bold;
+
+  box-sizing: border-box;
+  z-index: 1;
+  border-radius: inherit;
+}
+

@@ -1,0 +1,1 @@
+export const css = require("gridjs/dist/theme/mermaid.min.css").toString() + require("./gridjsStylesAddon.css").toString()

@@ -38,8 +38,8 @@ export default class PageManager extends Manager {
         ), val: () => import(/* webpackChunkName: "legalPage" */"../../_page/_blogPage/legalPage/legalPage")
       },
       {
-        key: new Import("blog", 10, (ghostBlogPage: typeof GhostBlogPage) =>
-            new ghostBlogPage()
+        key: new Import("blog/*", 10, (ghostBlogPage: typeof GhostBlogPage) => 
+          new ghostBlogPage()
         ), val: () => import(/* webpackChunkName: "ghostBlogPage" */"../../_page/_blogPage/ghostBlogPage/ghostBlogPage")
       },
       {

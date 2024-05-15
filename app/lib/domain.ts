@@ -6,7 +6,8 @@ import lang from "./../lib/lang"
 
 
 const commonTitle = lang.appName.short;
-const commonTitleSeperator = " - "
+const longTitle = lang.appName.long;
+const commonTitleSeperator = " | "
 const commonSubtileSeperator = " > "
 const maxCharactersInTitle = 20
 const toMuchSubtitlesTruncate = "..."
@@ -72,8 +73,15 @@ function renderSubtitle(myDomainIndex: string[] = domIndex) {
 
 
 commonTitle.get(updateTitle, false)
+longTitle.get(updateTitle, false)
 
 function updateTitle() {
+  if (domIndex.length === 0) {
+    const t = longTitle.get()
+    titleElement.txt(t)
+    return t
+  }
+
   let title = commonTitle.get()
 
   let originalSubtitle: string, subtitle: string

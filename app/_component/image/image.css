@@ -11,14 +11,17 @@
 
 picture {
   display: var(--display);
-  width: inherit;
-  height: inherit;
+  width: 100%;
+  height: 100%;
+  max-width: inherit;
+  max-height: inherit;
   position: absolute;
   top: 0;
   left: 0;
   overflow: hidden;
   border-radius: inherit;
   padding: inherit;
+  aspect-ratio: inherit;
 }
 picture:first-of-type {
   position: relative;
@@ -32,10 +35,13 @@ img {
   opacity: 0;
   object-fit: cover;
   object-position: var(--object-position);
-  width: inherit;
-  height: inherit;
+  width: 100%;
+  height: 100%;
+  max-width: inherit;
+  max-height: inherit;
   user-select: none;
   user-drag: none; 
+  aspect-ratio: inherit;
   -moz-user-select: none;
   -webkit-user-drag: none;
   -webkit-user-select: none;

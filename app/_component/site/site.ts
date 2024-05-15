@@ -8,14 +8,12 @@ import { dirString } from "../../lib/domain"
 import { ElementList } from "extended-dom"
 import HighlightAbleIcon from "../_themeAble/_icon/_highlightAbleIcon/highlightAbleIcon"
 import { Data, DataSubscription } from "josm"
-import { linkRecord } from "../_themeAble/link/link"
+
 
 
 const topLimit = 0
 const scrollTrendActivationCount = 20
 
-// intentionally never resolve those
-linkRecord.record()
 
 export default class Site extends Component {
 
@@ -115,7 +113,7 @@ export default class Site extends Component {
 
     this.apd(pageManager)
     pageManager.activate()
-    pageManager.minimalContentPaint().then(() => {
+    pageManager.minimalContentPaint(undefined).then(() => {
       // @ts-ignore
       const themeSubHeader = new DataSubscription(new Data(undefined), (theme) => {
         header.theme.set(theme as any)
@@ -135,8 +133,8 @@ export default class Site extends Component {
       pageManager.addThemeIntersectionListener(header, themeSubHeader.data.bind(themeSubHeader))    
       // pageManager.addThemeIntersectionListener(lowerNav, themeSubLowerNav.data.bind(themeSubLowerNav))
       
-      pageManager.fullContentPaint().then(() => {
-        pageManager.completePaint().then(() => {
+      pageManager.fullContentPaint(undefined).then(() => {
+        pageManager.completePaint(undefined).then(() => {
 
         })
       })

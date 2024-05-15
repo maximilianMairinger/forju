@@ -16,7 +16,7 @@ under-section {
 c-text-blob {
   margin: 100px calc(5% - 12px);
   margin-bottom: 10px;
-  --header-fontsize-factor: 3.5;
+  --header-fontsize: 3.5em;
   
 }
 

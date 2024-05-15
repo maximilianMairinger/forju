@@ -111,7 +111,7 @@ export default class Header extends ThemeAble {
 
     
 
-
+    
     (() => {
       let globalSym: Symbol
       this.atTheTop.get((show) => {
@@ -127,7 +127,7 @@ export default class Header extends ThemeAble {
         }
       })
     })()
-    
+
   }
 
 

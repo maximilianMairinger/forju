@@ -22,8 +22,8 @@ export default abstract class PageSection extends Frame {
     
   }
 
-  async minimalContentPaint() {
-    await super.minimalContentPaint()
+  async minimalContentPaint(loadId: string) {
+    await super.minimalContentPaint(loadId)
     this.anim({opacity: 1})
   }
 

@@ -10,7 +10,7 @@ const filledPath = "M111.103 315.206C83.9476 315.184 57.7423 305.204 37.4507 287
 
 
 
-export default class ThoughtBubble extends HighlightAbleIcon {
+export default class ThoughtBubbleIcon extends HighlightAbleIcon {
   private elem = this.q("#elem") as SVGPathElement
   constructor() {
     super()
@@ -28,8 +28,8 @@ export default class ThoughtBubble extends HighlightAbleIcon {
   }
 
   pug() {
-    return require("./thoughtBubble.pug").default
+    return require("./thoughtBubbleIcon.pug").default
   }
 }
 
-declareComponent("thought-bubble", ThoughtBubble)
+declareComponent("c-thought-bubble-icon", ThoughtBubbleIcon)

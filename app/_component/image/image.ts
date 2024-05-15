@@ -3,6 +3,8 @@ import declareComponent from "./../../lib/declareComponent"
 import { loadRecord } from "../_themeAble/_frame/frame"
 import { ResablePromise } from "more-proms"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
+import keyIndex from "key-index";
+import { Data } from "josm";
 
 const unionSymbol = "@"
 const typePrefix = "image/"
@@ -61,11 +63,13 @@ const ratio = 16 / 9
 export default class Image extends Component {
   public readonly loaded: {[key in typeof resesList[number]]?: ResablePromise<void>} = {}
   private elems: {[key in typeof resesList[number]]?: {picture: HTMLPictureElement, sources: {setSource: (src: string) => void}[], img: HTMLImageElement &  {setSource: (src: string) => void}}} = {}
-  private myWantedRes = this.resizeData().tunnel(({width, height}) => Math.sqrt(width * height * ratio))
+  private myWantedRes = new Data(0)
   protected body: BodyTypes
   constructor(src?: string, forceLoad?: boolean) {
     //@ts-ignore
     super(false)
+
+    this.resizeDataBase()(({width, height}) => this.myWantedRes.set(Math.sqrt(width * height * ratio)))
 
 
     this.myWantedRes.get(() => {
@@ -109,33 +113,39 @@ export default class Image extends Component {
     picture.apd(...sources)
     this.apd(picture)
 
-    this.newLoadedPromise(loadRes)
+    this.loadedPromiseAndHookMemo(loadRes)
   }
 
-  private newLoadedPromise(resolution: typeof resesList[number]) {
-    this.loaded[resolution] = new ResablePromise<void>((res, rej) => {
-      this.elems[resolution].img.onload = () => {
-        res();
-      }
-      this.elems[resolution].img.onerror = () => {
-        (rej as any)(new Error("Image failed to load. Url: " + this.elems[resolution].img.src));
-      }
-    }) as any
-  }
+  private loadedPromiseMemo = keyIndex((resolution: typeof resesList[number]) => {
+    return this.loaded[resolution] = new ResablePromise<void>((res, rej) => {}) as ResablePromise<void>
+  })
+
+  private loadedPromiseAndHookMemo = keyIndex((resolution: typeof resesList[number]) => {
+    const prom = this.loadedPromiseMemo(resolution)
+    this.elems[resolution].img.onload = () => {
+      prom.res();
+    }
+    this.elems[resolution].img.onerror = () => {
+      (prom.rej as any)(new Error("Image failed to load. Url: " + this.elems[resolution].img.src));
+    }
+    return prom
+  })
+
 
   private wasAtStageIndex = {}
   private currentlyActiveElems: {picture: HTMLPictureElement, sources: {setSource: (src: string) => void}[], img: HTMLImageElement &  {setSource: (src: string) => void}}
   private loadSrc(src: string, res: typeof resesList[number]): Promise<void> {
     const loadStageAtCall = this.currentLoadStage 
-    if (this.loaded[res] !== undefined) return this.loaded[res]
+    if (this.elems[res] !== undefined) return this.loaded[res]
     this.makeNewResElems(res, this.currentLoadStage)
     const thisActiveElems = this.elems[res]
     const { img, sources } = thisActiveElems
 
     const wasLoaded = loadingCache[src] && loadingCache[src][loadStageAtCall] && loadingCache[src][loadStageAtCall][res]
-    
 
-    if (this.loaded[res].settled) this.newLoadedPromise(res)
+
+    // I dont think this is important, as we make a new one in makeNewResElems anyway
+    // if (this.loaded[res].settled) this.newLoadedPromise(res)
 
     
 
@@ -203,8 +213,17 @@ export default class Image extends Component {
     this._src = src
     const isExplicitSrc = isExplicitLocation(src)
     if (forceLoad) {
-      const wantedResName = this.getCurrentlyWantedRes()
-      if (wantedResName && this.loaded[wantedResName] === undefined) return this.loadSrc(this._src, wantedResName)
+      if (isExplicitSrc) {
+        const wantedResName = ""
+        this.loadedPromiseMemo(wantedResName as any)
+        this.currentLoadStage = 1
+        return this.loadSrc(this._src, wantedResName as any)
+      }
+      else {
+        const wantedResName = this.getCurrentlyWantedRes()
+        if (wantedResName && this.loaded[wantedResName] === undefined) return this.loadSrc(this._src, wantedResName)
+      }
+      
     }
     else {
       if (loadingCache[src]) {
@@ -215,7 +234,8 @@ export default class Image extends Component {
             biggestLoadedRes = key
           }
         }
-        this.loadSrc(src, biggestLoadedRes as any)
+        
+        this.loadSrc(src, isExplicitSrc ? "" : biggestLoadedRes as any)
 
         if (this.currentLoadStage === 0 && !isExplicitSrc) {
           loadRecord.full.add(() => {
@@ -234,9 +254,10 @@ export default class Image extends Component {
 
       else {
         if (isExplicitSrc) {
+          const wantedResName = ""
+          this.loadedPromiseMemo(wantedResName as any)
           loadRecord.full.add(() => {
             this.currentLoadStage = 1
-            const wantedResName = ""
             return this.loadSrc(this._src, wantedResName as any)
           })
         }
@@ -257,7 +278,7 @@ export default class Image extends Component {
         }
         
       }
-      
+
       
     }
     return this

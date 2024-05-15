@@ -8,6 +8,7 @@ export default {
     philosophy: "Philosophie",
     services: "Service",
     team: "Team",
+    blog: "Blog",
     contact: "Kontakt",
     websites: "Websites",
     contentCreation: "Inhaltserstellung",

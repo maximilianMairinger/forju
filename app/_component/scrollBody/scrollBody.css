@@ -1,0 +1,334 @@
+:host {
+  display: flex; 
+  width: 100%;
+  height: 100%;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  position: relative;
+  --innerPadding: 0px;
+}
+
+scroll-body {
+  display: flex; 
+  width: 100%;
+  height: 100%;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  padding: var(--innerPadding);
+}
+
+:host([scrollSnap][x]) scroll-body {
+  scroll-snap-type: x mandatory;
+}
+
+:host([scrollSnap="soft"][x]) scroll-body {
+  scroll-snap-type: x proximity
+}
+
+:host([scrollSnap][y]) scroll-body {
+  scroll-snap-type: y mandatory;
+}
+
+:host([scrollSnap="soft"][y]) scroll-body {
+  scroll-snap-type: y proximity
+}
+
+:host([scrollSnap][x][y]) scroll-body {
+  scroll-snap-type: x mandatory y mandatory;
+}
+
+:host([scrollSnap="soft"][x][y]) scroll-body {
+  scroll-snap-type: x proximity y proximity;
+}
+
+:host([scrollSnap]) ::slotted(scroll-body-element-wrapper) {
+  scroll-snap-align: center;
+}
+
+
+scroll-body-element-wrapper {
+  display: inline-block;
+}
+
+
+
+:host([center][y]) scroll-body {
+  justify-content: center;
+}
+:host([center][x]) scroll-body {
+  align-items: center;
+}
+
+overflowing-container {
+  display: flex;
+  position: relative;
+  pointer-events: all;
+  height: max-content;
+}
+
+:host([y]:not([x])) overflowing-container {
+  flex-direction: column;
+
+}
+
+:host([x]:not([y])) overflowing-container {
+  flex-direction: row;
+
+}
+
+:host([x][y]) overflowing-container {
+  flex-wrap: wrap;
+}
+
+:host([y]) ::slotted(*) {
+  width: 100%;
+}
+
+:host([x]) ::slotted(*) {
+  height: 100%;
+}
+
+
+:host {
+  --margin-edge-x: calc(var(--margin-x) * 1.5);
+  /* --margin-edge-x: var(--margin-edge); */
+  --margin-edge-right: var(--margin-edge-x);
+  --margin-edge-left: var(--margin-edge-x);
+  --margin-edge-y: calc(var(--margin-y) * 1.5);
+  /* --margin-edge-y: var(--margin-edge); */
+  --margin-edge-top: var(--margin-edge-y);
+  --margin-edge-bottom: var(--margin-edge-y);
+
+  --margin: 10px;
+  --margin-x: var(--margin);
+  --margin-y: var(--margin);
+  box-sizing: border-box;
+}
+
+:host([y]) ::slotted(*:not(:last-child))  {
+  margin-bottom: var(--margin-y);
+}
+
+:host([x]) ::slotted(*:not(:last-child))  {
+  margin-right: var(--margin-x);
+}
+
+
+:host([y]) scroll-body   {
+  padding-top: var(--margin-edge-top);
+  padding-bottom: var(--margin-edge-bottom);
+}
+
+:host([x]) scroll-body {
+  padding-left: var(--margin-edge-left);
+  padding-right: var(--margin-edge-right);
+}
+
+
+
+/* this doesnt work... I think this some weird, but spec compliant behavior */
+:host([x]:not([y])) scroll-body {
+  overflow-y: visible;
+}
+
+:host([y]:not([x])) scroll-body {
+  overflow-x: visible;
+}
+
+:host([x]:not([bar])) scroll-body {
+  overflow-x: scroll;
+}
+
+:host([y]:not([bar])) scroll-body {
+  overflow-y: scroll;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+:host(:not([bar])) scroll-body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge add Firefox */
+:host(:not([bar])) scroll-body {
+  -ms-overflow-style: none;
+  scrollbar-width: none; /* Firefox */
+}
+
+:host([x][bar]) scroll-body {
+  overflow-x: auto;
+}
+
+:host([y][bar]) scroll-body {
+  overflow-y: auto;
+}
+
+:host {
+  --fade: none;
+  --fade-x: var(--fade);
+  --fade-right: var(--fade-x);
+  --fade-left: var(--fade-x);
+  --fade-y: var(--fade);
+  --fade-top: var(--fade-y);
+  --fade-bottom: var(--fade-y);
+
+  --fade-rgb-values: 255, 255, 255;
+  --fade-size: 2.5%;
+}
+
+:host([x]) {
+  --fade-x: block;
+}
+
+:host([y]) {
+  --fade-y: block;
+}
+
+scroll-fade {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+scroll-fade.right {
+  display: var(--fade-right);
+  background: linear-gradient(to right, rgba(var(--fade-rgb-values), 0), rgba(var(--fade-rgb-values), 1));
+  right: 0;
+}
+
+scroll-fade.left {
+  display: var(--fade-left);
+  background: linear-gradient(to left, rgba(var(--fade-rgb-values), 0), rgba(var(--fade-rgb-values), 1));
+  left: 0;
+}
+
+scroll-fade.top {
+  display: var(--fade-top);
+  background: linear-gradient(to top, rgba(var(--fade-rgb-values), 0), rgba(var(--fade-rgb-values), 1));
+  top: 0;
+}
+
+scroll-fade.bot {
+  display: var(--fade-bottom);
+  background: linear-gradient(to bottom, rgba(var(--fade-rgb-values), 0), rgba(var(--fade-rgb-values), 1));
+  bottom: 0;
+}
+
+:host(:not(.atTopEnd)) scroll-fade.top {
+  opacity: 1;
+}
+
+:host(:not(.atBotEnd)) scroll-fade.bot {
+  opacity: 1;
+}
+
+:host(:not(.atLeftEnd)) scroll-fade.left {
+  opacity: 1;
+}
+
+:host(:not(.atRightEnd)) scroll-fade.right {
+  opacity: 1;
+}
+
+
+scroll-fade.x {
+  top: 0;
+  bottom: 0;
+  width: var(--fade-size);
+}
+
+scroll-fade.y {
+  left: 0;
+  right: 0;
+  height: var(--fade-size);
+}
+
+
+
+
+:host {
+  --hint-background-color: white;
+  --hint-content-color: black;
+
+  --hint-margin-x: calc(var(--gen-1-percent-of-width) * 4);
+  --hint-margin-left: var(--hint-margin-x);
+  --hint-margin-right: var(--hint-margin-x);
+  --hint-margin-y: calc(var(--gen-1-percent-of-height) * 4);
+  --hint-margin-top: var(--hint-margin-y);
+  --hint-margin-bottom: var(--hint-margin-y);
+}
+
+.hint {
+  display: block;
+  opacity: 0;
+  border-radius: 50%;
+  position: absolute;
+  transition: .3s;
+  pointer-events: none; /* Will be negated when enabled */
+}
+
+.hint[side="top"] {
+  top: var(--hint-margin-top);
+  left: calc(50% - 52px / 2);
+  transform: translateY(-6px);
+}
+
+.hint[side="bot"] {
+  bottom: var(--hint-margin-bottom);
+  left: calc(50% - 52px / 2);
+  transform: translateY(6px);
+}
+
+.hint[side="left"] {
+  left: var(--hint-margin-left);
+  top: calc(50% - 52px / 2);
+  transform: translateX(-6px);
+}
+
+.hint[side="right"] {
+  right: var(--hint-margin-right);
+  top: calc(50% - 52px / 2);
+  transform: translateX(6px);
+}
+
+.hint chevron-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--hint-background-color);
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, .05);
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+}
+
+
+.hint c-chevron-icon {
+  --color: var(--hint-content-color);
+  width: 24px;
+  height: 24px
+}
+
+.hint[side="top"] c-chevron-icon {
+  transform: rotate(270deg) translateX(2px);
+}
+
+.hint[side="bot"] c-chevron-icon {
+  transform: rotate(90deg) translateX(2px);
+}
+
+.hint[side="left"] c-chevron-icon {
+  transform: rotate(180deg) translateX(2px);
+}
+
+:host(:not([no-hint]).scrollAbleY:not(.atTopEnd)) .hint[side="top"], 
+:host(:not([no-hint]).scrollAbleY:not(.atBotEnd)) .hint[side="bot"], 
+:host(:not([no-hint]).scrollAbleX:not(.atLeftEnd)) .hint[side="left"], 
+:host(:not([no-hint]).scrollAbleX:not(.atRightEnd)) .hint[side="right"] {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+
+

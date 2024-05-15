@@ -1,12 +1,25 @@
+import { MultiMap } from "more-maps"
+import keyIndex from "key-index"
+
 const loadStates = ["minimalContentPaint", "fullContentPaint", "completePaint"] as ["minimalContentPaint", "fullContentPaint", "completePaint"]
 const defaultPreloadToLoadStatus = loadStates[1]
 
-import keyIndex from "key-index"
-
 export const loadedSymbol = Symbol("loaded")
 
+function initStageProm() {
+  let r: Function
+  const p = new Promise((res) => {r = res}) as any
+  p.started = false
+  p.res = () => {
+    p.yet = true
+    r()
+  }
+  return p as Promise<void> & {started: boolean, yet: boolean, res: () => void}
+}
+
+
 export default function init<Func extends () => Promise<any>>(resources: ImportanceMap<any, any>, globalInitFunc?: (instance: any, index: number) => void | Promise<void>) {
-  const resolvements = new Map<Import<any, any>, (load: () => Promise<{default: {new(): any}}>, index: number, state: (typeof loadStates)[number]) => void>();
+  const resolvements = new Map<Import<any, any>, (load: () => Promise<{default: {new(): any}}>, index: number, domainFrag: string, state: (typeof loadStates)[number]) => void>();
   const resourcesMap = new ResourcesMap();
 
   resources.forEach((e: () => Promise<object>, imp) => {
@@ -15,14 +28,22 @@ export default function init<Func extends () => Promise<any>>(resources: Importa
       let instanc: any
       let resProm: any
       let prom = new Promise((res) => {
-        resolvements.set(imp, async (load: () => Promise<{default: {new(): any}}>, index: number, state?) => {
-          const loadState = async (load: () => Promise<{default: {new(): any}}>, index: number, state?) => {
-            await instanceProm
+        resolvements.set(imp, async (load: () => Promise<{default: {new(): any}}>, index: number, domainFrag: string, state?) => {
+          const stageIndex = keyIndex((subStateUid: any) => {
+            const ob = {}
+            for (const stage of loadStates) ob[stage] = initStageProm()
+            return ob as {[stage in typeof loadStates[number]]: ReturnType<typeof initStageProm>}
+          })
+
+          const loadState = async (load: () => Promise<{default: {new(): any}}>, index: number, domainFrag: string, state?) => {
+            const instance = await instanceProm
+            
             if (state) {
-              const stage = instance[loadedSymbol][state]
+              const loadUid = instance.domainFragmentToLoadUid !== undefined ? instance.domainFragmentToLoadUid === true ? domainFrag : instance.domainFragmentToLoadUid(domainFrag) : undefined
+              const stage = stageIndex(loadUid)[state]
               if (!stage.started) {
                 stage.started = true
-                await instance[state]()
+                await instance[state](loadUid)
                 stage.res()
               }
             }
@@ -32,23 +53,13 @@ export default function init<Func extends () => Promise<any>>(resources: Importa
           let instanceProm = ((async () => imp.initer((await load()).default)))();
 
 
-          function initStageProm() {
-            let r: Function
-            const p = new Promise((res) => {r = res}) as any
-            p.started = false
-            p.res = () => {
-              p.yet = true
-              r()
-            }
-            return p
-          }
-
+          
 
 
           resolvements.set(imp, loadState)
 
           
-          let instance = await instanceProm
+          const instance = await instanceProm
 
           const stageOb = instance[loadedSymbol] = {}
           for (const stage of loadStates) {
@@ -63,7 +74,7 @@ export default function init<Func extends () => Promise<any>>(resources: Importa
           
           if (globalInitFunc !== undefined) await globalInitFunc(instance, index);
 
-          await loadState(load, index, state)
+          await loadState(load, index, domainFrag, state)
           
           if (!dontRes) res(instance)          
         })
@@ -75,9 +86,9 @@ export default function init<Func extends () => Promise<any>>(resources: Importa
       prom.imp = imp
 
       //@ts-ignore
-      prom.priorityThen = async function(cb?: Function, deepLoad?: boolean) {
+      prom.priorityThen = async function(fromDomain: string, cb?: Function, deepLoad?: boolean) {
         dontRes = true
-        await resources.superWhiteList(imp, deepLoad)
+        await resources.superWhiteList(fromDomain, imp, deepLoad)
         let result: any
         if (cb) result = await cb(instanc)
         if (resProm) resProm(instanc)
@@ -92,8 +103,8 @@ export default function init<Func extends () => Promise<any>>(resources: Importa
   resourcesMap.reloadStatusPromises();
 
 
-  (resources as any).resolve(<Mod>(load: () => Promise<{default: {new(): Mod}}>, imp: Import<string, Mod>, index: number, state?: any) => {
-    return resolvements.get(imp)(load, index, state)
+  (resources as any).resolve(<Mod>(load: () => Promise<{default: {new(): Mod}}>, imp: Import<string, Mod>, index: number, domainFrag: string, state?: any) => {
+    return resolvements.get(imp)(load, index, domainFrag, state)
   })
   
 
@@ -109,7 +120,7 @@ import { dirString } from "./domain";
 export const slugifyUrl = (url: string) => url.split(dirString).replace((s) => slugify(s)).join(dirString)
 
 
-export type PriorityPromise<T = any> = Promise<T> & {imp: Import<string, any>, priorityThen: (cb?: (instance: any) => void, deepLoad_loadToStage?: boolean | typeof loadStates[number]) => any}
+export type PriorityPromise<T = any> = Promise<T> & {imp: Import<string, any>, priorityThen: (fromDomain: string, cb?: (instance: any) => void, deepLoad_loadToStage?: boolean | typeof loadStates[number]) => any}
 
 export class BidirectionalMap<K, V> extends Map<K, V> {
   public reverse: Map<V, K> = new Map
@@ -124,41 +135,8 @@ export class BidirectionalMap<K, V> extends Map<K, V> {
   }
 }
 
-class MultiKeyMap<K, V> {
-  private index = keyIndex<K, V[]>(() => [])
-  constructor(...index: {key: K, val: V}[]) {
-    for (const e of index) {
-      this.index(e.key).add(e.val)
-    }
-  }
-  add(key: K, val: V) {
-    this.index(key).add(val)
-  }
-  getAll(key: K) {
-    return this.index(key)
-  }
-  get(key: K, atIndex: number = 0) {
-    return this.getAll(key)[atIndex]
-  }
-  
-  has(key: K) {
-    return !!this.getAll(key)
-  }
-  forEach(cb: (key: K, vals: V[]) => void) {
-    for (let e of this.index.entries()) {
-      // @ts-ignore
-      cb(...e)
-    }
-  }
-  *[Symbol.iterator](): IterableIterator<[key: K, vals: V[]]> {
-    return this.index.entries()
-  }
-  entries() {
-    return this[Symbol.iterator]()
-  }
-}
 
-export class ResourcesMap extends MultiKeyMap<string, PriorityPromise> {
+export class ResourcesMap extends MultiMap<string, PriorityPromise> {
   public fullyLoaded: Promise<any>
   public anyLoaded: Promise<any>
   public loadedIndex: BidirectionalMap<string, any>
@@ -196,10 +174,10 @@ export class ResourcesMap extends MultiKeyMap<string, PriorityPromise> {
 
 
 
-export class ImportanceMap<Func extends () => Promise<{default: {new(): Mod}}>, Mod> extends Map<Import<string, Mod>, Func> {
-  private importanceList: Import<string, Mod>[] = [];
+export class ImportanceMap<Func extends () => Promise<{default: {new(): Module}}>, Module> extends Map<Import<string, Module>, Func> {
+  private importanceList: Import<string, Module>[] = [];
 
-  constructor(...index: {key: Import<string, Mod>, val: Func}[]) {
+  constructor(...index: {key: Import<string, Module>, val: Func}[]) {
     super()
     for (let e of index) {
       this.importanceList.add(e.key)
@@ -207,11 +185,11 @@ export class ImportanceMap<Func extends () => Promise<{default: {new(): Mod}}>, 
     }
   }
 
-  private resolver: (e: Func, key: Import<string, Mod>, index: number, state?: (typeof loadStates)[number]) => any
-  protected resolve(resolver: ImportanceMap<Func, Mod>["resolver"]) {
+  private resolver: (e: Func, key: Import<string, Module>, index: number, domainFrag: string, state?: (typeof loadStates)[number]) => any
+  protected resolve(resolver: ImportanceMap<Func, Module>["resolver"]) {
     this.resolver = resolver
     if (this.superWhiteListCache) {
-      this.superWhiteList(this.superWhiteListCache.imp, this.superWhiteListCache.deepLoad)
+      this.superWhiteList(this.superWhiteListCache.domainFrag, this.superWhiteListCache.imp, this.superWhiteListCache.deepLoad)
     }
     if (!this.whiteListedImports.empty) {
       this.startResolvement()
@@ -222,18 +200,19 @@ export class ImportanceMap<Func extends () => Promise<{default: {new(): Mod}}>, 
     if (!this.resolver) return
     const toStageIndex = loadStates.indexOf(toStage) + 1
     const whiteList = this.whiteListedImports
-    whiteList.sort((a, b) => b.importance - a.importance)
+    whiteList.sort((a, b) => b.imp.importance - a.imp.importance)
     for (let j = 0; j < toStageIndex; j++) {
       const state = loadStates[j];
       for (let i = 0; i < whiteList.length; i++) {
         if (whiteList !== this.whiteListedImports) return
         while (this.superWhiteListDone) await this.superWhiteListDone
-        await this.resolver(this.get(this.whiteListedImports[i]), this.whiteListedImports[i], this.importanceList.indexOf(this.whiteListedImports[i]), state);
+        const mine = this.whiteListedImports[i]
+        await this.resolver(this.get(mine.imp), mine.imp, this.importanceList.indexOf(mine.imp), mine.domainFrag, state);
       }
     }
   }
 
-  public getByString(key: string): {key: Import<string, Mod>, val: Func} {
+  public getByString(key: string): {key: Import<string, Module>, val: Func} {
     let kk: any, vv: any;
     this.forEach((v,k) => {
       if (k.val === key) {
@@ -244,33 +223,40 @@ export class ImportanceMap<Func extends () => Promise<{default: {new(): Mod}}>, 
     if (!kk || !vv) throw new Error("No such value found")
     return {key: kk, val: vv};
   }
-  public set(key: Import<string, Mod>, val: Func): this {
+  public set(key: Import<string, Module>, val: Func): this {
     this.importanceList.add(key);
     super.set(key, val);
     return this;
   }
 
-  public whiteList(imp: Import<string, Mod>[], toStage?: typeof loadStates[number]) {
+  public whiteList(imp: {domainFrag: string, imp: Import<string, Module>}[], toStage?: typeof loadStates[number]) {
     this.whiteListedImports = imp
     return this.startResolvement(toStage)
   }
   public whiteListAll(toStage?: typeof loadStates[number]) {
-    return this.whiteList(this.importanceList, toStage)
+    return this.whiteList(this.importanceList.map((imp) => ({imp, domainFrag: null})), toStage)
   }
 
-  private superWhiteListCache: {imp: Import<string, Mod>, deepLoad: boolean | typeof loadStates[number]}
-  public superWhiteList(imp: Import<string, Mod>, deepLoad?: false): Promise<any>
-  public superWhiteList(imp: Import<string, Mod>, deepLoad: true): Promise<any>
-  public superWhiteList(imp: Import<string, Mod>, loadToStage: typeof loadStates[number]): Promise<any>
-  public superWhiteList(imp: Import<string, Mod>, loadToStage_deepLoad: boolean | typeof loadStates[number]): Promise<any>
-  public superWhiteList(imp: Import<string, Mod>, loadToStage_deepLoad: boolean | typeof loadStates[number] = loadStates.first) {
-    this.superWhiteListCache = {imp, deepLoad: loadToStage_deepLoad}
+  private superWhiteListCache: {domainFrag: string, imp: Import<string, Module>, deepLoad: boolean | typeof loadStates[number]}
+  public superWhiteList(domainFrag: string, imp: Import<string, Module>, deepLoad?: false): Promise<any>
+  public superWhiteList(domainFrag: string, imp: Import<string, Module>, deepLoad: true): Promise<any>
+  public superWhiteList(domainFrag: string, imp: Import<string, Module>, loadToStage: typeof loadStates[number]): Promise<any>
+  public superWhiteList(domainFrag: string, imp: Import<string, Module>, loadToStage_deepLoad: boolean | typeof loadStates[number]): Promise<any>
+  public superWhiteList(domainFrag: string, imp: Import<string, Module>, loadToStage_deepLoad: boolean | typeof loadStates[number] = loadStates.first) {
+    this.superWhiteListCache = {imp, deepLoad: loadToStage_deepLoad, domainFrag}
     if (!this.resolver) return
     
     let mySuperWhiteListDone = this.superWhiteListDone = new Promise(async (res) => {
       const v = this.get(imp)
       if (loadToStage_deepLoad) {
-        if (this.whiteListedImports.includes(imp)) this.whiteListedImports.rmV(imp)
+        let ind = 0
+        for (const { imp: i } of this.whiteListedImports) {
+          if (i === imp) {
+            this.whiteListedImports.rmI(ind)
+            break
+          }
+          ind++
+        }
 
 
         const toStage = loadToStage_deepLoad === true ? loadStates.last : loadToStage_deepLoad
@@ -278,16 +264,16 @@ export class ImportanceMap<Func extends () => Promise<{default: {new(): Mod}}>, 
         for (let i = 0; i < toStageIndex; i++) {
           const state = loadStates[i]
 
-          await this.resolver(v, imp, this.importanceList.indexOf(imp), state)
+          await this.resolver(v, imp, this.importanceList.indexOf(imp), domainFrag, state)
           if (mySuperWhiteListDone !== this.superWhiteListDone) {
-            if (state !== loadStates.last) this.whiteListedImports.add(imp)
+            if (state !== loadStates.last) this.whiteListedImports.add({imp, domainFrag})
             res()
             return
           }
         }
       }
       else {
-        await this.resolver(v, imp, this.importanceList.indexOf(imp))
+        await this.resolver(v, imp, this.importanceList.indexOf(imp), domainFrag)
       }
       
       this.superWhiteListDone = undefined
@@ -298,7 +284,7 @@ export class ImportanceMap<Func extends () => Promise<{default: {new(): Mod}}>, 
     return mySuperWhiteListDone
   }
 
-  public whiteListedImports = []
+  public whiteListedImports = [] as {domainFrag: string, imp: Import<string, Module>}[]
   private superWhiteListDone: Promise<void>
 }
 
