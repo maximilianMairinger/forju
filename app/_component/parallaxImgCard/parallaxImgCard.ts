@@ -93,8 +93,8 @@ export default class ParallaxImgCard extends Component {
 
   
 
-  imgSrc(to: string) {
-    this.body.img.src(to)
+  imgSrc(to: string, forceLoad?: boolean) {
+    this.body.img.src(to, forceLoad)
     this.body.img.loaded[""].then(() => {
       this.picSize.set(this.body.img.width())
     })

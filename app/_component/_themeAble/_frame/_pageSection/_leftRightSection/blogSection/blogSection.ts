@@ -24,13 +24,14 @@ export default class BlogSection extends LeftRightSection {
         filter: "tag:forju+tag:scienceBlog",
         include: "authors"
       })
-
+      return blogs
+    }).then((blogs) => {
       this.body.scrollBody.innerHTML = ""
 
       
       for (const blog of blogs) {
         const card = new ParallaxImgCard()
-        card.imgSrc(blog.feature_image)
+        card.imgSrc(blog.feature_image, true)
         card.heading(blog.title)
         card.desc(blog.excerpt)
 

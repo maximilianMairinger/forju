@@ -10,8 +10,8 @@ export class Record<T> {
     this.ls = []
     return ret
   }
-  add(...e: T[]) {
-    this.ls.push(...e)
+  add(e: T) {
+    this.ls.push(e)
   }
 }
 
@@ -19,6 +19,18 @@ export class TaskRecord<R, T extends () => R = () => R> extends Record<T>{
   // @ts-ignore
   doneRecording() {
     return super.doneRecording().map(f => f())
+  }
+  add<F extends T>(ogF: F) {
+    return new Promise<Awaited<ReturnType<F>>>((res, rej) => {
+      super.add((() => {
+        try {
+          res(ogF() as any)
+        }
+        catch(e) {
+          rej(e)
+        }
+      }) as any as T)
+    })
   }
 }
 
@@ -35,7 +47,7 @@ function makeStackedRecord(MyRecord: typeof TaskRecord): {new<T>(resolveAddOnEmp
 function makeStackedRecord(MyRecord: typeof AsyncTaskRecord): {new<T>(resolveAddOnEmpty?: (val: any) => void): {add: AsyncTaskRecord<T>["add"], record: (doneRecordingCbToBringToTop?: (() => any) & { token: Token }) => (AsyncTaskRecord<T>["doneRecording"] & { token: Token })}}
 function makeStackedRecord(MyRecord: {new<T>(): {add: any, doneRecording: any}}): any {
   return class StackedNewRecord<T> {
-    constructor(private resolveAddOnEmpty?: (val: T) => void) {
+    constructor(private resolveAddOnEmpty?: (val: T) => unknown) {
 
     }
     private records = new LinkedList<any>()
@@ -51,10 +63,10 @@ function makeStackedRecord(MyRecord: {new<T>(): {add: any, doneRecording: any}})
     }
     add(val: T) {
       if (this.records.empty) {
-        if (this.resolveAddOnEmpty) this.resolveAddOnEmpty(val)
+        if (this.resolveAddOnEmpty) return this.resolveAddOnEmpty(val)
         else throw new Error("No record to add to")
       }
-      else this.records.lastToken.value.add(val)
+      else return this.records.lastToken.value.add(val)
     }
   }
 }

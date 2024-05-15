@@ -3,9 +3,7 @@ import { StackedAsyncTaskRecord } from "../../../lib/record";
 import { Data } from "josm";
 import keyIndex from "key-index";
 
-const resolveAddOnEmpty = (func: Function) => {
-  func()
-}
+const resolveAddOnEmpty = (func: Function) => func()
 
 export const loadRecord = {
   minimal: new StackedAsyncTaskRecord(resolveAddOnEmpty),
@@ -92,8 +90,6 @@ export default abstract class Frame extends ThemeAble<HTMLElement> {
 
   private firstTryNav = true
   public async _tryNavigate(domainFragment?: string) {
-    // if (domainFragment === 'willkommen-wissenschaftler-von-morgen') debugger
-    
     const loadUid = this.domainFragmentToLoadUid !== undefined ? this.domainFragmentToLoadUid === true ? domainFragment : (this as any).domainFragmentToLoadUid(domainFragment) : undefined
     let myRecords: {minimal: Recording, content: Recording, full: Recording}
     if (this.firstTryNav) {

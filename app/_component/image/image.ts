@@ -210,8 +210,17 @@ export default class Image extends Component {
     this._src = src
     const isExplicitSrc = isExplicitLocation(src)
     if (forceLoad) {
-      const wantedResName = this.getCurrentlyWantedRes()
-      if (wantedResName && this.loaded[wantedResName] === undefined) return this.loadSrc(this._src, wantedResName)
+      if (isExplicitSrc) {
+        const wantedResName = ""
+        this.loadedPromiseMemo(wantedResName as any)
+        this.currentLoadStage = 1
+        return this.loadSrc(this._src, wantedResName as any)
+      }
+      else {
+        const wantedResName = this.getCurrentlyWantedRes()
+        if (wantedResName && this.loaded[wantedResName] === undefined) return this.loadSrc(this._src, wantedResName)
+      }
+      
     }
     else {
       if (loadingCache[src]) {

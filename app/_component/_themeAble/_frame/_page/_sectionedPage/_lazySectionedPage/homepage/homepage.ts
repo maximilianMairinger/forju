@@ -48,7 +48,7 @@ export default class HomePage extends LazySectionedPage {
         key: new Import("contact", 1, (footerSection: typeof FooterSection) =>
           new footerSection()
         ), val: () => import(/* webpackChunkName: "footerSection" */"../../../../_pageSection/footerSection/footerSection")
-      },
+      }
     ), baselink, sectionChangeCallback, undefined, {
       footer: "team"
     })
