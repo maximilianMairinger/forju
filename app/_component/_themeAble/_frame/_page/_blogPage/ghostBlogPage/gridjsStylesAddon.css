@@ -1,0 +1,20 @@
+.gridjs-tbody {
+  /* will be set by .blogCard.bg */
+  background-color: transparent;
+}
+
+td.gridjs-td {
+  background-color: transparent;
+}
+
+th.gridjs-th {
+  color: rgb(var(--primary-text));
+  background-color: #7777770a;
+}
+
+th.gridjs-th {
+  -webkit-user-select: initial;
+  -moz-user-select: initial;
+  user-select: initial;
+}
+

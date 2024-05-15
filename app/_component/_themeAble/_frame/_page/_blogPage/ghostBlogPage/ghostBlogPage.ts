@@ -13,15 +13,27 @@ import "../../../../textBlob/textBlob"
 import TextBlob from "../../../../textBlob/textBlob"
 import AT from "../../../../../../lib/formatTime"
 import PersonCircle from "../../../../../personCircle/personCircle"
-import keyIndex from "key-index"
+import { Grid } from "gridjs"
+import keyIndex, { memoize } from "key-index"
+import { loadRecord } from "../../../frame"
 
+const importGridJs = memoize(() => Promise.all([import("gridjs").then(({Grid}) => Grid), import("./gridjsStyles")]))
+const importAudioJs = memoize(() => Promise.all([import("./audioPlayerJs").then(({default: audioPlayer}) => audioPlayer), import("./audioPlayerStyles")]))
 
 function parseContentHTML(html: string) {
+  
   html = html
     //@ts-ignore
     .replaceAll("'", "&apos;")
-    .replaceAll(/<(?:a.*? href=(?:"|')(.*?)(?:"|').*?>)(.*?)<\/a>/gi, "<c-link link='$1'>$2</c-link>")
-    .replaceAll(/<(?:img.*? src=(?:"|')(.*?)(?:"|').*?>)(.*?)<\/img>/gi, "<c-image src='$1'></c-image>")
+    // a tag to link 
+    .replaceAll(/<(?:a.*?\shref=(?:"|')(.*?)(?:"|').*?>)(.*?)<\/a>/gi, "<c-link link='$1'>$2</c-link>")
+    // this must be below the link parsing
+    .replaceAll(/<(?:div.*?\sclass=(?:"|')(?:kg-card kg-button-card kg-align-)(.*?)(?:"|').*?>)(?:<c-link link=(?:"|'))(.*?)(?:(?:"|').*?>)(.*?)(?:<\/c-link>)(?:<\/div>)/gi, "<c-block-button link='$2' class='align-btn-$1 themed' content='$3'></c-block-button>")
+    // delete imgs with empty src
+    .replaceAll(/<img\s.*?src(\s|(=(""|''))).*?>(<\/img>)?/gi, "") 
+    // img to c-image
+    .replaceAll(/<(?:img.*?\ssrc=(?:"|')(.*?)(?:"|').*?>)(.*?)(?:<\/img>)?/gi, "<c-image src='$1'></c-image>")
+    // heading
     .replaceAll(/<(?:h(1|2|3|4|5|6|7).*?>)(.*?)<\/h.>/gi, "<c-text-blob popunderline='' class='h$1' heading='$2'></c-text-blob>")
 
   return html
@@ -72,13 +84,58 @@ export default class GhostBlogPage extends BlogPage {
 
     const contentContainer = ce("content-inner-container").apd(parseContentHTML(blogData.html))
 
+    const tables = contentContainer.childs("table", true)
+    if (tables.length > 0) {
+      loadRecord.content.add(() => {
+        importGridJs().then(([ Grid, css ]) => {
+          this.addStyle(css)
+  
+  
+          for (const table of tables) {
+          
+            const grid = new Grid({
+              from: table as HTMLElement,
+              sort: true
+            })
+            const tableContainer = ce("table-container")
+            tableContainer.addClass("blogCard", "bg")
+            grid.render(tableContainer)
+            
+            contentContainer.insertAfter(tableContainer, table)
+            table.remove()
+          } 
+        })
+      })
+    }
+
+    const audioPlayers = contentContainer.childs("div.kg-card.kg-audio-card", true)
+    if (audioPlayers.length > 0) {
+      audioPlayers.addClass("blogCard", "bg")
+      loadRecord.content.add(() => {
+        importAudioJs().then(([ f, css ]) => {
+          // debugger
+          this.addStyle(css)
+          f(this.body.contentContainer)
+        })
+      })
+    }
+
+    
+
+
     this.addHooksToChilds([...titleContainer.children, ...contentContainer.children])
+
+
 
     return [ 
       titleContainer,
       contentContainer
     ]
   }
+
+  addStyle = keyIndex(({css}) => {
+    this.shadowRoot.append(ce("style").addClass("gridJsCss").html(css))
+  })
   // this is important for frame, so that it knows that each sub domainFragment should be treated as a unique load 
   // process with a seperate loadUid, where loadUid === domainFragment. 
   domainFragmentToLoadUid = true

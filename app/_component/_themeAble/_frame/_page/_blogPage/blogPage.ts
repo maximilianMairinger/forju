@@ -24,7 +24,6 @@ export default abstract class BlogPage extends Page {
     for (const child of childs) {
       if (child instanceof TextBlob) {
         child.resizeDataBase().height.get((height) => {
-          console.log(height, child.headerElem.css("lineHeight"))
           const lineHeight = child.headerElem.css("lineHeight")
           if (height > lineHeight * 1.5) child.removeAttribute("popUnderline")
           else child.setAttribute("popUnderline", "true")

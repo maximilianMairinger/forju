@@ -115,6 +115,7 @@
     "fast-linked-list": "^3.2.3",
     "get-base-url": "^3.0.2",
     "get-video-screenshot": "^1.0.1",
+    "gridjs": "^6.2.0",
     "is-safari": "^1.0.0",
     "josm": "^1.7.45",
     "josm-adapter": "^1.1.3",

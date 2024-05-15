@@ -2,9 +2,12 @@ component-body {
   display: flex;
   justify-content: center;
   min-height: 100%;
-  background-color: rgb(var(--tertiary-themed-background));
+  background-color: rgb(var(--tertiary-themed-background-soft));
 
   --oversized: max(min(85vw, 170%), 100%);
+  font-size: 18px;
+
+  --margin: 1.11111111111em;
 }
 
 content-container {
@@ -22,6 +25,7 @@ blog-content {
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 1;
 }
 
 bottom-spacer {
@@ -37,6 +41,32 @@ bottom-spacer {
 }
 
 
+/* background */
+background-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+lines-container {
+  position: absolute;
+  width: 100%;
+  height: 500px;
+  top: 300px;
+}
+
+bg-line {
+  --angle: 30deg;
+  position: absolute;
+  width: calc(1 / cos(var(--angle)) * 100%);
+  background-color: white;
+  height: 7px;
+  transform-origin: 0;
+  transform: rotate(var(--angle));
+}
 
 
 
@@ -45,6 +75,7 @@ bottom-spacer {
 
 /* BLOG POST */
 
+/* blog post heading */
 
 title-container {
   width: var(--oversized);
@@ -71,16 +102,46 @@ title-container c-image {
 
 c-text-blob {
   margin-bottom: 0;
+  position: relative;
 }
 
 c-text-blob.title {
   padding-left: 40px;
+  
   box-sizing: border-box;
   
   --header-fontsize: 3.5em;
   margin-bottom: 30px;
 }
+
+
+@media (max-width: 1000px) {
+  c-text-blob.title {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+@media (max-width: 620px) {
+  title-container {
+    width: 100%;
+  }
+  c-text-blob.title {
+    padding: 0;
+  }
+}
+
+c-image.title {
+  aspect-ratio: 10 / 9;
+  max-height: 600px;
+  margin-bottom: 60px;
+}
+
+
+
   
+
+/* blog post content */
 
 c-image {
   width: 100%;
@@ -88,33 +149,77 @@ c-image {
   box-shadow: 20px 20px 0px 0px rgba(0, 0, 0, 0.2);
 }
 
-c-image.title {
-  aspect-ratio: 10 / 9;
-  max-height: 600px;
-  margin-bottom: 30px;
-}
+
 
 /* the biggest heading in an article is h2, as h1 is reserved for the title, and it has .title as class */
-c-text-blob.h2 {
-  margin-top: 1em;
+c-text-blob {
+  margin-top: calc(2 * var(--margin));
+}
+
+c-text-blob + * {
+  margin-top: calc(.5 * var(--margin)) !important
+}
+
+p {
+  display: inline-block;
+  line-height: 1.6em;
+  margin-bottom: 0;
+  margin-top: var(--margin);
+}
+
+p + p {
+  margin-top: calc(2 * var(--margin));
+}
+
+c-image {
+  margin-top: var(--margin);
+}
+
+hr {
+  margin: 0;
+  margin-top: calc(2 * var(--margin));
+  margin-bottom: var(--margin);
+  height: 2px;
+  border: none;
+  background-color: rgba(var(--primary-text), .5);
+}
+
+figure {
+  margin: 0;
+}
+
+c-block-button {
+  margin-top: var(--margin);
+}
+
+.align-btn-center {
+  margin-right: auto;
+  margin-left: auto;
 }
 
 
-
-
-
-/* ::slotted(c-image.title)::after {
+.align-btn-right {
+  margin-left: auto;
+}
+/* c-text-blob:not(.title)::before {
   content: "";
-  --offset: -30px;
-  background-color: black;
+  display: block;
   position: absolute;
-  top: var(--offset);
-  right: var(--offset);
-  width: 100%;
-  height: 100%;
-  z-index: -1;
+  left: -20px;
+  top: 24px;
+  height: calc(100% - 32px);
+  width: 5px;
+  background-color: rgb(var(--primary-theme));
 } */
 
+.blogCard {
+  display: inline-block;
+  margin-top: var(--margin);
+}
+
+.blogCard.bg {
+  background-color: rgba(255 255 255 / 48%)
+}
 
 
 
