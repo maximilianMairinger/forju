@@ -1,0 +1,42 @@
+:host {
+  display: inline-block;
+  position: relative;
+  --size: 40px;
+  width: var(--size);
+  height: var(--size);
+}
+
+main-container {
+  display: inline-block;
+  padding: 7px 10px;
+}
+
+
+c-image {
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  border: 3px sold var(--plain-background);
+  position: relative;
+  float: left;
+}
+
+txt-container {
+  display: flex;
+  position: relative;
+  float: left;
+  height: var(--size);
+  justify-content: center;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+heading-elem {
+  font-weight: bold;
+  display: block;
+}
+
+body-elem {
+  display: block;
+}
+

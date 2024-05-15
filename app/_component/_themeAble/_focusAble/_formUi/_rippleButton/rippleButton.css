@@ -1,5 +1,6 @@
 :host {
   display: block;
+  --_focus: var(--focus);
 }
 
 c-button {
@@ -7,6 +8,11 @@ c-button {
   height: inherit;
   max-height: inherit;
   max-width: inherit;
+  font-weight: inherit;
+
+  
+  --focus: var(--_focus);
+
 }
 
 move-me {

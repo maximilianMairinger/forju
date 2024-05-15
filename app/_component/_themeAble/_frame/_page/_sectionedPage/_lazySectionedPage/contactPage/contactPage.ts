@@ -3,7 +3,7 @@ import HighlightAbleIcon from "../../../../../_icon/_highlightAbleIcon/highlight
 import LazySectionedPage from "../lazySectionedPage"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 import { Import, ImportanceMap } from "../../../../../../../lib/lazyLoad"
-import ThoughtBubbleIcon from "../../../../../_icon/_highlightAbleIcon/thoughtBubble/thoughtBubble"
+import ThoughtBubbleIcon from "../../../../../_icon/_highlightAbleIcon/thoughtBubbleIcon/thoughtBubbleIcon"
 import TeamIcon from "../../../../../_icon/_highlightAbleIcon/teamIcon/teamIcon"
 import ContactIcon from "../../../../../_icon/_highlightAbleIcon/contact/contact"
 import FooterSection from "../../../../_pageSection/footerSection/footerSection"
@@ -41,7 +41,7 @@ export default class ContactPage extends LazySectionedPage {
 
 
     this.iconIndex = {
-      praesidium: new ThoughtBubbleIcon(),
+      praesidium: new TeamIcon(),
       presse: new TeamIcon(),
       contact: new ContactIcon()
     }

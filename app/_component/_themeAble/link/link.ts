@@ -6,9 +6,9 @@ import delay from "delay"
 import ExternalLinkIcon from "../_icon/externalLink/externalLink"
 import { Prim, EventListener } from "extended-dom";
 
-import { PrimitiveRecord } from "../../../lib/record";
+import { Record } from "../../../lib/record";
 
-export const linkRecord = new PrimitiveRecord<{link: string, level: number}>()
+export const linkRecord = new Record<{link: string, level: number}>()
 
 
 export default class Link extends ThemeAble {

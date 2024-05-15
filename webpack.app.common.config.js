@@ -25,6 +25,10 @@ module.exports = () => {
         module: {
             rules: [
                 {
+                    test: /\.scss$/i,
+                    use: ["to-string-loader", "css-loader", "sass-loader"],
+                },
+                {
                     test: /\.less$/i,
                     use: ["to-string-loader", "css-loader", "less-loader"],
                 },

@@ -35,7 +35,7 @@ export default abstract class Component<T extends HTMLElement | HTMLAnchorElemen
     if (indexName) {
       this.componentBody.childs("*", true).ea((e: any) => {
         const name = e.getAttribute("name")
-        if (name !== undefined) {
+        if (name !== null) {
           if (this.body[name] === undefined) this.body[name] = e
           else if (this.body[name] instanceof ElementList) (this.body[name] as ElementList).add(e)
           else this.body[name] = new ElementList(this.body[name], e)

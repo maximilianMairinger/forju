@@ -8,7 +8,7 @@ import { Data, DataCollection, DataSubscription } from "josm";
 import { constructIndex } from "key-index"
 import HightlightAbleIcon from "../../../_icon/_highlightAbleIcon/highlightAbleIcon"
 import localSettings from "./../../../../../lib/localSettings"
-const SyncProm = require("sync-p")
+import { SyncPromise } from "more-proms";
 
 
 
@@ -176,7 +176,7 @@ export type QuerySelector = string
 
 
 
-type RenderSections = {initElemIndex?: number} & {isInPos: Data<number>, wantedPos: number, dimensions: {top: number, bot: number}, rendered: Data<boolean>, section: HTMLElement, isInWantedPos: Promise<void>}[]
+type RenderSections = {isInPos: Data<number>, wantedPos: number, dimensions: {top: number, bot: number}, rendered: Data<boolean>, section: HTMLElement, isInWantedPos: Promise<void>}[]
 export default abstract class SectionedPage extends Page {
   protected readonly sectionIndex: ResourcesMap
   public readonly sectionList: Data<string[]>
@@ -227,7 +227,9 @@ export default abstract class SectionedPage extends Page {
   
         let prom = Promise.resolve(elem)
         //@ts-ignore
-        prom.priorityThen = prom.then
+        prom.priorityThen = (to: string, cb: (value: any) => any) => {
+          return prom.then(cb)
+        }
         //@ts-ignore
         map.set(name, prom)
       }
@@ -266,12 +268,12 @@ export default abstract class SectionedPage extends Page {
     domain.set(name, this.domainLevel, false)
   }
 
-  private curSectionProm: Promise<{ pageSection: PageSection, fragments: { rootElem: string, closeUp: string } }>
+  private curSectionPromMap: Map<string, Promise<{ pageSection: PageSection, fragments: { rootElem: string, closeUp: string } }>> = new Map
   protected currentDomainFragment: string
   private verticalOffset: number
-  tryNavigationCallback(domainFragment: string) {
+  tryNavigationCallback(ogDomainFragment: string) {
 
-    domainFragment = this.merge(domainFragment)
+    let domainFragment = this.merge(ogDomainFragment)
     
     //@ts-ignore
     let fragments: {
@@ -307,23 +309,25 @@ export default abstract class SectionedPage extends Page {
 
 
     const m = this.sectionIndex.get(this.currentDomainFragment = domainFragment, this.currentlyActiveSectionIdIndex = this.currentSectionIdStore.get() === fragments.rootElem ? this.currentSectionIdIndexStore.get() : 0)
-    this.curSectionProm = new Promise((res) => {
+    this.curSectionPromMap.set(ogDomainFragment, new Promise((res) => {
       if (m) m.then((pageSection) => {
         res({pageSection, fragments})
       })
-      
-    })
+    }))
+
+    this.lastTriedNavigationSectionIndex = this.sectionList.get().indexOf(domainFragment)
 
 
     return !!m
   }
+  private lastTriedNavigationSectionIndex: number
 
   
 
   private lastLocalScrollProgressStoreSubstription: DataSubscription<[number]>
   private confirmedLastScrollProgress = 0
 
-  async navigationCallback() {
+  async navigationCallback(loadId: string) {
     let resFunc: Function
     const funcProm = new Promise<void>((r) => {resFunc = r})
     let active = this.active
@@ -333,7 +337,7 @@ export default abstract class SectionedPage extends Page {
 
 
 
-    let { pageSection: section, fragments } = await this.curSectionProm
+    let { pageSection: section, fragments } = await this.curSectionPromMap.get(loadId)
 
     this.activateSectionName(fragments.closeUp)
     this.currentlyActiveSectionRootName = fragments.rootElem
@@ -404,10 +408,9 @@ export default abstract class SectionedPage extends Page {
 
 
     const isInPos = new Data() as Data<number>
-    const isInWantedPos = new SyncProm((res) => {
+    const isInWantedPos = new SyncPromise((res) => {
       
       const s = isInPos.get((i) => {
-        
         if (i === wantedPos) {
           setTimeout(() => {
             this.unreadySectionCount.set(this.unreadySectionCount.get() - 1)
@@ -418,7 +421,7 @@ export default abstract class SectionedPage extends Page {
           s.deactivate()
         }
       }, false)
-    })
+    }) as any
 
 
     let justBeforeInWantedPosScrollPos: number
@@ -426,127 +429,85 @@ export default abstract class SectionedPage extends Page {
 
     isInWantedPos.then(() => {
       const scrollTop = this.scrollTop - this.componentBody.css("marginTop")
-      const nextSib = section.nextSibling as HTMLElement
-      let isAboveCurrent = wantedPos < this.renderingSections.initElemIndex
+      const nextSection = section.nextSibling as HTMLElement
+      if (nextSection === null) return // This can only happen when this is the last section and the initial one (as showSection() must have been called already by the init function, otherwise we would still have the loading section). In this case we dont need to do anything.
       
-      const sectionWillTemper = isAboveCurrent && this.confirmedLastScrollProgress < 0 && nextSib && nextSib.offsetTop && nextSib.offsetTop > scrollTop && nextSib.offsetTop < scrollTop + window.innerHeight
-      let sideEffect: number
-      if ((section as any).showSection !== undefined) {
-        const _sideEffect = section.showSection()
-         
-        if (_sideEffect !== undefined) {
-          sideEffect = _sideEffect as any
-        }
+      const isAboveCurrent = wantedPos < this.lastTriedNavigationSectionIndex
+
+      // we use nextSection here because we havent appended the section yet
+      const completelyScrolledBy = nextSection.offsetTop < scrollTop
+
+      let subSideEffect = section.showSection()
+      if (subSideEffect === undefined) subSideEffect = 0
+      const totalSideEffect = section.offsetHeight + section.css("marginTop") + section.css("marginBottom") + subSideEffect
+
+      if (isAboveCurrent && !completelyScrolledBy) {
+        this.scrollTop += totalSideEffect
       }
-      else section.show()
+      
+      // const sectionWillTemper = isAboveCurrent && this.confirmedLastScrollProgress < 0 && nextSib && nextSib.offsetTop && nextSib.offsetTop > scrollTop && nextSib.offsetTop < scrollTop + window.innerHeight
+      // let sideEffect: number
+      // if ((section as any).showSection !== undefined) {
+      //   const _sideEffect = section.show()
+         
+      //   if (_sideEffect !== undefined) {
+      //     sideEffect = _sideEffect as any
+      //   }
+      // }
+      // else section.show()
       
       // console.log(section.offsetTop) // This is important. It forces the section to be rendered.
-      if (sideEffect) {
-        lastHeight = sideEffect
-      }
-      else {
-        lastHeight = section.offsetHeight + section.css("marginTop") + section.css("marginBottom") - lastHeight 
-        if (sectionWillTemper) this.scrollTop += lastHeight
-      }
+      // if (sideEffect) {
+      //   lastHeight = sideEffect
+      // }
+      // else {
+      //   lastHeight = section.offsetHeight + section.css("marginTop") + section.css("marginBottom") - lastHeight 
+      //   if (sectionWillTemper) this.scrollTop += lastHeight
+      // }
 
 
-      justBeforeInWantedPosScrollPos = this.scrollTop
-      justBeforeInWantedPosScrollHeight = this.scrollHeight
+      // justBeforeInWantedPosScrollPos = this.scrollTop
+      // justBeforeInWantedPosScrollHeight = this.scrollHeight
       
-      calculateDimensionsAndRender()
-      compensateResizeScrollDiffFromInit(section.offsetHeight)
+      // calculateDimensionsAndRender()
+      // compensateResizeScrollDiffFromInit(section.offsetHeight)
 
 
-      let first = true
-      section.on("resize", ({height}) => {
-        if (first) {
-          first = false
-          return 
-        }
-        if (!this.active) return
+      // let first = true
+      // section.on("resize", ({height}) => {
+      //   if (first) {
+      //     first = false
+      //     return 
+      //   }
+      //   if (!this.active) return
       
 
-        // console.log("resize", section)
+      //   // console.log("resize", section)
         
         
-        let localToken = globalToken = Symbol();
-        compensateResizeScrollDiffFromRuntime(height).then(() => {
-          if (localToken !== globalToken) return
-          calculateDimensionsAndRender()
-        })
+      //   let localToken = globalToken = Symbol();
+      //   compensateResizeScrollDiffFromRuntime(height).then(() => {
+      //     if (localToken !== globalToken) return
+      //     calculateDimensionsAndRender()
+      //   })
   
   
         
-      })
+      // })
     })
     
     const sec = {rendered, dimensions: {top, bot: top + section.offsetHeight}, section, isInWantedPos, isInPos, wantedPos}
 
     if (this.renderingSections.empty) {
-      this.renderingSections[wantedPos] = sec
-      this.renderingSections.initElemIndex = wantedPos
-      isInPos.set(wantedPos)
+      this.renderingSections[0] = sec
+      isInPos.set(0)
     }
     else {
-      let last = {
-        index: this.renderingSections.initElemIndex,
-        el: this.renderingSections[this.renderingSections.initElemIndex]
-      }
-      if (wantedPos < last.index) {
-        while (true) {
-          last.index--
-          const el = last.el = this.renderingSections[last.index]
-
-          if (!el) {
-            isInPos.set(last.index)
-            this.renderingSections[last.index] = sec
-            break
-          }
-          else {
-            if (wantedPos < el.wantedPos) continue
-            else {
-              const reverseUpdateQueue = []
-              for (let i = 1; i <= last.index; i++) {
-                const prevI = i - 1
-                if (!this.renderingSections[i]) continue
-                const e = this.renderingSections[prevI] = this.renderingSections[i]
-                reverseUpdateQueue.add(() => {e.isInPos.set(prevI)})
-              }
-              isInPos.set(last.index)
-              this.renderingSections[last.index] = sec
-              reverseUpdateQueue.reverse().Call()
-              break
-            }
-          }
-        }
-      }
-      else {
-        while (true) {
-          last.index++
-          const el = last.el = this.renderingSections[last.index]
-
-          if (!el) {
-            isInPos.set(last.index)
-            this.renderingSections[last.index] = sec
-            break
-          }
-          else {
-            if (wantedPos > el.wantedPos) continue
-            else {
-              const reverseUpdateQueue = []
-              for (let i = this.renderingSections.length-2; i >= last.index; i--) {
-                const nextI = i + 1
-                if (!this.renderingSections[i]) continue
-                const e = this.renderingSections[nextI] = this.renderingSections[i]
-                reverseUpdateQueue.add(() => {e.isInPos.set(nextI)})
-              }
-              isInPos.set(last.index)
-              this.renderingSections[last.index] = sec
-              reverseUpdateQueue.reverse().Call()
-              break
-            }
-          }
-        }
+      this.renderingSections.push(sec)
+      this.renderingSections.sort((a, b) => a.wantedPos - b.wantedPos)
+      for (let i = 0; i < this.renderingSections.length; i++) {
+        const sec = this.renderingSections[i];
+        sec.isInPos.set(i)
       }
     }
 
@@ -567,7 +528,7 @@ export default abstract class SectionedPage extends Page {
     let lastHeight = 0
 
     const constructResizeScrollCompensationFunction = (validator: (scrollTop: number) => boolean, calculateDiff: (height: number) => number) => {
-      return (height: number): Promise<void> => {
+      return (height: number) => {
         height = height + section.css("marginTop") + section.css("marginBottom")
         let diff = calculateDiff(height) 
         lastHeight = height
@@ -576,7 +537,7 @@ export default abstract class SectionedPage extends Page {
         if (validator(scrollTop)) {
           return this.scrollDiffCompensator.diff(diff)
         }
-        else return new SyncProm((r) => r())
+        else return new SyncPromise((r) => r())
       }
     }
     const compensateResizeScrollDiffFromRuntime = constructResizeScrollCompensationFunction((scrollTop) => section.offsetTop < scrollTop, (height: number) => Math.round(height - lastHeight))
@@ -655,7 +616,7 @@ export default abstract class SectionedPage extends Page {
       // }, false)
 
 
-      
+      // when this is a lazySectionedPage, this is empty anyways
       for (let i = 0; i < this.initialChilds.length; i++) {
         this.newSectionArrived(this.initialChilds[i], i)
       }
@@ -1010,7 +971,7 @@ class ScrollDiffCompensator {
   private timoutId: any
   private scrollIdle = new Data(false)
   private pressingScrollbar = new Data(false)
-  private currentDiffProm: Promise<void> & {resolve: () => void}
+  private currentDiffProm: SyncPromise & {resolve: () => void}
   private working: boolean = false
 
   constructor(private page: SectionedPage) {
@@ -1056,7 +1017,7 @@ class ScrollDiffCompensator {
       (this.page as any).componentBody.css("marginTop", this.compensationCurrentDiff)
       if (this.currentDiffProm === undefined) {
         let r: any
-        let p = new SyncProm((resClean) => {r = resClean})
+        let p = new SyncPromise((resClean) => {r = resClean}) as SyncPromise & {resolve: () => void}
         p.resolve = r
         return this.currentDiffProm = p
       }
@@ -1067,7 +1028,7 @@ class ScrollDiffCompensator {
       this.page.scrollTop -= this.compensationCurrentDiff
       this.compensationCurrentDiff = 0
       this.working = false
-      return new SyncProm((r) => r())
+      return new SyncPromise((r) => r())
     }
 
     
