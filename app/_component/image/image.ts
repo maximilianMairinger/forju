@@ -4,6 +4,7 @@ import { loadRecord } from "../_themeAble/_frame/frame"
 import { ResablePromise } from "more-proms"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 import keyIndex from "key-index";
+import { Data } from "josm";
 
 const unionSymbol = "@"
 const typePrefix = "image/"
@@ -62,11 +63,13 @@ const ratio = 16 / 9
 export default class Image extends Component {
   public readonly loaded: {[key in typeof resesList[number]]?: ResablePromise<void>} = {}
   private elems: {[key in typeof resesList[number]]?: {picture: HTMLPictureElement, sources: {setSource: (src: string) => void}[], img: HTMLImageElement &  {setSource: (src: string) => void}}} = {}
-  private myWantedRes = this.resizeData().tunnel(({width, height}) => Math.sqrt(width * height * ratio))
+  private myWantedRes = new Data(0)
   protected body: BodyTypes
   constructor(src?: string, forceLoad?: boolean) {
     //@ts-ignore
     super(false)
+
+    this.resizeDataBase()(({width, height}) => this.myWantedRes.set(Math.sqrt(width * height * ratio)))
 
 
     this.myWantedRes.get(() => {
