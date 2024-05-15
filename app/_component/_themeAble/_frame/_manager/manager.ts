@@ -382,7 +382,7 @@ export default abstract class Manager extends Frame {
         }
         else suc = await pageProm.priorityThen(undefined, async (page: Page | SectionedPage) => {
           sucPage = page
-          page.domainLevel = domainLevel
+          if (page.domainLevel === undefined) page.domainLevel = domainLevel
           domainFragment = rootDomainFragment === "" ? page.defaultDomain : rootDomainFragment
           return await this.canSwap(page, domainFragment)
         }, false)

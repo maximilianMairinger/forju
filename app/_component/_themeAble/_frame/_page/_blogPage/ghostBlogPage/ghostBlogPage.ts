@@ -60,6 +60,8 @@ export default class GhostBlogPage extends BlogPage {
     //   html: `<h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p><h2>lel</h2><p>My Content</p><p>lelellelel ll el elle le le l</p>`,
     // } as any
 
+
+
     lang({links: {[slug]: blogData.title}})
 
     
@@ -143,8 +145,7 @@ export default class GhostBlogPage extends BlogPage {
   private async setBlogFromQuery(query: string) {
     this.setBlog(...this.cache.get(query))
   }
-  public domainLevel = 1
-
+  public domainLevel = 2
 
 
   private cache = new Map<string, ReturnType<typeof this.parseBlogPostToHTML>>()
