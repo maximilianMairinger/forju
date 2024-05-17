@@ -2,14 +2,8 @@ import { Data } from "josm";
 import declareComponent from "../../../../../lib/declareComponent"
 import PageSection from "../pageSection"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
+import { toggleClass } from "../../../../../lib/actions";
 
-function toggleClass(elem: HTMLElement, className: string) {
-
-  return function (flag: boolean) {
-    if (flag) elem.addClass(className)
-    else elem.removeClass(className)
-  }
-}
 
 export default class PartnerSection extends PageSection {
   protected body: BodyTypes
@@ -29,6 +23,7 @@ export default class PartnerSection extends PageSection {
       childCount.set(this.body.partnerBody.children.length)
     })
 
+    
     m.observe(this.body.partnerBody, {
       childList: true,
       subtree: false

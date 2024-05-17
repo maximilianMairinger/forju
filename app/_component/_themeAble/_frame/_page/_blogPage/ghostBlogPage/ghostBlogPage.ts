@@ -13,7 +13,6 @@ import "../../../../textBlob/textBlob"
 import TextBlob from "../../../../textBlob/textBlob"
 import AT from "../../../../../../lib/formatTime"
 import PersonCircle from "../../../../../personCircle/personCircle"
-import { Grid } from "gridjs"
 import keyIndex, { memoize } from "key-index"
 import { loadRecord } from "../../../frame"
 
@@ -21,7 +20,9 @@ const importGridJs = memoize(() => Promise.all([import("gridjs").then(({Grid}) =
 const importAudioJs = memoize(() => Promise.all([import("./audioPlayerJs").then(({default: audioPlayer}) => audioPlayer), import("./audioPlayerStyles")]))
 
 function parseContentHTML(html: string) {
-  
+
+  html = html ?? ""
+
   html = html
     //@ts-ignore
     .replaceAll("'", "&apos;")
@@ -34,7 +35,7 @@ function parseContentHTML(html: string) {
     // img to c-image
     .replaceAll(/<(?:img.*?\ssrc=(?:"|')(.*?)(?:"|').*?>)(.*?)(?:<\/img>)?/gi, "<c-image src='$1'></c-image>")
     // heading
-    .replaceAll(/<(?:h(1|2|3|4|5|6|7).*?>)(.*?)<\/h.>/gi, "<c-text-blob popunderline='' class='h$1' heading='$2'></c-text-blob>")
+    .replaceAll(/<(?:h(1|2|3|4|5|6|7).*?>)(.*?)<\/h.>/gi, "<c-text-blob class='h$1' heading='$2'></c-text-blob>")
 
   return html
   // console.log(html)
@@ -64,27 +65,46 @@ export default class GhostBlogPage extends BlogPage {
 
     lang({links: {[slug]: blogData.title}})
 
+    const retArr = [] as HTMLElement[]
+    const contentContainer = ce("content-inner-container").apd(parseContentHTML(blogData.html))
     
+
     const headingElem = new TextBlob()
-    headingElem.setAttribute("popunderline", "")
-    headingElem.addClass("title")
+    headingElem.addClass("h1")
+    headingElem.setAttribute("popunderline", "popunderline")
     headingElem.heading(blogData.title)
     headingElem.note(AT.formatDate(new Date(blogData.published_at)))
 
-    const author = new PersonCircle()  
-    author.src(blogData.primary_author.profile_image ?? "unknownAvatarDepthRect")
-    author.heading(blogData.primary_author.name)
-    author.subText(blogData.primary_author.location)
-    author.link(blogData.primary_author.website ?? "")
-    headingElem.text(author as any)
+    // special header section
+    if (blogData.feature_image != null) {
+
+
+      const author = new PersonCircle()  
+      author.src(blogData.primary_author.profile_image ?? "unknownAvatarDepthRect")
+      author.heading(blogData.primary_author.name)
+      author.subText(blogData.primary_author.location)
+      if (blogData.primary_author.website !== undefined && blogData.primary_author.website !== null) author.link(blogData.primary_author.website)
+      headingElem.text(author as any)
+      
+      const imgElem = new Image(blogData.feature_image ?? "greenSpace")
+      imgElem.addClass("title")
+
+      const titleContainer = ce("title-container")
+      titleContainer.apd(headingElem as any, imgElem)
+      retArr.push(titleContainer)
+    }
+    else {
+      contentContainer.prepend(headingElem as any)
+    }
+
+
+    const headings = contentContainer.childs("c-text-blob", true)
+    for (const header of headings) {
+      if (header.hasClass("h1") || header.hasClass("h2")) {
+        header.setAttribute("popUnderline", "popunderline")
+      }
+    }
     
-    const imgElem = new Image(blogData.feature_image)
-    imgElem.addClass("title")
-
-    const titleContainer = ce("title-container")
-    titleContainer.apd(headingElem as any, imgElem)
-
-    const contentContainer = ce("content-inner-container").apd(parseContentHTML(blogData.html))
 
     const tables = contentContainer.childs("table", true)
     if (tables.length > 0) {
@@ -115,24 +135,16 @@ export default class GhostBlogPage extends BlogPage {
       audioPlayers.addClass("blogCard", "bg")
       loadRecord.content.add(() => {
         importAudioJs().then(([ f, css ]) => {
-          // debugger
           this.addStyle(css)
           f(this.body.contentContainer)
         })
       })
     }
 
-    
+    retArr.push(contentContainer)
 
 
-    this.addHooksToChilds([...titleContainer.children, ...contentContainer.children])
-
-
-
-    return [ 
-      titleContainer,
-      contentContainer
-    ]
+    return retArr
   }
 
   addStyle = keyIndex(({css}) => {

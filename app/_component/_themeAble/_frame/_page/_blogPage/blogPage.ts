@@ -8,6 +8,7 @@ import TextBlob from "../../../textBlob/textBlob";
 
 export default abstract class BlogPage extends Page {
 
+
   constructor(...content: (string | Element)[]) {
     super()
 
@@ -17,22 +18,8 @@ export default abstract class BlogPage extends Page {
   setBlog(...content: (string | Element)[]) {
     this.body.contentContainer.innerHTML = ""
     this.body.contentContainer.apd(...content) 
-    this.addHooksToChilds([...this.children])
     this.scrollTop = 0
   }
-  protected addHooksToChilds(childs: Element[]) {
-    for (const child of childs) {
-      if (child instanceof TextBlob) {
-        child.resizeDataBase().height.get((height) => {
-          const lineHeight = child.headerElem.css("lineHeight")
-          if (height > lineHeight * 1.5) child.removeAttribute("popUnderline")
-          else child.setAttribute("popUnderline", "true")
-        })
-      }
-        
-    }
-  }
-
 
 
   protected async navigationCallback(loadId: unknown) {
