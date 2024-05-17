@@ -18,6 +18,7 @@ h1 {
   margin-top: .15em;
   line-height: 1.13em;
   display: inline-block;
+  word-break: break-word;
 }
 h1 > span {
   position: relative;
