@@ -3,3 +3,7 @@ content-inner-container {
   width: 100%;
   height: max-content;
 }
+
+content-container {
+  align-items: center;
+}
