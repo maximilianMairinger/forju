@@ -5,15 +5,17 @@ component-body {
   background-color: rgb(var(--tertiary-themed-background-soft));
 
   --oversized: max(min(85vw, 170%), 100%);
-  font-size: 18px;
+  --normalFontSize: 18px;
+  font-size: var(--normalFontSize);
 
-  --margin: 1.11111111111em;
+  --margin: 1em;
 }
 
 content-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
 
 
@@ -87,11 +89,6 @@ title-container {
   justify-content: flex-start;
 }
 
-title-container c-text-blob {
-  width: max(20%, 340px);
-  min-width: min-content;
-  flex-grow: 1;
-}
 
 title-container c-image {
   width: max(60%, 200px);
@@ -101,22 +98,33 @@ title-container c-image {
 
 
 c-text-blob {
+  width: 100%;
   margin-bottom: 0;
   position: relative;
+  font-size: 2.5em;
+  --header-fontsize: 1em;
+  --smallTxt-fontsize: 16px;
+}
+c-text-blob > * {
+  font-size: .4em;
 }
 
-c-text-blob.title {
+title-container c-text-blob {
   padding-left: 40px;
   
   box-sizing: border-box;
   
-  --header-fontsize: 3.5em;
+  font-size: 2.5em;
   margin-bottom: 30px;
+
+  width: max(20%, 340px);
+  min-width: min-content;
+  flex-grow: 1;
 }
 
 
 @media (max-width: 1000px) {
-  c-text-blob.title {
+  title-container c-text-blob {
     padding-left: 10px;
     padding-right: 10px;
   }
@@ -126,12 +134,12 @@ c-text-blob.title {
   title-container {
     width: 100%;
   }
-  c-text-blob.title {
+  title-container c-text-blob {
     padding: 0;
   }
 }
 
-c-image.title {
+title-container c-image {
   aspect-ratio: 10 / 9;
   max-height: 600px;
   margin-bottom: 60px;
@@ -149,18 +157,41 @@ c-image {
   box-shadow: 20px 20px 0px 0px rgba(0, 0, 0, 0.2);
 }
 
+c-text-blob.h1 {
+  font-size: 3em;
+  
+}
 
+c-text-blob.h2 {
+  font-size: 2.3em;
+}
 
-/* the biggest heading in an article is h2, as h1 is reserved for the title, and it has .title as class */
+c-text-blob.h3 {
+  font-size: 1.7em;
+}
+
+c-text-blob.h4 {
+  font-size: 1.4em;
+}
+
+c-text-blob.h5 {
+  font-size: 1.2em;
+}
+
+c-text-blob.h6 {
+  font-size: 1.1em;
+}
+
 c-text-blob {
-  margin-top: calc(2 * var(--margin));
+  margin-top: var(--margin);
 }
 
 c-text-blob + * {
-  margin-top: calc(.5 * var(--margin)) !important
+  margin-top: calc(.2 * var(--margin)) !important
 }
 
 p {
+  width: 100%;
   display: inline-block;
   line-height: 1.6em;
   margin-bottom: 0;
@@ -168,7 +199,7 @@ p {
 }
 
 p + p {
-  margin-top: calc(2 * var(--margin));
+  /* margin-top: calc(2 * var(--margin)); */
 }
 
 c-image {
@@ -222,5 +253,15 @@ c-block-button {
 }
 
 
-
+blockquote {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  margin-top: var(--margin);
+  padding: 20px;
+  background-color: rgba(var(--primary-theme), .1);
+  font-style: italic;
+  border-left: 5px solid rgb(var(--primary-theme));
+  border-radius: 5px;
+}
 

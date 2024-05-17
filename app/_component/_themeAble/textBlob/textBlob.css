@@ -5,6 +5,7 @@
   margin-bottom: 20px;
   --body-size: 70%;
   --header-fontsize: 2.5em;
+  --smallTxt-fontsize: 1em;
 
   --pop-underline-opacity: 1;
   --pop-underline-color: rgba(var(--theme), .8);
@@ -20,6 +21,7 @@ h1 {
   line-height: 1.13em;
   display: inline-block;
   width: var(--widthOfHeading);
+  word-break: break-word;
 }
 h1 > span {
   position: relative;
@@ -34,13 +36,15 @@ p {
   position: relative;
   width: var(--body-size);
   margin-bottom: 0;
+  font-size: var(--smallTxt-fontsize);
 }
 
 note-header {
   font-weight: bold;
   color: rgb(var(--theme));
   position: relative;
-  display: block
+  display: block;
+  font-size: var(--smallTxt-fontsize);
 }
 
 note-header::selection {
@@ -59,7 +63,7 @@ pop-underline {
 
 }
 
-:host([popUnderline]) pop-underline {
+:host([popUnderline]:not(.multiline)) pop-underline {
   display: inline-block;
 }
 
