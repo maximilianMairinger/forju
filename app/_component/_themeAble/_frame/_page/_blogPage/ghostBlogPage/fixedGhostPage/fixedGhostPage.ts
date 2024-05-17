@@ -23,3 +23,4 @@ export default class FixedGhostPage extends GhostBlogPage {
 }
 
 declareComponent("c-fixed-ghost-page", FixedGhostPage)
+

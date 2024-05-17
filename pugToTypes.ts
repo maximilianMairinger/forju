@@ -3,7 +3,8 @@ import { Document, load as loadCheerio } from "cheerio"
 import { camelCase } from "change-case"
 import chokidar from "chokidar"
 import path from "node:path"
-import {promises as fs} from "fs"
+import pth from "node:path"
+import fss, {promises as fs} from "fs"
 declare const Bun: any
 import { program } from "commander"
 
@@ -223,9 +224,21 @@ await readDirRecursiveOnce(rootPath, (path: string) => {
   paths.push(path)
 })
 
+
 const proms = [] as Promise<any>[]
 for (const path of paths) {
   proms.push(handlePugUpdate(path, kind))
+}
+
+
+for (const filePath of paths) {
+  proms.push((async () => {
+    if (filePath.endsWith(".ts") && path.basename(path.dirname(filePath) + ".ts") === path.basename(filePath)) {
+      if (!await fileExists(path.join(path.dirname(filePath), "pugBody.gen.ts"))) {
+        await fs.writeFile(path.join(path.dirname(filePath), "pugBody.gen.ts"), `export interface BodyTypes {}`)
+      }
+    }
+  })())
 }
 await Promise.all(proms)
 console.log("PugToTypes: Done")
@@ -414,3 +427,9 @@ function parseInterface(interfaceString: string): Map<string, string> {
   return map;
 }
 
+
+function fileExists(filePath: string) {
+  return fs.access(filePath)
+    .then(() => true)
+    .catch(() => false)
+}
