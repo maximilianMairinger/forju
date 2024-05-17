@@ -6,7 +6,7 @@ import ContactPage from "../../_page/_sectionedPage/_lazySectionedPage/contactPa
 import AboutPage from "../../_page/_sectionedPage/_lazySectionedPage/aboutPage/aboutPage";
 import { declareComponent } from "../../../../../lib/declareComponent"
 import HighlightAbleIcon from "../../../_icon/_highlightAbleIcon/highlightAbleIcon";
-import LegalPage from "../../_page/_blogPage/legalPage/legalPage"
+import FixedGhostBlogPage from "../../_page/_blogPage/ghostBlogPage/fixedGhostPage/fixedGhostPage"
 import GhostBlogPage from "../../_page/_blogPage/ghostBlogPage/ghostBlogPage"
 
 
@@ -33,9 +33,9 @@ export default class PageManager extends Manager {
         ), val: () => import(/* webpackChunkName: "aboutPage" */"../../_page/_sectionedPage/_lazySectionedPage/aboutPage/aboutPage")
       },
       {
-        key: new Import("impressum", 10, (legalPage: typeof LegalPage) =>
-            new legalPage()
-        ), val: () => import(/* webpackChunkName: "legalPage" */"../../_page/_blogPage/legalPage/legalPage")
+        key: new Import("impressum", 10, (fixedGhostBlogPage: typeof FixedGhostBlogPage) =>
+            new fixedGhostBlogPage("impressum-forju")
+        ), val: () => import(/* webpackChunkName: "legalPage" */"../../_page/_blogPage/ghostBlogPage/fixedGhostPage/fixedGhostPage")
       },
       {
         key: new Import("blog/*", 10, (ghostBlogPage: typeof GhostBlogPage) => 
