@@ -225,11 +225,13 @@ await readDirRecursiveOnce(rootPath, (path: string) => {
 })
 
 
-const proms = [] as Promise<any>[]
+let proms = [] as Promise<any>[]
 for (const path of paths) {
   proms.push(handlePugUpdate(path, kind))
 }
 
+await Promise.all(proms)
+proms = []
 
 for (const filePath of paths) {
   proms.push((async () => {
