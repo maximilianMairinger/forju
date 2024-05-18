@@ -34,8 +34,7 @@ export default class PartnerSection extends PageSection {
       this.body.headline.heading(`Unser${multiple ? "e" : ""} Partner`)
     })
 
-    const headerTooSmall = this.body.headerSection.resizeDataBase().width.tunnel((w) => w < 380)
-    headerTooSmall.get(toggleClass(this.componentBody, "headerTooSmall"))
+    this.body.headline.isMultiline.get(toggleClass(this.componentBody, "headerTooSmall"))
 
   }
 

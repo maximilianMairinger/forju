@@ -8,17 +8,17 @@ export default class TextBlob extends ThemeAble {
   private h1Elem = this.q("h1")
   public readonly headerElem = this.h1Elem.childs("span")
   private bodyElem = this.q("p")
+  public isMultiline = new Data(false)
   constructor() {
     super(false)
 
-    const multiline = new Data(false)
+    
     this.h1Elem.resizeDataBase().height.get((height) => {
       const lineHeight = this.headerElem.css("lineHeight")
-      multiline.set(height > lineHeight * 1.5)
+      this.isMultiline.set(height > lineHeight * 1.5)
     })
 
-    const toggleClassMultiLine = toggleClass(this as any, "multiline")
-    multiline.get(toggleClassMultiLine)
+    this.isMultiline.get(toggleClass(this as any, "multiline"))
   }
 
 

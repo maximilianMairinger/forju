@@ -11,6 +11,7 @@
   --pop-underline-color: rgba(var(--theme), .8);
 
   --widthOfHeading: unset;
+  --word-break: break-word;
 }
 
 h1 {
@@ -21,7 +22,7 @@ h1 {
   line-height: 1.13em;
   display: inline-block;
   width: var(--widthOfHeading);
-  word-break: break-word;
+  word-break: var(--word-break);
 }
 h1 > span {
   position: relative;
