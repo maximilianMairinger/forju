@@ -21,6 +21,7 @@ picture {
   overflow: hidden;
   border-radius: inherit;
   padding: inherit;
+  box-sizing: border-box;
   aspect-ratio: inherit;
 }
 picture:first-of-type {
