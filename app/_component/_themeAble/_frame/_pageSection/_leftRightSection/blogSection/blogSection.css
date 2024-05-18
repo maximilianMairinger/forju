@@ -3,6 +3,7 @@
   position: relative;
 }
 
+
 component-body {
   background-color: rgb(var(--secondary-themed-background));
   min-height: 600px;
@@ -51,4 +52,14 @@ c-block-button.themed {
 }
 c-text-blob {
   --theme: var(--secondary-theme);
+}
+
+btn-wrapper {
+  display: grid;
+  gap: 10px;
+  justify-content: start;
+}
+
+btn-wrapper > * {
+  grid-row: 1
 }
