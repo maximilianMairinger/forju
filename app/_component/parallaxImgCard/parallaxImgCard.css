@@ -11,41 +11,7 @@
   --color: white;
 }
 
-component-body {
-  width: 100%;
-  height: 100%;
-  
-}
 
-image-container {
-  display: inline-block;
-  width: 100%;
-  height: 100%;
-}
-
-
-image-container {
-  transition: transform .8s;
-}
-
-image-container:hover {
-  transform: scale(1.02);
-}
-
-c-image {
-  min-width: 100%;
-  min-height: 100%;
-}
-
-:host([x]) c-image, :host(:not([y])) c-image {
-  height: 100%;
-  width: max-content;
-}
-
-:host([y]) c-image {
-  width: 100%;
-  height: max-content;
-}
 
 grad-overlay {
   position: absolute;

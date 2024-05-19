@@ -1,0 +1,34 @@
+:host {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+component-body {
+  transition: transform .8s;
+}
+
+:host([zoomOnHover]) {
+  component-body:hover {
+    transform: scale(1.02);  
+  }
+  
+}
+
+::slotted(*) {
+  min-width: 100%;
+  min-height: 100%;
+}
+
+
+:host([x]) ::slotted(*), :host(:not([y])) ::slotted(*) {
+  height: 100%;
+  width: max-content;
+}
+
+:host([y]) ::slotted(*) {
+  width: 100%;
+  height: max-content;
+}
