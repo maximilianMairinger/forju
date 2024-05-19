@@ -24,7 +24,7 @@ picture {
   box-sizing: border-box;
   aspect-ratio: inherit;
 }
-picture:first-of-type {
+picture:last-of-type {
   position: relative;
   top: initial;
   left: initial;

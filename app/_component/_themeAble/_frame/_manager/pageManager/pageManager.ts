@@ -8,6 +8,7 @@ import { declareComponent } from "../../../../../lib/declareComponent"
 import HighlightAbleIcon from "../../../_icon/_highlightAbleIcon/highlightAbleIcon";
 import FixedGhostBlogPage from "../../_page/_blogPage/ghostBlogPage/fixedGhostPage/fixedGhostPage"
 import GhostBlogPage from "../../_page/_blogPage/ghostBlogPage/ghostBlogPage"
+import ProjectsPage from "../../_page/projectBrowsePage/projectBrowsePage"
 
 
 
@@ -26,6 +27,11 @@ export default class PageManager extends Manager {
         key: new Import("contactSite", 10, (contactPage: typeof ContactPage) =>
             new contactPage("contactSite", sectionChangeCallback)
         ), val: () => import(/* webpackChunkName: "contactPage" */"../../_page/_sectionedPage/_lazySectionedPage/contactPage/contactPage")
+      },
+      {
+        key: new Import("projects", 10, (projectsPage: typeof ProjectsPage) =>
+            new projectsPage()
+        ), val: () => import(/* webpackChunkName: "projectsPage" */"../../_page/projectBrowsePage/projectBrowsePage")
       },
       {
         key: new Import("about", 10, (aboutPage: typeof AboutPage) =>

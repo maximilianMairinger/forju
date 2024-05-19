@@ -136,7 +136,6 @@ export default abstract class Manager extends Frame {
 
 
   async minimalContentPaint(loadId: string) {
-    // debugger
     // console.log("start minimal")
     await super.minimalContentPaint(loadId)
     await this.setElem(this.domainSubscription.domain)

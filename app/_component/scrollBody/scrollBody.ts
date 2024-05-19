@@ -8,6 +8,7 @@ import RippleButton from "./../_themeAble/_focusAble/_formUi/_rippleButton/rippl
 import WAAPIEasing from "waapi-easing"
 import delay, { isIdle } from "tiny-delay"
 import { nextFrame } from "animation-frame-delta";
+import { clamp, probRange } from "../../lib/util";
 
 const easing = new WAAPIEasing("easeInOut").function
 const wrapperElemName = "scroll-body-element-wrapper"
@@ -76,7 +77,7 @@ export default class ScrollBody extends Component<false> {
 
   async childAddedCallback(child: Element) {
 
-    const probRange = inRange(0, 1)
+    
     
     await nextFrame()
     await delay(0)
@@ -574,12 +575,4 @@ function dataNextTrue(data: Data<boolean>) {
 
 function nextScrollIdle(elem: Element, dir?: "x" | "y" | "one", timeout?: number) {
   return dataNextTrue(isScrollIdle(elem, dir, timeout))
-}
-
-function inRange(bot: number, top: number) {
-  return function(val: number) {
-    if (val < bot) return bot
-    else if (val > top) return top
-    else return val
-  }
 }

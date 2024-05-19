@@ -285,6 +285,10 @@ export default class Image extends Component {
   }
 
   private getCurrentlyWantedRes() {
+    if (this._src !== undefined) {
+      const isExplicitSrc = isExplicitLocation(this._src)
+      if (isExplicitSrc) return ""
+    }
 
     const stage = this.currentLoadStage
     const wantedRes = this.myWantedRes.get()
