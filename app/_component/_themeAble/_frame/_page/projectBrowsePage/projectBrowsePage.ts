@@ -10,11 +10,6 @@ import { Data, DataCollection, DataSubscription } from "josm";
 import AT from "../../../../../lib/formatTime";
 import { probRange } from "../../../../../lib/util";
 
-function clamp(min: number, max: number) {
-  return function (val: number) {
-    return Math.min(max, Math.max(min, val))
-  }
-}
 
 
 
@@ -37,7 +32,7 @@ export default class ProjectBrowsePage extends Page {
   constructor() {
     super()
 
-    loadRecord.full.add(async () => {
+    loadRecord.content.add(async () => {
       const blogs = await ghostApi.posts.browse({
         formats: "html",
         limit: 15,
@@ -46,7 +41,7 @@ export default class ProjectBrowsePage extends Page {
       })
       return blogs
     }).then((blogs) => {
-      this.componentBody.innerHTML = ""
+      this.body.contentContainer.innerHTML = ""
 
 
       const thisCurHeight = this.resizeDataBase().height
@@ -63,14 +58,14 @@ export default class ProjectBrowsePage extends Page {
           cardTop = card.offsetTop
           
           const res = percentageInViewPort({ begin: cardTop, size: cardHeight }, { begin: scrollProg, size: viewPortHeight })
-          console.log(res)
+          // console.log(res)
           percentInViewPort.set(res)
         })
         percentInViewPort.get((prog) => {
           card.parallaxProgHook.set(prog)
         })
         
-        const img = new Image(blog.feature_image ?? "greenSpace", true)
+        const img = new Image(blog.feature_image ?? "greenSpace", true) // is this force even needed
         card.append(img)
         projContainer.append(card)
 
@@ -94,6 +89,14 @@ export default class ProjectBrowsePage extends Page {
         // this.body.scrollBody.append(btn)
       }
     })
+
+
+    loadRecord.full.add(async () => {
+      await import("./blobMove").then(({ default: blobMove }) => {
+        blobMove(this)
+      })
+    })
+
   }
 
   stl() {

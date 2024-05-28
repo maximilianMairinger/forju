@@ -7,3 +7,4 @@ export function clamp(bot: number, top: number) {
   }
 }
 export const probRange = clamp(0, 1)
+

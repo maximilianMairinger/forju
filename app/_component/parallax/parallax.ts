@@ -68,7 +68,6 @@ export default class Parallax extends Component {
 
     let lastSub: DataSubscription<[any]>
     curChild.get((child) => {
-      console.log("child", child)
       if (lastSub !== undefined) lastSub.deactivate()
       lastSub = child.resizeDataBase()(widthDir).get((width: number) => {
         picSize.set(width === 0 ? Infinity : width)
@@ -100,8 +99,6 @@ export default class Parallax extends Component {
         })
   
         const translate = `translate${dir.toUpperCase()}`
-
-        console.log(cardWidth, childWidth)
         
         child.anim([
           { offset: 0, transform: `${translate}(0)` },
