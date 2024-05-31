@@ -8,7 +8,8 @@ import RippleButton from "./../_themeAble/_focusAble/_formUi/_rippleButton/rippl
 import WAAPIEasing from "waapi-easing"
 import delay, { isIdle } from "tiny-delay"
 import { nextFrame } from "animation-frame-delta";
-import { clamp, probRange } from "../../lib/util";
+import { capitalize, clamp, dirToLenIndex, dirToSideIndex, probRange } from "../../lib/util";
+import { nextScrollIdle, relativeViewProgressData } from "../../lib/actions";
 
 const easing = new WAAPIEasing("easeInOut").function
 const wrapperElemName = "scroll-body-element-wrapper"
@@ -112,22 +113,10 @@ export default class ScrollBody extends Component<false> {
 
     
     for (const dir of dirs) {
-      
       const propagateFullViewProgressData = propagateFullViewProgressDatas[dir]
       if (propagateFullViewProgressData !== undefined) {
-        const wid = dir === "x" ? "Width" : "Height"
-
-        this.body.scrollBody.scrollData(false, dir).get((scrollProg) => {
-
-          const leftOfElem = (child as HTMLElement)[dir === "x" ? "offsetLeft" : "offsetTop"]
-          const widthOfElem = (child as HTMLElement)[dir === "x" ? "offsetWidth" : "offsetHeight"]
-          const rightOfElem = (child as HTMLElement)[dir === "x" ? "offsetLeft" : "offsetTop"] + widthOfElem
-          const widthOfContainer = this[`offset${wid}`]
-
-          const widthWhereElemIsVis = widthOfContainer + widthOfElem 
-          const scrollProgRight = scrollProg + widthOfContainer
-          
-          propagateFullViewProgressData.set(probRange((scrollProgRight - leftOfElem) / widthWhereElemIsVis))
+        relativeViewProgressData(dir, this.body.scrollBody, child as HTMLElement).get((a) => {
+          propagateFullViewProgressData.set(a)
         })
       }
     }
@@ -544,35 +533,9 @@ declareComponent("c-scroll-body", ScrollBody)
 
 
 
-const dirToLenIndex = {
-  x: "width",
-  y: "height"
-} as const
 
 
-function capitalize(s: string) {
-  return s[0].toUpperCase() + s.slice(1)
-}
 
-function isScrollIdle(elem: Element, dir?: "x" | "y" | "one", timeout?: number) {
-  const { idle, f } = isIdle(timeout)
-  elem.scrollData(false, dir).get(f)
-  return idle
-}
 
-function dataNextTrue(data: Data<boolean>) {
-  return () => {
-    return new Promise<void>((res) => {
-      const s = data.get((d) => {
-        if (d) {
-          res()
-          s.deactivate()
-        }
-      })
-    })
-  }
-}
 
-function nextScrollIdle(elem: Element, dir?: "x" | "y" | "one", timeout?: number) {
-  return dataNextTrue(isScrollIdle(elem, dir, timeout))
-}
+

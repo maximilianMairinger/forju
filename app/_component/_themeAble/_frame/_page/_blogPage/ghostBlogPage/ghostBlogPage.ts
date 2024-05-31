@@ -10,11 +10,16 @@ import {ghostApi} from "../../../../../../lib/ghostApi";
 import "../../../../link/link"
 import "../../../../../image/image" 
 import "../../../../textBlob/textBlob"
+import "../../../../../parallax/parallax"
 import TextBlob from "../../../../textBlob/textBlob"
 import AT from "../../../../../../lib/formatTime"
 import PersonCircle from "../../../../../personCircle/personCircle"
 import keyIndex, { memoize } from "key-index"
 import { loadRecord } from "../../../frame"
+import Parallax from "../../../../../parallax/parallax"
+import { relativeViewProgressData } from "../../../../../../lib/actions"
+
+const parallaxLength = 100
 
 const importGridJs = memoize(() => Promise.all([import("gridjs").then(({Grid}) => Grid), import("./gridjsStyles")]))
 const importAudioJs = memoize(() => Promise.all([import("./audioPlayerJs").then(({default: audioPlayer}) => audioPlayer), import("./audioPlayerStyles")]))
@@ -33,7 +38,7 @@ function parseContentHTML(html: string) {
     // delete imgs with empty src
     .replaceAll(/<img\s.*?src(\s|(=(""|''))).*?>(<\/img>)?/gi, "") 
     // img to c-image
-    .replaceAll(/<(?:img.*?\ssrc=(?:"|')(.*?)(?:"|').*?>)(.*?)(?:<\/img>)?/gi, "<c-image src='$1'></c-image>")
+    .replaceAll(/<(?:img.*?\ssrc=(?:"|')(.*?)(?:"|').*?>)(.*?)(?:<\/img>)?/gi, "<c-parallax y='y'><c-image src='$1'></c-image></c-parallax>")
     // heading
     .replaceAll(/<(?:h(1|2|3|4|5|6|7).*?>)(.*?)<\/h.>/gi, "<c-text-blob class='h$1' heading='$2'></c-text-blob>")
 
@@ -88,9 +93,17 @@ export default class GhostBlogPage extends BlogPage {
       
       const imgElem = new Image(blogData.feature_image ?? "greenSpace")
       imgElem.addClass("title")
+      const imgParallaxElem = new Parallax(parallaxLength)
+      imgParallaxElem.append(imgElem)
+      imgParallaxElem.y("y")
+      relativeViewProgressData("y", this, imgParallaxElem).get((prog) => {
+        console.log()
+        imgParallaxElem.relativeScrollProg(prog)
+      })
+
 
       const titleContainer = ce("title-container")
-      titleContainer.apd(headingElem as any, imgElem)
+      titleContainer.apd(headingElem as any, imgParallaxElem)
       retArr.push(titleContainer)
     }
     else {
@@ -139,6 +152,17 @@ export default class GhostBlogPage extends BlogPage {
           f(this.body.contentContainer)
         })
       })
+    }
+
+    const parallaxElems = contentContainer.childs("c-parallax", true) as any as Parallax[]
+    
+    for (const parallaxElem of parallaxElems) {
+      relativeViewProgressData("y", this, parallaxElem).get((prog) => {
+        parallaxElem.relativeScrollProg(prog)
+      })
+
+      parallaxElem.parallaxLength(parallaxLength)
+
     }
 
     retArr.push(contentContainer)

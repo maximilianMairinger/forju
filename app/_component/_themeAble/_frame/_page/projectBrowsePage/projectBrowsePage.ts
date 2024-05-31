@@ -9,20 +9,12 @@ import TextBlob from "../../../textBlob/textBlob";
 import { Data, DataCollection, DataSubscription } from "josm";
 import AT from "../../../../../lib/formatTime";
 import { probRange } from "../../../../../lib/util";
+import { relativeViewProgressData } from "../../../../../lib/actions";
 
 
 
 
-// Output: 0 when above view and when the bottom of element hits the top of the view, 1 when the top of the element hits the bottom of the view or when it is below
-function percentageInViewPort(elem: {begin: number, size: number}, viewPort: {begin: number, size: number}) {
-  // const widthWhereElemIsVis = viewPort.size + elem.size
-  // const scrollProgRight = viewPort.begin + viewPort.size
-  
-  // return probRange((scrollProgRight - elem.begin) / widthWhereElemIsVis)
 
-
-  return probRange((viewPort.begin + viewPort.size - elem.begin) / (viewPort.size + elem.size))
-}
 
 // TODO: above may be reused by scrollBody
 
@@ -44,23 +36,14 @@ export default class ProjectBrowsePage extends Page {
       this.body.contentContainer.innerHTML = ""
 
 
-      const thisCurHeight = this.resizeDataBase().height
-      
-      
+            
       for (const blog of blogs) {
         const projContainer = ce("project-container")
-        const card = new Parallax(.9)
+        const card = new Parallax()
         card.setAttribute("zoomOnHover", "zoomOnHover")
         card.curDir.set("y")
-        const cardSize = card.resizeDataBase()
-        const percentInViewPort = new Data(0)
-        new DataCollection(this.scrollData(false, "y"), thisCurHeight, cardSize.top, cardSize.bottom).get((scrollProg, viewPortHeight, cardTop, cardHeight) => {          
-          cardTop = card.offsetTop
-          
-          const res = percentageInViewPort({ begin: cardTop, size: cardHeight }, { begin: scrollProg, size: viewPortHeight })
-          // console.log(res)
-          percentInViewPort.set(res)
-        })
+
+        const percentInViewPort = relativeViewProgressData("y", this, card)
         percentInViewPort.get((prog) => {
           card.parallaxProgHook.set(prog)
         })

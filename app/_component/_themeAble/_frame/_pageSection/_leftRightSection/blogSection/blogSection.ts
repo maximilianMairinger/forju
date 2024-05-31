@@ -14,7 +14,7 @@ export default class BlogSection extends LeftRightSection {
   constructor() {
     super(1010);
 
-    const filter = process.env.DEV_BUILD === "true" ? "tag:forju+tag:test+tag:test2" : "tag:forju+tag:scienceBlog"
+    const filter = process.env.DEV_BUILD === "true" ? "tag:forju+tag:test" : "tag:forju+tag:scienceBlog"
 
 
     loadRecord.full.add(async () => {

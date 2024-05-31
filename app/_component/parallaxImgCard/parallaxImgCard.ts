@@ -36,6 +36,9 @@ export default class ParallaxImgCard extends Component {
     this.curDir.set("y")
   }
 
+  parallaxLength(to: number) {
+    this.body.parallax.parallaxLength(+to)
+  }
   
 
   imgSrc(to: string, forceLoad?: boolean) {

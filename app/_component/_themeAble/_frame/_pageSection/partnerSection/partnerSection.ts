@@ -14,9 +14,6 @@ export default class PartnerSection extends PageSection {
 
     const childCount = new Data(this.body.partnerBody.children.length)
     const notTooManyChildsForSideLayout = childCount.tunnel(c => c <= 2)
-    notTooManyChildsForSideLayout.get((q) => {
-      console.log(q ? "notTooManyChildsForSideLayout" : "not notTooManyChildsForSideLayout")
-    })
     notTooManyChildsForSideLayout.get(toggleClass(this.componentBody, "sideLayout"))
 
     const m = new MutationObserver(() => {
