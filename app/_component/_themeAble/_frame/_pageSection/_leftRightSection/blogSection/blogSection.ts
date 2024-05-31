@@ -14,14 +14,14 @@ export default class BlogSection extends LeftRightSection {
   constructor() {
     super(1010);
 
-
+    const filter = process.env.DEV_BUILD === "true" ? "tag:forju+tag:test+tag:test2" : "tag:forju+tag:scienceBlog"
 
 
     loadRecord.full.add(async () => {
       const blogs = await ghostApi.posts.browse({
         formats: "html",
         limit: 15,
-        filter: "tag:forju+tag:scienceBlog",
+        filter,
         include: "authors"
       })
       return blogs

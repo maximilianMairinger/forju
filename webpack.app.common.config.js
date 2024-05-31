@@ -1,5 +1,5 @@
-const InjectPlugin = require("webpack-inject-plugin")
 const path = require("path")
+const Dotenv = require('dotenv-webpack');
 
 
 
@@ -55,6 +55,12 @@ module.exports = () => {
                     use: ['raw-loader', 'pug-html-loader']
                 }
             ]
-        }
+        },
+        plugins: [
+            new Dotenv({
+                systemvars: true,
+                defaults: true
+            })
+        ]
     }
 };
