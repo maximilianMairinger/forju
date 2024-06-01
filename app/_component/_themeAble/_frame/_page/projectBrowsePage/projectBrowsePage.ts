@@ -9,7 +9,6 @@ import TextBlob from "../../../textBlob/textBlob";
 import { Data, DataCollection, DataSubscription } from "josm";
 import AT from "../../../../../lib/formatTime";
 import { probRange } from "../../../../../lib/util";
-import { relativeViewProgressData } from "../../../../../lib/actions";
 
 
 
@@ -42,11 +41,7 @@ export default class ProjectBrowsePage extends Page {
         const card = new Parallax()
         card.setAttribute("zoomOnHover", "zoomOnHover")
         card.curDir.set("y")
-
-        const percentInViewPort = relativeViewProgressData("y", this, card)
-        percentInViewPort.get((prog) => {
-          card.parallaxProgHook.set(prog)
-        })
+        card.autoHook(this)
         
         const img = new Image(blog.feature_image ?? "greenSpace", true) // is this force even needed
         card.append(img)
