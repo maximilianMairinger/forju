@@ -1,4 +1,4 @@
-import { Data, DataCollection } from "josm"
+import { Data, DataCollection, DataSubscription } from "josm"
 import { isIdle } from "tiny-delay"
 import { capitalize, dirToLenIndex, dirToSideIndex, probRange } from "./util"
 
@@ -40,17 +40,27 @@ export function nextScrollIdle(elem: Element, dir?: "x" | "y" | "one", timeout?:
 }
 
 
-export function relativeViewProgressData(dir: "x" | "y", scrollBody: HTMLElement, child: HTMLElement) {
-  const wid = dirToLenIndex[dir]
-  const side = dirToSideIndex[dir]
-  const thisCurHeight = scrollBody.resizeDataBase()[wid] as Data<number>
-  const childSize = child.resizeDataBase()
-
+export function relativeViewProgressData(dir: "x" | "y" | Data<"x" | "y">, scrollBody: HTMLElement, child: HTMLElement) {
+  const ddir = dir instanceof Data ? dir : new Data(dir)
+  let sub: any
   const prog = new Data(0)
-  new DataCollection(scrollBody.scrollData(false, dir), thisCurHeight, childSize[side], childSize[wid]).get((scrollProg, viewPortHeight, childTop, childHeight) => {
-    childTop = child[`offset${capitalize(side)}`] // quickfix
-    prog.set(percentageInViewPort({ begin: childTop, size: childHeight }, { begin: scrollProg, size: viewPortHeight }))
+  ddir.get((dir) => {
+    setTimeout(() => {
+      if (sub !== undefined) sub.deactivate()
+        
+      const wid = dirToLenIndex[dir]
+      const side = dirToSideIndex[dir]
+      const thisCurHeight = scrollBody.resizeDataBase()[wid] as Data<number>
+      const childSize = child.resizeDataBase()
+    
+      
+      sub = new DataCollection(scrollBody.scrollData(false, dir), thisCurHeight, childSize[side], childSize[wid]).get((scrollProg, viewPortHeight, childTop, childHeight) => {
+        childTop = child[`offset${capitalize(side)}`] // quickfix. It is important that the next anchor element (something with pos abs or rel or fixed) is at the very top of scroll fame
+        prog.set(percentageInViewPort({ begin: childTop, size: childHeight }, { begin: scrollProg, size: viewPortHeight }))
+      })
+    })
   })
+
   return prog
 }
 

@@ -3,6 +3,7 @@ import declareComponent from "../../lib/declareComponent"
 import Component from "../component"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 import { dirToLenIndex, dirToSideIndex, scaleAroundCenter } from "../../lib/util";
+import { relativeViewProgressData } from "../../lib/actions";
 
 
 
@@ -140,6 +141,12 @@ export default class Parallax extends Component {
 
   relativeScrollProg(prog: number) {
     this.parallaxProgHook.set(prog)
+  }
+
+  autoHook(scrollParent: HTMLElement, dir: Data<"x" | "y"> | "x" | "y" = this.curDir) {
+    relativeViewProgressData(dir, scrollParent, this).get((prog) => {
+      this.parallaxProgHook.set(prog)
+    })
   }
 
   x(x) {

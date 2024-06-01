@@ -81,7 +81,8 @@ bg-line {
 
 title-container {
   width: var(--oversized);
-  position: relative;
+  /* position: relative; */
+  /* It is important that this does not have pos: rel. Because we use offsetTop in ghostBlogPage in relativeViewProgressData to find current offset to parent anchor element. Which should start at very top.  */
   display: flex;
   flex-direction: row-reverse;
   flex-wrap: wrap;

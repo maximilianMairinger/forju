@@ -17,7 +17,6 @@ import PersonCircle from "../../../../../personCircle/personCircle"
 import keyIndex, { memoize } from "key-index"
 import { loadRecord } from "../../../frame"
 import Parallax from "../../../../../parallax/parallax"
-import { relativeViewProgressData } from "../../../../../../lib/actions"
 
 const parallaxLength = 100
 
@@ -96,10 +95,7 @@ export default class GhostBlogPage extends BlogPage {
       const imgParallaxElem = new Parallax(parallaxLength)
       imgParallaxElem.append(imgElem)
       imgParallaxElem.y("y")
-      relativeViewProgressData("y", this, imgParallaxElem).get((prog) => {
-        console.log()
-        imgParallaxElem.relativeScrollProg(prog)
-      })
+      imgParallaxElem.autoHook(this)
 
 
       const titleContainer = ce("title-container")
@@ -157,9 +153,7 @@ export default class GhostBlogPage extends BlogPage {
     const parallaxElems = contentContainer.childs("c-parallax", true) as any as Parallax[]
     
     for (const parallaxElem of parallaxElems) {
-      relativeViewProgressData("y", this, parallaxElem).get((prog) => {
-        parallaxElem.relativeScrollProg(prog)
-      })
+      parallaxElem.autoHook(this)
 
       parallaxElem.parallaxLength(parallaxLength)
 

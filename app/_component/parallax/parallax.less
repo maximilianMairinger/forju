@@ -31,12 +31,14 @@ component-body {
 
 :host([x]) ::slotted(*), :host(:not([y])) ::slotted(*) {
   height: 100%;
-  width: max-content;
+  width: 100%;
+  min-width: max-content;
 }
 
 :host([y]) ::slotted(*) {
   width: 100%;
-  height: max-content;
+  height: 100%;
+  min-height: max-content;
 }
 
 adaptive-body {
