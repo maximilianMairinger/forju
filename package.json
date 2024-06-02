@@ -96,7 +96,7 @@
     "webpack-cli": "^4.10.0",
     "webpack-inject-plugin": "^1.5.5",
     "webpack-merge": "^5.10.0",
-    "ws": "^8.17.0",
+    "ws": "^8.16.0",
     "yargs": "16.2.0"
   },
   "dependencies": {
