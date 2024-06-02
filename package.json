@@ -112,7 +112,7 @@
     "chromaticity-color-utilities": "0.14.0-alpha",
     "colorjs.io": "^0.4.5",
     "copy-to-clipboard": "^3.3.3",
-    "extended-dom": "^4.2.12",
+    "extended-dom": "^4.2.13",
     "fast-decode-uri-component": "^1.0.1",
     "fast-linked-list": "^3.2.3",
     "get-base-url": "^3.0.2",

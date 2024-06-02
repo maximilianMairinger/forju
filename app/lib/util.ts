@@ -30,3 +30,24 @@ export function scaleAroundCenter(by: number) {
     return half + frac * by
   }
 }
+
+
+export function findFirstParentThatMatches(elem: HTMLElement, query: string) {
+  for (const elems of parents(elem)) {
+    if (elems.matches(query)) return elems
+  }
+}
+
+
+// also supports shadow root
+export function* parents(elem: Element) {
+  while (elem) {
+      const parent = elem.parentElement || (elem.getRootNode() as ShadowRoot).host;
+      if (parent) {
+          yield parent;
+          elem = parent;
+      } else {
+          break;
+      }
+  }
+}

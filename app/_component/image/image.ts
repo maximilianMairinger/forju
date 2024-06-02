@@ -1,10 +1,11 @@
 import Component from "../component"
 import declareComponent from "./../../lib/declareComponent"
 import { loadRecord } from "../_themeAble/_frame/frame"
-import { ResablePromise } from "more-proms"
+import { ResablePromise, ResableSyncPromise } from "more-proms"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 import keyIndex from "key-index";
 import { Data } from "josm";
+import { capitalize } from "../../lib/util";
 
 const unionSymbol = "@"
 const typePrefix = "image/"
@@ -61,7 +62,12 @@ function isExplicitLocation(location: string) {
 const ratio = 16 / 9
 
 export default class Image extends Component {
-  public readonly loaded: {[key in typeof resesList[number]]?: ResablePromise<void>} = {}
+  public readonly loadedRes: {[key in typeof resesList[number]]?: ResablePromise<void>} = {}
+  public readonly loaded = {
+    full: new ResablePromise<void>(),
+    min: new ResablePromise<void>()
+  }
+  private minLoadedSyncProm = new ResableSyncPromise()
   private elems: {[key in typeof resesList[number]]?: {picture: HTMLPictureElement, sources: {setSource: (src: string) => void}[], img: HTMLImageElement &  {setSource: (src: string) => void}}} = {}
   private myWantedRes = new Data(0)
   protected body: BodyTypes
@@ -74,10 +80,29 @@ export default class Image extends Component {
 
     this.myWantedRes.get(() => {
       const wantedResName = this.getCurrentlyWantedRes()
-      if (wantedResName && this.loaded[wantedResName] === undefined) {
+      if (wantedResName && this.loadedRes[wantedResName] === undefined) {
         this.loadSrc(this.src(), wantedResName)
       }
     }, false)
+
+
+    const firstSideToBeSizeRestricted = new Data<"width" | "height" | "both" | "none">("none")
+    const sub = this.resizeDataBase()(({width, height}) => {
+      const w = width !== 0
+      const h = height !== 0
+      firstSideToBeSizeRestricted.set(w && h ? "both" : w ? "width" : h ? "height" : "none")
+    })
+    firstSideToBeSizeRestricted.get((val) => {
+      if (val !== "none") sub.deactivate()
+    })
+    let lastCls: `sizeRestricted${"none" | "width" | "height" | "both"}`
+    firstSideToBeSizeRestricted.get((side) => {
+      // if (this.src() === "https://ghost.maximilian.mairinger.com/content/images/2024/05/daniel-sessler-HYD91Hk8Wjo-unsplash.jpg") debugger
+      if (lastCls !== undefined) this.removeClass(lastCls)
+      this.addClass(lastCls = `sizeRestricted${capitalize(side)}` as any)
+    })
+    
+
 
     // this.elems[resesList.first].img.setAttribute("importance", "high")
 
@@ -117,12 +142,21 @@ export default class Image extends Component {
   }
 
   private loadedPromiseMemo = keyIndex((resolution: typeof resesList[number]) => {
-    return this.loaded[resolution] = new ResablePromise<void>((res, rej) => {}) as ResablePromise<void>
+    const prom = this.loadedRes[resolution] = new ResablePromise<void>((res, rej) => {}) as ResablePromise<void>
+    prom.then(() => {
+      if (resolution === "PREV") this.loaded.min.res()
+      else {
+        this.loaded.min.res()
+        this.loaded.full.res()
+      }
+    })
+    return prom
   })
 
   private loadedPromiseAndHookMemo = keyIndex((resolution: typeof resesList[number]) => {
     const prom = this.loadedPromiseMemo(resolution)
     this.elems[resolution].img.onload = () => {
+      this.minLoadedSyncProm.res()
       prom.res();
     }
     this.elems[resolution].img.onerror = () => {
@@ -136,7 +170,7 @@ export default class Image extends Component {
   private currentlyActiveElems: {picture: HTMLPictureElement, sources: {setSource: (src: string) => void}[], img: HTMLImageElement &  {setSource: (src: string) => void}}
   private loadSrc(src: string, res: typeof resesList[number]): Promise<void> {
     const loadStageAtCall = this.currentLoadStage 
-    if (this.elems[res] !== undefined) return this.loaded[res]
+    if (this.elems[res] !== undefined) return this.loadedRes[res]
     this.makeNewResElems(res, this.currentLoadStage)
     const thisActiveElems = this.elems[res]
     const { img, sources } = thisActiveElems
@@ -157,7 +191,7 @@ export default class Image extends Component {
 
       const firstTimeAtStage = !this.wasAtStageIndex[this.currentLoadStage]
       
-      this.loaded[res].then(() => {
+      this.loadedRes[res].then(() => {
         loadingCache[src][loadStageAtCall][res] = true
         
         
@@ -198,7 +232,7 @@ export default class Image extends Component {
 
     this.wasAtStageIndex[this.currentLoadStage] = true
 
-    return this.loaded[res].onSettled
+    return this.loadedRes[res].onSettled
   }
     
 
@@ -221,7 +255,7 @@ export default class Image extends Component {
       }
       else {
         const wantedResName = this.getCurrentlyWantedRes()
-        if (wantedResName && this.loaded[wantedResName] === undefined) return this.loadSrc(this._src, wantedResName)
+        if (wantedResName && this.loadedRes[wantedResName] === undefined) return this.loadSrc(this._src, wantedResName)
       }
       
     }
@@ -242,12 +276,12 @@ export default class Image extends Component {
             if (this.currentLoadStage >= 1) return
             this.currentLoadStage = 1
             const wantedResName = this.getCurrentlyWantedRes()
-            if (wantedResName && this.loaded[wantedResName] === undefined) return this.loadSrc(this._src, wantedResName)
+            if (wantedResName && this.loadedRes[wantedResName] === undefined) return this.loadSrc(this._src, wantedResName)
           })
         }
         else {
           const wantedResName = this.getCurrentlyWantedRes()
-          if (wantedResName && this.loaded[wantedResName] === undefined) this.loadSrc(this.src(), wantedResName)  
+          if (wantedResName && this.loadedRes[wantedResName] === undefined) this.loadSrc(this.src(), wantedResName)  
         }
 
       }

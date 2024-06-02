@@ -1,7 +1,9 @@
 c-oval-icon(name="backgroundCircle")
 
 right-side
-  c-image(src="officePpl2")
+  //- todo next parent has relative! But should only happen when scroll
+  c-parallax(y autoHook="c-home-page" parallaxLength="150")
+    c-image(src="officePpl2")
   c-spike-icon
   c-fidget.a
   c-fidget.b
