@@ -40,7 +40,7 @@ export function nextScrollIdle(elem: Element, dir?: "x" | "y" | "one", timeout?:
 }
 
 
-export function relativeViewProgressData(dir: "x" | "y" | Data<"x" | "y">, scrollBody: HTMLElement, child: HTMLElement) {
+export function relativeViewProgressData(dir: "x" | "y" | Data<"x" | "y">, scrollBody: Element, child: Element) {
   const ddir = dir instanceof Data ? dir : new Data(dir)
   let sub: any
   const prog = new Data(0)
@@ -55,7 +55,10 @@ export function relativeViewProgressData(dir: "x" | "y" | Data<"x" | "y">, scrol
     
       
       sub = new DataCollection(scrollBody.scrollData(false, dir), thisCurHeight, childSize[side], childSize[wid]).get((scrollProg, viewPortHeight, childTop, childHeight) => {
-        childTop = child[`offset${capitalize(side)}`] // quickfix. It is important that the next anchor element (something with pos abs or rel or fixed) is at the very top of scroll fame
+        // childTop = child[`offset${capitalize(side)}`] // quickfix. It is important that the next anchor element (something with pos abs or rel or fixed) is at the very top of scroll fame. This is only relevant when we use elem.offsetTop. 
+        // since the conditions above are not very transparent and checkable from here: Here is an alternative way of doing it:
+        childTop = child.getBoundingClientRect()[side] - scrollBody.getBoundingClientRect()[side] + scrollProg
+        
         prog.set(percentageInViewPort({ begin: childTop, size: childHeight }, { begin: scrollProg, size: viewPortHeight }))
       })
     })
@@ -67,5 +70,8 @@ export function relativeViewProgressData(dir: "x" | "y" | Data<"x" | "y">, scrol
 
 // Output: 0 when above view and when the bottom of element hits the top of the view, 1 when the top of the element hits the bottom of the view or when it is below
 export function percentageInViewPort(elem: {begin: number, size: number}, viewPort: {begin: number, size: number}) {
-  return probRange((viewPort.begin + viewPort.size - elem.begin) / (viewPort.size + elem.size))
+  const num = viewPort.begin + viewPort.size - elem.begin
+  const div = viewPort.size + elem.size
+  if (div === 0 && num === 0) return 0
+  return probRange(num / div)
 }

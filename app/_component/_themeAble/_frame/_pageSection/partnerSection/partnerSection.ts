@@ -32,7 +32,6 @@ export default class PartnerSection extends PageSection {
     })
 
     this.body.headline.isMultiline.get(toggleClass(this.componentBody, "headerTooSmall"))
-
   }
 
   stl() {

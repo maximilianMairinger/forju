@@ -61,7 +61,7 @@ c-line-accent {
 
 
 
-right-side c-image {
+right-side c-parallax {
   border-radius: 20px;
   width: 900px;
   height: 600px;
@@ -194,7 +194,7 @@ c-big-video {
     margin-bottom: 80px;
   }
 
-  right-side c-image {
+  right-side c-parallax {
     margin-left: 0;
   }
 
@@ -219,13 +219,13 @@ c-big-video {
 }
 
 @media (max-width: 1000px) {
-  right-side c-image {
+  right-side c-parallax {
     width: calc(100vw - 100px);
   }
 }
 
 @media (max-width: 800px) {
-  right-side c-image {
+  right-side c-parallax {
     width: calc(93vw);
   }
   left-side {
