@@ -97,6 +97,10 @@ c-oval-icon {
 
 }
 
+:host(.safari) c-oval-icon {
+  display: none;
+}
+
 @media (max-width: 650px) {
   c-text-blob {
     --pop-underline-color: transparent;
