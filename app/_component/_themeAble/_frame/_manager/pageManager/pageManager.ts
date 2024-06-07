@@ -28,11 +28,11 @@ export default class PageManager extends Manager {
             new contactPage("contactSite", sectionChangeCallback)
         ), val: () => import(/* webpackChunkName: "contactPage" */"../../_page/_sectionedPage/_lazySectionedPage/contactPage/contactPage")
       },
-      // {
-      //   key: new Import("projects", 10, (projectsPage: typeof ProjectsPage) =>
-      //       new projectsPage()
-      //   ), val: () => import(/* webpackChunkName: "projectsPage" */"../../_page/projectBrowsePage/projectBrowsePage")
-      // },
+      {
+        key: new Import("projects", 10, (projectsPage: typeof ProjectsPage) =>
+            new projectsPage()
+        ), val: () => import(/* webpackChunkName: "projectsPage" */"../../_page/projectBrowsePage/projectBrowsePage")
+      },
       {
         key: new Import("about", 10, (aboutPage: typeof AboutPage) =>
             new aboutPage("about", sectionChangeCallback)
