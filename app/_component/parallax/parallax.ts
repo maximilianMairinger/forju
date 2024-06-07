@@ -6,7 +6,7 @@ import { dirToLenIndex, dirToSideIndex, findFirstParentThatMatches, scaleAroundC
 import { relativeViewProgressData } from "../../lib/actions";
 import delay from "tiny-delay";
 import { ResablePromise, latestLatent } from "more-proms";
-
+import * as isSafari from "is-safari"
 
 
 
@@ -28,6 +28,7 @@ export default class Parallax extends Component {
 
   constructor(parallaxLength?: number) {
     super()
+    if (isSafari) this.addClass("safari")
 
     if (parallaxLength !== undefined) this.parallaxLength(parallaxLength)
 

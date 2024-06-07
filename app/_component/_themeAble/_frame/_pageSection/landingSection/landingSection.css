@@ -25,7 +25,10 @@ c-oval-icon {
   bottom: -300px;
   left: 0;
   transform: translate(-280px, -558px) scale(2);
+}
 
+:host(.safari) c-oval-icon {
+  display: none;
 }
 
 c-landing-circle {

@@ -15,6 +15,8 @@ import "./../../../../_icon/crossIcon/crossIcon"
 import "./../../../../_icon/ovalIcon/ovalIcon"
 import "./../../../textBlob/textBlob"
 
+import * as isSafari from "is-safari"
+
 import { EventListener } from "extended-dom"
 import delay from "tiny-delay"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
@@ -27,6 +29,7 @@ export default class LandingSection extends PageSection {
   private link = this.q("view-work c-link") as Link
   constructor() {
     super("light")
+    if (isSafari) this.addClass("safari")
 
     new EventListener(this.coverButton, ["mouseover", "focusin"], this.link.mouseOverAnimation)
     new EventListener(this.coverButton, ["mouseleave", "focusout"], this.link.mouseOutAnimation)
