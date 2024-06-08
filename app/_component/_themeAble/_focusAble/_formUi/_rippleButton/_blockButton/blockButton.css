@@ -19,8 +19,9 @@
 move-me {
   width: inherit;
   height: inherit;
-  background-color: var(--background-color);
+  /* background-color: var(--background-color); */
 }
+
 
 slot {
   overflow: hidden;

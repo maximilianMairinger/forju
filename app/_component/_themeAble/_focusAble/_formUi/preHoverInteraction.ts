@@ -1,5 +1,6 @@
 import FormUi from "./formUi";
 import animationFrame from "animation-frame-delta";
+import { ElementList } from "extended-dom";
 import Easing from "waapi-easing"
 
 const dragImpactEaseFunc = new Easing("easeIn").function
@@ -21,19 +22,19 @@ const dragImpactEaseFunc = new Easing("easeIn").function
 // } */
 
 const maxPxPerFrame = .75
-const overShoot = 11
-const targetOverflow = 15
+const overShoot = 15
+const targetOverflow = 20
 const targetOverflowWidthStr = `calc(100% + ${targetOverflow * 2}px)`
 const activeTargetOverflow = 30
 const activeTargetOverflowWidthStr = `calc(100% + ${activeTargetOverflow * 2}px)`
 const qlance = .4
-
+const backgroundOvershootFactor = -.3
 
 
 const halfQlance = qlance / 2
 
 
-export default function(root: HTMLElement, target: HTMLElement, moveElement: HTMLElement, evTarget: HTMLElement) {
+export default function(root: HTMLElement, target: HTMLElement, moveElement: HTMLElement, coverElems: ElementList<HTMLElement>, evTarget: HTMLElement) {
 
 
 
@@ -185,6 +186,7 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
 
 
     moveElement.css({translateX: renderedX, translateY: renderedY})
+    coverElems.css({translateX: renderedX * backgroundOvershootFactor, translateY: renderedY * backgroundOvershootFactor})
   }
 
 
