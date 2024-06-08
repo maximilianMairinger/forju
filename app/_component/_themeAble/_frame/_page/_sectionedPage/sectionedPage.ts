@@ -941,22 +941,22 @@ export default abstract class SectionedPage extends Page {
       // })
       if (this.currentlyActiveSectionElem) this.currentlyActiveSectionElem.activate()
 
-      // sectionIndex.forEach(async (key, elems: any) => {
-      //   for (let elem of elems) {
-      //     elem = await elem
-      //     this.mainIntersectionObserver.observe(elem)
-      //   }
-      // })
+      sectionIndex.forEach(async (key, elems: any) => {
+        for (let elem of elems) {
+          elem = await elem
+          this.mainIntersectionObserver.observe(elem)
+        }
+      })
     }
     else {
       this.intersectingIndex.clear()
       this.currentlyActiveSectionElem.deactivate()
-      // sectionIndex.forEach(async (key, elems: any) => {
-      //   for (let elem of elems) {
-      //     elem = await elem
-      //     this.mainIntersectionObserver.unobserve(elem)
-      //   }
-      // })
+      sectionIndex.forEach(async (key, elems: any) => {
+        for (let elem of elems) {
+          elem = await elem
+          this.mainIntersectionObserver.unobserve(elem)
+        }
+      })
     }
   }
 

@@ -6,6 +6,7 @@ import Button from "../_button/button";
 import FocusAble from "../focusAble"
 import { Theme } from "../../themeAble"
 import { loadRecord } from "../../_frame/frame";
+import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 
 if (window.TouchEvent === undefined) window.TouchEvent = class SurelyNotTouchEvent {} as any
 
@@ -21,6 +22,7 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
   private rippleElements: HTMLElement;
   private waveElement: HTMLElement;
   public validMouseButtons = new Set([0])
+  protected body: BodyTypes
 
   protected moveBody = this.q("move-me") as HTMLElement;
 
@@ -187,7 +189,7 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
         await import("./preHoverInteraction").then(({default: f}) => {
           const root = ce("root-bounds");
           this.apd(root);
-          this.preHoverAnimations = f(root as any, hovPreDet, this.moveBody as any, this.componentBody as any)
+          this.preHoverAnimations = f(root as any, hovPreDet, this.moveBody as any, this.q(".cover") as ElementList<HTMLElement>, this.componentBody as any)
           if (!this.userFeedbackMode.preHover.get()) this.preHoverAnimations.disable()
         })
       }
