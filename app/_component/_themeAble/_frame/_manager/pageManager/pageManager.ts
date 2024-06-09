@@ -49,6 +49,11 @@ export default class PageManager extends Manager {
         ), val: () => import(/* webpackChunkName: "ghostBlogPage" */"../../_page/_blogPage/ghostBlogPage/ghostBlogPage")
       },
       {
+        key: new Import("services/*", 10, (ghostBlogPage: typeof GhostBlogPage) => 
+          new ghostBlogPage()
+        ), val: () => import(/* webpackChunkName: "ghostBlogPage" */"../../_page/_blogPage/ghostBlogPage/ghostBlogPage")
+      },
+      {
         key: new Import("", 60, (notFoundPage: typeof NotFoundPage) =>
           new notFoundPage()
         ), val: () => import(/* webpackChunkName: "notFoundPage" */"../../_page/notFound/notFound")
