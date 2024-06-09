@@ -19,6 +19,10 @@ export default abstract class Page extends Frame {
     if (this.navigationCallback) this.navigationCallback(loadId)
   }
 
+  protected async tryNavigationCallback(domainFragment: string) {
+    return domainFragment === ""
+  }
+
 
   
   protected navigationCallback?(loadId: unknown): Promise<void>

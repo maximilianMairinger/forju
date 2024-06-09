@@ -129,14 +129,7 @@ export default abstract class Frame extends ThemeAble<HTMLElement> {
 
     
     
-    if (!res) {
-      // clear them from stack
-      const rec = this.records.get(loadUid)
-      this.records.delete(loadUid)
-      rec.minimal()
-      rec.content()
-      rec.full()
-    }
+
     return res
   }
   public attachStructureCallback?(domainFragment: unknown): void

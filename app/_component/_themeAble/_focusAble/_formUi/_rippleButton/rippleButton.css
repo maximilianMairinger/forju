@@ -1,6 +1,7 @@
 :host {
   display: block;
   --_focus: var(--focus);
+  --background: 0, 0, 0,0;
 }
 
 c-button {
@@ -13,10 +14,6 @@ c-button {
   
   --focus: var(--_focus);
 
-}
-
-move-me {
-  background-color: transparent;
 }
 
 ::slotted(*) {
