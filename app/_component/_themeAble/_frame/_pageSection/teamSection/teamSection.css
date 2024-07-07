@@ -26,6 +26,16 @@ under-section {
   box-sizing: border-box;
 }
 
+under-section.a {
+  flex-direction: column;
+  margin-bottom: 50px;
+}
+
+under-section.a c-block-button {
+  --background: var(--tertiary-theme);
+  /* --text: var(--plain-background); */
+}
+
 under-section.b {
   padding: 0 calc(12% - 12px - 50px);
   justify-content: center;
@@ -33,9 +43,17 @@ under-section.b {
 
 c-text-blob {
   margin: 100px 0;
+  font-size: 1.08em;
   margin-bottom: 10px;
-  --header-fontsize: 3.5em;
+  --body-size: 50%;
+  --header-fontsize: 3.2em;
   --theme: var(--tertiary-theme);
+}
+
+@media (max-width: 666px) {
+  c-text-blob {
+    --body-size: 90%;
+  } 
 }
 
 contact-card {

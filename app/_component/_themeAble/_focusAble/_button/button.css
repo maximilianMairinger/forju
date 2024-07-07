@@ -18,9 +18,11 @@
 }
 
 a {
-  width: inherit;
-  max-width: inherit;
+  
+  width: 100%;
   height: 100%;
+  max-height: inherit;
+  max-width: inherit;
   text-align: inherit;
   color: inherit;
   display: block;
@@ -32,11 +34,6 @@ a {
 
   -webkit-user-drag: var(--drag);
   user-drag: var(--drag);
-
-  min-height: min-content;
-  min-width: max-content;
-  width: 100%;
-  height: 100%;
 }
 
 slot {

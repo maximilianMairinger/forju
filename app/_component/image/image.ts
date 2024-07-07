@@ -225,9 +225,7 @@ export default class Image extends Component {
       img.src = src
     }
     else {
-      const pointIndex = src.lastIndexOf(".")
-      if (pointIndex !== -1) src = src.slice(0, pointIndex)
-      sources.Inner("setSource", ["/res/img/dist/" + src + unionSymbol + res + "."])
+      sources.Inner("setSource", [this.baseUrl + src + unionSymbol + res + "."])
     }
 
     this.wasAtStageIndex[this.currentLoadStage] = true
@@ -238,14 +236,42 @@ export default class Image extends Component {
 
   private currentLoadStage: number
 
-
+  private baseUrl = "/res/img/dist/"
   private _src: string
   src(): string
   src(src: string, forceLoad?: boolean): this
   src(src?: string, forceLoad: boolean = false): any {
     if (src === undefined) return this._src
+
+    let isExplicitSrc = isExplicitLocation(src)
+
+    if (isExplicitSrc) {
+      const srcUrl = new URL(src)
+      if (srcUrl.host === "ghost.maximilian.mairinger.com") {
+        const ghostImgDir = "/content/images/"
+        if (srcUrl.pathname.startsWith(ghostImgDir)) {
+          srcUrl.pathname = srcUrl.pathname.splice(ghostImgDir.length, 0, "dist/")
+          const fullSrc = srcUrl.toString()
+          const picNameStartIndex = fullSrc.lastIndexOf("/")
+          const picNameWithExt = fullSrc.slice(picNameStartIndex + 1)
+          const picNamePointIndex = picNameWithExt.lastIndexOf(".")
+          const picName = picNameWithExt.slice(0, picNamePointIndex)
+          const srcWOPic = fullSrc.slice(0, picNameStartIndex + 1)
+          src = picName
+          this.baseUrl = srcWOPic
+          isExplicitSrc = false
+        }
+      }
+    }
+    else {
+      const pointIndex = src.lastIndexOf(".")
+      if (pointIndex !== -1) src = src.slice(0, pointIndex)
+    }
+
+
+
     this._src = src
-    const isExplicitSrc = isExplicitLocation(src)
+    
     if (forceLoad) {
       if (isExplicitSrc) {
         const wantedResName = ""
@@ -254,8 +280,13 @@ export default class Image extends Component {
         return this.loadSrc(this._src, wantedResName as any)
       }
       else {
+        this.currentLoadStage = 0
         const wantedResName = this.getCurrentlyWantedRes()
-        if (wantedResName && this.loadedRes[wantedResName] === undefined) return this.loadSrc(this._src, wantedResName)
+        if (wantedResName && this.loadedRes[wantedResName] === undefined) return this.loadSrc(this._src, wantedResName).then(() => {
+          this.currentLoadStage = 1
+          const wantedResName = this.getCurrentlyWantedRes()
+          return this.loadSrc(this._src, wantedResName)
+        })
       }
       
     }

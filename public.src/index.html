@@ -8,7 +8,6 @@
   <meta content=no name=msapplication-tap-highlight>
   <!-- <link rel='manifest' href='/webmanifest.json'> -->
   <!-- <link href="/res/favicon/forju_logo_180x180.png" rel=icon type=image/png> -->
-  <link rel="prefetch" importance="low" href="/res/font/avertacy-regular.woff2" as="font" type="font/woff2" crossorigin/>
   <script src="/dist/forju.js"></script>
 
 
@@ -36,7 +35,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      font-family: 'Averta CY', Arial, sans-serif;
+      font-family: 'Onest', Arial, sans-serif;
     }
 
     c-center {
@@ -61,23 +60,8 @@
 
     /* Dunno why but this regular font has a bold version included. Looks a little little different than the actual bold version (maybe its just an upscaled version of the regular one but this works for me rn) */
     @font-face {
-      font-family: 'Averta CY';
-      src: url('/res/font/avertacy-regular.woff2') format('woff2'),
-           url('/res/font/avertacy-regular.woff') format('woff');
-      font-style: normal;
-      font-weight: normal;
-      font-display: swap;
-    
-    }
-    
-    @font-face {
-      font-family: 'Averta Cy';
-      src: url('/res/font/avertacy-bold.woff2') format('woff2'),
-          url('/res/font/avertacy-bold.woff') format('woff');
-      font-weight: bold;
-      font-style: normal;
-      font-display: swap;
-    
+      font-family: 'Onest';
+      src: url('Onest-VariableFont_wght.ttf') format('ttf');
     }
   </style>
 </head>

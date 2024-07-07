@@ -9,14 +9,15 @@ import TextBlob from "../../../textBlob/textBlob";
 import { Data, DataCollection, DataSubscription } from "josm";
 import AT from "../../../../../lib/formatTime";
 import { probRange } from "../../../../../lib/util";
-import { relativeViewProgressData } from "../../../../../lib/actions";
+import UiButton from "../../../_focusAble/_formUi/_rippleButton/rippleButton";
+import Button from "../../../_focusAble/_button/button";
+import Link from "../../../link/link";
+import FooterSection from "../../_pageSection/footerSection/footerSection";
 
 
 
 
 
-
-// TODO: above may be reused by scrollBody
 
 export default class ProjectBrowsePage extends Page {
   protected body: BodyTypes
@@ -28,49 +29,59 @@ export default class ProjectBrowsePage extends Page {
       const blogs = await ghostApi.posts.browse({
         formats: "html",
         limit: 15,
-        filter: "tag:forju+tag:projekt+tag:test",
+        filter: "tag:forju+tag:projekt",
         include: "authors"
       })
       return blogs
     }).then((blogs) => {
+      this.body.countProj.txt(blogs.length.toString())
+      // todo maybe count up slowly like a rolling clock?
+
+
+
       this.body.contentContainer.innerHTML = ""
+      this.body.contentContainer.css({
+        opacity: 0,
+        translateY: 30
+      })
 
 
             
       for (const blog of blogs) {
         const projContainer = ce("project-container")
-        const card = new Parallax()
+        const btn = new Button()
+        btn.link(`projects/${blog.slug}`)
+        projContainer.append(btn)
+        const card = new Parallax(100)
         card.setAttribute("zoomOnHover", "zoomOnHover")
         card.curDir.set("y")
-
-        const percentInViewPort = relativeViewProgressData("y", this, card)
-        percentInViewPort.get((prog) => {
-          card.parallaxProgHook.set(prog)
-        })
+        card.autoHook(this)
         
         const img = new Image(blog.feature_image ?? "greenSpace", true) // is this force even needed
         card.append(img)
-        projContainer.append(card)
+        btn.append(card)
 
-        const projTitle = new TextBlob()
-        projTitle.heading(blog.title)
-        projTitle.text(blog.excerpt)
-        projTitle.note(AT.formatDate(blog.published_at))
-        projContainer.append(projTitle as any)
-        this.componentBody.append(projContainer)
+        const projTitle = new Link(blog.title)
+        projTitle.eventTarget(btn)
+        // projTitle.text(blog.excerpt)
+        // projTitle.note(AT.formatDate(blog.published_at))
+        btn.append(projTitle as any)
+        
+        // btn.append(projContainer)
 
-        // const card = new ParallaxImgCard()
-        // card.imgSrc(blog.feature_image, true)
-        // card.heading(blog.title)
-        // card.desc(blog.excerpt)
-
-        // const btn = new RippleButton()
-        // btn.link(`blog/${blog.slug}`)
-        // this.styleRippleButton(btn);
-        // (btn as any).relativeScrollProg = card.relativeScrollProg.bind(card)
-        // btn.append(card)
-        // this.body.scrollBody.append(btn)
+        this.body.contentContainer.append(projContainer)
       }
+
+
+
+
+      this.body.contentContainer.anim({
+        opacity: 1,
+        translateY: 0
+      }, 1000)
+
+
+      this.componentBody.apd(new FooterSection().css("opacity", 1))
     })
 
 

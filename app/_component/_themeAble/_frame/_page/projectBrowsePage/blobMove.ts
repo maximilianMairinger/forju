@@ -1,18 +1,20 @@
 import { mousePos } from "../../../../../lib/dataBindings";
+import { signedEasing } from "../../../../../lib/util";
 import ProjectBrowsePage from "./projectBrowsePage";
 import animationFrameDelta from "animation-frame-delta"
+import { Easing } from "waapi-easing"
 
+const easeOutFunc = signedEasing(new Easing("easeOut"))
 
-
-const posSwiv = 300
-const possibleSwivel = {
-  x: posSwiv,
-  y: posSwiv
+const posSwivPerc = .25
+const possibleSwivelPercent = {
+  x: posSwivPerc,
+  y: posSwivPerc
 }
 const approachSpeed = 0.04
 
 export default function(page: ProjectBrowsePage) {
-  for (const blob of page.q(".blob.a", true) as any as HTMLElement[]) {
+  for (const blob of page.q(".blob", true) as any as HTMLElement[]) {
     const topFrac = blob.css("top") / page.clientHeight
     const leftFrac = blob.css("left") / page.clientWidth
 
@@ -27,11 +29,12 @@ export default function(page: ProjectBrowsePage) {
       const mouseXFrac = mouseX / page.clientWidth
       const mouseYFrac = mouseY / page.clientHeight
 
-      const mouseXFracAroundCenter = mouseXFrac - leftFrac
-      const mouseYFracAroundCenter = mouseYFrac - topFrac
+      const mouseXFracAroundCenter = easeOutFunc(mouseXFrac - leftFrac)
+      const mouseYFracAroundCenter = easeOutFunc(mouseYFrac - topFrac)
 
-      const swivelX = possibleSwivel.x * mouseXFracAroundCenter
-      const swivelY = possibleSwivel.y * mouseYFracAroundCenter
+
+      const swivelX = possibleSwivelPercent.x * page.offsetHeight * mouseXFracAroundCenter
+      const swivelY = possibleSwivelPercent.y * page.offsetWidth * mouseYFracAroundCenter
 
       wantPos.x = swivelX
       wantPos.y = swivelY
@@ -49,7 +52,7 @@ export default function(page: ProjectBrowsePage) {
       // currentPos.x = wantPos.x
       // currentPos.y = wantPos.y
 
-      blob.style.transform = `translate(-50%, -50%) translate(${currentPos.x}px, ${currentPos.y}px)`
+      blob.style.transform = `translate(-50%, -50%) translate(${Math.round(currentPos.x * 100) / 100}px, ${Math.round(currentPos.y * 100) / 100}px)`
     })
 
 
