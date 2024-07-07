@@ -1,0 +1,7 @@
+:host {
+  --stroke-width: 2.5;
+}
+
+:host > svg path {
+  transition: .4s stroke;
+}

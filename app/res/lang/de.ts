@@ -7,6 +7,7 @@ export default {
   links: {
     philosophy: "Philosophie",
     services: "Service",
+    partner: "Partner",
     team: "Team",
     blog: "Blog",
     contact: "Kontakt",

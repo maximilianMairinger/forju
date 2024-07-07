@@ -15,6 +15,7 @@ import ThoughtBubbleIcon from "../../../../../_icon/_highlightAbleIcon/thoughtBu
 import RocketIcon from "../../../../../_icon/_highlightAbleIcon/rocket/rocket"
 import TeamIcon from "../../../../../_icon/_highlightAbleIcon/teamIcon/teamIcon"
 import ContactIcon from "../../../../../_icon/_highlightAbleIcon/contact/contact"
+import HeartIcon from "../../../../../_icon/_highlightAbleIcon/heartIcon/heartIcon"
 
 
 
@@ -65,6 +66,7 @@ export default class HomePage extends LazySectionedPage {
       services: new RocketIcon(),
       team: new TeamIcon(),
       contact: new ContactIcon(),
+      partner: new HeartIcon(),
       blog: new ThoughtBubbleIcon()
     }
   }

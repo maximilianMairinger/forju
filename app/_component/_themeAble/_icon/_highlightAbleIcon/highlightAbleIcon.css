@@ -1,13 +1,13 @@
 :host {
-  --highlight: var(--primary-theme);
-  --highlight: var(--theme)
+  --highlight: rgb(var(--primary-theme));
+  --highlight: rgb(var(--theme));
+  --color: black;
 }
 
 :host > svg path {
-  transition: .4s fill;
+  transition: .4s fill, .4 stroke;
 }
 
-:host(.highlight) svg > g, :host(.highlight) svg > path {
-  fill: rgb(var(--highlight)) !important
+:host(.highlight), :host(.highlight) svg > g, :host(.highlight) svg > path {
+  --color: var(--highlight) !important
 }
-
