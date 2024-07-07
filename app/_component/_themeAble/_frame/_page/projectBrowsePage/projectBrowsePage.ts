@@ -33,7 +33,16 @@ export default class ProjectBrowsePage extends Page {
       })
       return blogs
     }).then((blogs) => {
+      this.body.countProj.txt(blogs.length.toString())
+      // todo maybe count up slowly like a rolling clock?
+
+
+
       this.body.contentContainer.innerHTML = ""
+      this.body.contentContainer.css({
+        opacity: 0,
+        translateY: 30
+      })
 
 
             
@@ -61,14 +70,22 @@ export default class ProjectBrowsePage extends Page {
 
         this.body.contentContainer.append(projContainer)
       }
+
+
+
+
+      this.body.contentContainer.anim({
+        opacity: 1,
+        translateY: 0
+      }, 1000)
     })
 
 
-    loadRecord.full.add(async () => {
-      await import("./blobMove").then(({ default: blobMove }) => {
-        blobMove(this)
-      })
-    })
+    // loadRecord.full.add(async () => {
+    //   await import("./blobMove").then(({ default: blobMove }) => {
+    //     blobMove(this)
+    //   })
+    // })
 
   }
 

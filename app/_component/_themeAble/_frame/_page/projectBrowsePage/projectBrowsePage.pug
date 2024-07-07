@@ -1,27 +1,40 @@
-<svg style="display: none">
-  <filter id="frostedGlass">
-    //- <!-- Apply a Gaussian blur -->
-    <feGaussianBlur in="SourceGraphic" stdDeviation="180" result="blur" />
-    //- <!-- Apply a noise effect -->
-    <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="1" stitchTiles="stitch" result="turbulence" />
+//- <svg style="display: none">
+//-   <filter id="frostedGlass">
+//-     //- <!-- Apply a Gaussian blur -->
+//-     <feGaussianBlur in="SourceGraphic" stdDeviation="180" result="blur" />
+//-     //- <!-- Apply a noise effect -->
+//-     <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="1" stitchTiles="stitch" result="turbulence" />
 
-    <feColorMatrix type="matrix" values="0.33 0.33 0.33 0 0   0.33 0.33 0.33 0 0   0.33 0.33 0.33 0 0   0 0 0 1 0" result="grayscaleNoise" />
+//-     <feColorMatrix type="matrix" values="0.33 0.33 0.33 0 0   0.33 0.33 0.33 0 0   0.33 0.33 0.33 0 0   0 0 0 1 0" result="grayscaleNoise" />
 
-    <feComponentTransfer in="grayscaleNoise" result="fadedTurbulence">
-      <feFuncA type="linear" slope=".35" />
-    </feComponentTransfer>
-    //- <!-- Combine blur and noise -->
-    <feBlend in="blur" in2="fadedTurbulence" mode="overlay" />
-  </filter>
-</svg>
+//-     <feComponentTransfer in="grayscaleNoise" result="fadedTurbulence">
+//-       <feFuncA type="linear" slope=".35" />
+//-     </feComponentTransfer>
+//-     //- <!-- Combine blur and noise -->
+//-     <feBlend in="blur" in2="fadedTurbulence" mode="overlay" />
+//-   </filter>
+//- </svg>
 
 
-background-blob-container
+//- background-blob-container
   
   c-blob-a-icon.blob.a
   c-blob-b-icon.blob.b
 
 
-title-section
+title-section(name="title")
+  c-text-blob(heading="Projekte")
+  title-details
+    detail-card
+      h3(name="countProj") ...
+      card-description Anzahl Projekte
+    //- evtl button zum draufdrücken, dann kommt man zu ner mitarbeiter seite und bei den projekten scrollt man einfach runter
+    detail-card
+      h3 57
+      card-description Anzahl Mitarbeiter
+
+    detail-description Egal, ob es um das „Entfalten“ neuer Ideen geht oder um die Umsetzung spannender Projekte – hier sprüht Kreativität, Wissenschaft und Spaß aus jeder Ecke.
+
   
-content-container(name="contentContainer")
+content-container(name="contentContainer") 
+  h1 Loading...
