@@ -43,9 +43,10 @@ under-section.b {
 
 c-text-blob {
   margin: 100px 0;
+  font-size: 1.08em;
   margin-bottom: 10px;
   --body-size: 50%;
-  --header-fontsize: 3.5em;
+  --header-fontsize: 3.2em;
   --theme: var(--tertiary-theme);
 }
 
