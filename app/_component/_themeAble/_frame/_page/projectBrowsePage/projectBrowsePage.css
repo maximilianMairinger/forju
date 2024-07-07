@@ -22,7 +22,7 @@ background-blob-container {
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  /* filter: blur(200px); */
+  filter: blur(200px);
   /* opacity: .5; */
   /* filter: url(#frostedGlass); */
 }
@@ -206,4 +206,5 @@ project-container c-parallax {
 c-footer-section {
   --padding: 0 var(--side-padding);
   --align-x: flex-start;
+  --background-color: transparent;
 }

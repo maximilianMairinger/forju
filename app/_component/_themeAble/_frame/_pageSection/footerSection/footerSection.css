@@ -4,6 +4,7 @@
   background-color: rgb(var(--tertiary-themed-background));
   --align-x: center;
   --padding: 50px calc(5% - 12px);
+  --background-color: rgb(var(--plain-background)); 
 }
 
 component-body {
@@ -13,7 +14,7 @@ component-body {
   display: flex;
   justify-content: var(--align-x);
   align-items: center;
-  background-color: rgb(var(--plain-background));
+  background-color: var(--background-color);
 }
 
 
