@@ -2,14 +2,16 @@
   display: block;
   position: relative;
   background-color: rgb(var(--tertiary-themed-background));
+  --align-x: center;
+  --padding: 50px calc(5% - 12px);
 }
 
 component-body {
   height: 300px;
-  padding: 50px calc(5% - 12px);
+  padding: var(--padding);
   box-sizing: border-box;
   display: flex;
-  justify-content: center;
+  justify-content: var(--align-x);
   align-items: center;
   background-color: rgb(var(--plain-background));
 }

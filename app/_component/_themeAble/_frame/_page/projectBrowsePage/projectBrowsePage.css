@@ -1,6 +1,8 @@
 :host {
   display: block;
   position: relative;
+
+  --side-padding: min(calc(15% - 50px), 130px);
 }
 
 component-body {
@@ -140,8 +142,8 @@ content-container {
 }
 
 title-section, content-container {
-  padding-left: min(calc(15% - 50px), 130px);
-  padding-right: min(calc(15% - 50px), 130px);
+  padding-left: var(--side-padding);
+  padding-right: var(--side-padding);
 }
 
 content-container > *:nth-child(2n) {
@@ -163,7 +165,7 @@ project-container {
 }
 
 content-container {
-  padding-bottom: 400px;
+  padding-bottom: 300px;
 }
 
 project-container c-parallax {
@@ -173,21 +175,19 @@ project-container c-parallax {
 }
 
 @media (max-width: 950px) {
-  title-section, content-container {
-    padding-left: 3%;
-    padding-right: 3%;
+  :host {
+    --side-padding: 3%;
   }
 }
 
 @media (max-width: 750px) {
   content-container {
     grid-template-columns: 1fr;
+    padding-bottom: 50px;
   }
   
   title-section, content-container {
-    
-    padding-left: 10%;
-    padding-right: 10%;
+    --side-padding: 10%;
   }
 
 
@@ -198,10 +198,12 @@ project-container c-parallax {
 
 @media (max-width: 550px) {
   title-section, content-container {
-    padding-left: 3%;
-    padding-right: 3%;
+    --side-padding: 3%;
   }
 }
 
 
-
+c-footer-section {
+  --padding: 0 var(--side-padding);
+  --align-x: flex-start;
+}

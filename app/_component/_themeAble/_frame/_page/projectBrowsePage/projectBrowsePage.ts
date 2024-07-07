@@ -12,6 +12,7 @@ import { probRange } from "../../../../../lib/util";
 import UiButton from "../../../_focusAble/_formUi/_rippleButton/rippleButton";
 import Button from "../../../_focusAble/_button/button";
 import Link from "../../../link/link";
+import FooterSection from "../../_pageSection/footerSection/footerSection";
 
 
 
@@ -78,6 +79,9 @@ export default class ProjectBrowsePage extends Page {
         opacity: 1,
         translateY: 0
       }, 1000)
+
+
+      this.componentBody.apd(new FooterSection().css("opacity", 1))
     })
 
 
