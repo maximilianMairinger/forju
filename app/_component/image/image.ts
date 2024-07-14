@@ -182,7 +182,7 @@ export default class Image extends Component {
     // if (this.loaded[res].settled) this.newLoadedPromise(res)
 
     
-
+    const proms = [] as Promise<void>[]
     if (!wasLoaded) {
       if (loadingCache[src] === undefined) loadingCache[src] = {} as any
       
@@ -191,7 +191,7 @@ export default class Image extends Component {
 
       const firstTimeAtStage = !this.wasAtStageIndex[this.currentLoadStage]
       
-      this.loadedRes[res].then(() => {
+      proms.push(this.loadedRes[res].then(() => {
         loadingCache[src][loadStageAtCall][res] = true
         
         
@@ -214,7 +214,7 @@ export default class Image extends Component {
           })
         }
         this.currentlyActiveElems = thisActiveElems
-      })
+      }))
     }
     else {
       thisActiveElems.img.css({opacity: 1})
@@ -230,7 +230,12 @@ export default class Image extends Component {
 
     this.wasAtStageIndex[this.currentLoadStage] = true
 
-    return this.loadedRes[res].onSettled
+    return (Promise.all([this.loadedRes[res].onSettled, ...proms]) as any as Promise<void>).then(() => {
+      // do this before we resolve load promise here, so that functions depending on myWantedRes (specifically getCurrentlyWantedRes) have valid state even if called immediately after this promise, without a delay for the on resize function to trigger
+      const width = this.offsetWidth
+      const height = this.offsetHeight
+      this.myWantedRes.set(Math.sqrt(width * height * ratio))
+    })
   }
     
 
