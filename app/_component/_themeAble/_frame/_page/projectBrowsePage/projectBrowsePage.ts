@@ -13,6 +13,7 @@ import UiButton from "../../../_focusAble/_formUi/_rippleButton/rippleButton";
 import Button from "../../../_focusAble/_button/button";
 import Link from "../../../link/link";
 import FooterSection from "../../_pageSection/footerSection/footerSection";
+import { ResablePromise } from "more-proms";
 
 
 
@@ -24,6 +25,9 @@ export default class ProjectBrowsePage extends Page {
 
   constructor() {
     super()
+
+
+    const blogElemOffsetTopIndexProm = new ResablePromise<Map<Element, number>>()
 
     loadRecord.content.add(async () => {
       const blogs = await ghostApi.posts.browse({
@@ -46,9 +50,15 @@ export default class ProjectBrowsePage extends Page {
       })
 
 
-            
+      const blogElemOffsetTopIndex = new Map<Element, number>()
+      
+
+      let toggle = true
       for (const blog of blogs) {
+        toggle = !toggle
+        const projContainerWrapper = ce("project-container-wrapper")
         const projContainer = ce("project-container")
+        projContainerWrapper.append(projContainer)
         const btn = new Button()
         btn.link(`projects/${blog.slug}`)
         projContainer.append(btn)
@@ -69,8 +79,18 @@ export default class ProjectBrowsePage extends Page {
         
         // btn.append(projContainer)
 
-        this.body.contentContainer.append(projContainer)
+        const offsetTop = new Data<number>()
+        offsetTop.get((size) => {
+          blogElemOffsetTopIndex.set(projContainer, size)
+        }, false)
+        this.body.contentContainer.append(projContainerWrapper)
+        this.resizeDataBase()(() => {
+          offsetTop.set(projContainer.getBoundingClientRect().top + (projContainer.css("translateY")))
+        })
+        
       }
+
+      blogElemOffsetTopIndexProm.res(blogElemOffsetTopIndex)
 
 
 
@@ -90,6 +110,37 @@ export default class ProjectBrowsePage extends Page {
         blobMove(this)
       })
     })
+
+
+    blogElemOffsetTopIndexProm.then((blogElemOffsetTopIndex) => {
+      const elemAnimMap = new Map<Element, Data<boolean>>()
+      for (const elem of blogElemOffsetTopIndex.keys()) {
+        const animData = new Data(false)
+        elemAnimMap.set(elem, animData)
+        animData.get((show) => {
+          if (show) {
+            elem.anim({
+              translateY: 0,
+              opacity: 1
+            })
+          }
+          else {
+            elem.anim({
+              translateY: 30,
+              opacity: 0
+            })
+          }
+        })
+      }
+      const containerSize = this.resizeDataBase()()
+      this.scrollData(true, "y").get((progress) => {
+        for (const [ elem, elemTop ] of blogElemOffsetTopIndex.entries()) {
+          const animData = elemAnimMap.get(elem)
+          animData.set(progress > elemTop + 50 || elemTop < containerSize.height)
+        } 
+      })
+    })
+    
 
   }
 
