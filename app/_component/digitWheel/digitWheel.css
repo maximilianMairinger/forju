@@ -1,0 +1,21 @@
+:host {
+  display: inline-flex;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+component-body {
+  
+}
+
+span {
+  display: inline-block;
+  line-height: .8em;
+}
+
+span:nth-child(1) {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
