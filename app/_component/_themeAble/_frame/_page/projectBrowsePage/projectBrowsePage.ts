@@ -14,7 +14,7 @@ import Button from "../../../_focusAble/_button/button";
 import Link from "../../../link/link";
 import FooterSection from "../../_pageSection/footerSection/footerSection";
 import { ResablePromise } from "more-proms";
-
+import delay from "tiny-delay";
 
 
 
@@ -29,7 +29,7 @@ export default class ProjectBrowsePage extends Page {
 
     const blogElemOffsetTopIndexProm = new ResablePromise<Map<Element, number>>()
 
-    loadRecord.content.add(async () => {
+    const blogDataProm = loadRecord.content.add(async () => {
       const blogs = await ghostApi.posts.browse({
         formats: "html",
         limit: 15,
@@ -37,11 +37,21 @@ export default class ProjectBrowsePage extends Page {
         include: "authors"
       })
       return blogs
-    }).then((blogs) => {
-      this.body.countProj.txt(blogs.length.toString())
-      // todo maybe count up slowly like a rolling clock?
+    })
 
+    blogDataProm.catch(() => {
+      this.body.contentContainer.childs("h1").txt("Failed to load projects, try refreshing the page.")
+    })
 
+    delay(600).then(() => {
+      this.body.countMA.animateValueTo(57, 15)
+    })
+
+    Promise.all([blogDataProm, delay(500)]).then(async ([blogs]) => {
+      this.body.countProj.animateValueTo(blogs.length)
+    })
+
+    blogDataProm.then((blogs) => {
 
       this.body.contentContainer.innerHTML = ""
       this.body.contentContainer.css({
@@ -140,9 +150,8 @@ export default class ProjectBrowsePage extends Page {
         } 
       })
     })
-    
-
   }
+
 
   stl() {
     return super.stl() + require("./projectBrowsePage.css").toString()

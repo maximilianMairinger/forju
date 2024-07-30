@@ -37,7 +37,7 @@ export default class DigitWheel extends Component<false> {
   public direction = "y" as "x" | "y"
   public inverse = false
 
-  constructor() {
+  constructor(initValue?: number) {
     super(false)
 
     const elemIndex = this.elemIndex
@@ -51,9 +51,7 @@ export default class DigitWheel extends Component<false> {
       return this as any
     }
 
-    // @ts-ignore
-    window.digitEl = this
-
+    if (initValue !== undefined) this.value(initValue)
   }
 
   // private _hideInitState: boolean = false
@@ -100,6 +98,9 @@ export default class DigitWheel extends Component<false> {
 
       this.prevVal = to
 
+      const digitExpMin1 = 10**(digit-1)
+      const digitExp = digitExpMin1 * 10
+      const topCutExp = digit === 0 ? 10 : digitExp
       
       return (prog: number) => {
         prog = probRange(prog)
@@ -108,30 +109,41 @@ export default class DigitWheel extends Component<false> {
         
         let nextVal = Math.ceil(toExact)
         let prevVal = Math.floor(toExact)
-        nextVal = Math.floor(nextVal / 10**digit)
-        prevVal = Math.floor(prevVal / 10**digit)
+        const nextValCut = Math.floor(nextVal / digitExp) % topCutExp
+        const prevValCut = Math.floor(prevVal / digitExp) % topCutExp
         
         
 
-
-        const exactMatch = nextVal === prevVal
+        const exactMatch = nextValCut === prevValCut
         if (exactMatch) { // exact match, only one number on screen
-          this.elemIndex.setElemValLazy(undefined, nextVal)
+          this.elemIndex.setElemValLazy(nextValCut)
         }
         else {
-          this.elemIndex.setElemValLazy(prevVal, nextVal)
+          this.elemIndex.setElemValLazy(prevValCut, nextValCut)
         }
 
-        const distanceToPrev = toExact - prevVal
-        if (distanceToPrev/* % 10**digit */ >= 10**(digit-1) * 9) {
-          const myDistanceToPrev = distanceToPrev - 10**(digit-1) * 9 // should have a range of 0-1 now again
+
+
+        const distanceToPrev = ((toExact / digitExp) % topCutExp) - prevValCut
+
+        if (digit === 0) {
+          const myDistanceToPrev = distanceToPrev
           this.elemIndex[0].elem.style.transform = `translateY(${myDistanceToPrev * this.elemHeight}px)`
           this.elemIndex[1].elem.style.transform = `translateY(${-1 * (1 - myDistanceToPrev) * this.elemHeight}px)`
         }
         else {
-          this.elemIndex[0].elem.style.transform = `translateY(0px)`
-          this.elemIndex[1].elem.style.transform = `translateY(${this.elemHeight}px)`
+          const thresholdForAnimation = 1 - 10**-digit
+          if (distanceToPrev/* % 10**digit */ >= thresholdForAnimation) {
+            const myDistanceToPrev = ((distanceToPrev - thresholdForAnimation) * digitExp) % 1 // should have a range of 0-1 now again
+            this.elemIndex[0].elem.style.transform = `translateY(${myDistanceToPrev * this.elemHeight}px)`
+            this.elemIndex[1].elem.style.transform = `translateY(${-1 * (1 - myDistanceToPrev) * this.elemHeight}px)`
+          }
+          else {
+            this.elemIndex[0].elem.style.transform = `translateY(0px)`
+            this.elemIndex[1].elem.style.transform = `translateY(${this.elemHeight}px)`
+          }
         }
+        
         
         
 

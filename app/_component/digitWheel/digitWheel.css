@@ -2,11 +2,8 @@
   display: inline-flex;
   position: relative;
   overflow: hidden;
-  width: 100%;
-}
-
-component-body {
-  
+  width: 30px;
+  justify-content: flex-end;
 }
 
 span {
@@ -17,5 +14,4 @@ span {
 span:nth-child(1) {
   position: absolute;
   top: 0;
-  left: 0;
 }

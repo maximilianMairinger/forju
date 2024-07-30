@@ -26,12 +26,13 @@ title-section(name="title")
   c-text-blob(heading="Projekte")
   title-details
     detail-card
-      h3(name="countProj") ...
+      h3
+        c-number-wheel(name="countProj" value="0" digitCount="2")
       card-description Anzahl Projekte
     //- evtl button zum draufdrücken, dann kommt man zu ner mitarbeiter seite und bei den projekten scrollt man einfach runter
     detail-card
       h3 
-        c-digit-wheel(value="0")
+        c-number-wheel(name="countMA" value="0" digitCount="2")
       card-description Anzahl Mitarbeiter
 
     detail-description Egal, ob es um das „Entfalten“ neuer Ideen geht oder um die Umsetzung spannender Projekte – hier sprüht Kreativität, Wissenschaft und Spaß aus jeder Ecke.
