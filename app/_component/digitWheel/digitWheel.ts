@@ -52,6 +52,11 @@ export default class DigitWheel extends Component<false> {
     }
 
     if (initValue !== undefined) this.value(initValue)
+
+
+    this.elemIndex[0].elem.resizeDataBase()(({height}) => {
+      this.elemHeight = height
+    })
   }
 
   // private _hideInitState: boolean = false
@@ -76,10 +81,6 @@ export default class DigitWheel extends Component<false> {
       const setVal = (to * 10**digit) % 10
       const [ { elem } ] = this.elemIndex.setElemValLazy(setVal)
 
-      this.elemHeight = elem.offsetHeight
-      setTimeout(() => {
-        this.elemHeight = elem.offsetHeight
-      })
       
       
       // changeVis(elem, !this._hideInitState)

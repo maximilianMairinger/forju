@@ -23,13 +23,15 @@ import delay from "tiny-delay";
 export default class ProjectBrowsePage extends Page {
   protected body: BodyTypes
 
+  private blogDataProm: Promise<any>
+
   constructor() {
     super()
 
 
     const blogElemOffsetTopIndexProm = new ResablePromise<Map<Element, number>>()
 
-    const blogDataProm = loadRecord.content.add(async () => {
+    const blogDataProm = this.blogDataProm = loadRecord.content.add(async () => {
       const blogs = await ghostApi.posts.browse({
         formats: "html",
         limit: 15,
@@ -43,16 +45,7 @@ export default class ProjectBrowsePage extends Page {
       this.body.contentContainer.childs("h1").txt("Failed to load projects, try refreshing the page.")
     })
 
-    delay(600).then(() => {
-      this.body.countMA.animateValueTo(57, 15)
-    })
-
-    Promise.all([blogDataProm, delay(500)]).then(async ([blogs]) => {
-      this.body.countProj.animateValueTo(blogs.length)
-    })
-
     blogDataProm.then((blogs) => {
-
       this.body.contentContainer.innerHTML = ""
       this.body.contentContainer.css({
         opacity: 0,
@@ -149,6 +142,16 @@ export default class ProjectBrowsePage extends Page {
           animData.set(progress > elemTop + 50 || elemTop < containerSize.height)
         } 
       })
+    })
+  }
+
+  protected async navigationCallback(loadId: unknown): Promise<void> {
+    delay(600).then(() => {
+      this.body.countMA.animateValueTo(57, 15)
+    })
+
+    Promise.all([this.blogDataProm, delay(500)]).then(async ([blogs]) => {
+      this.body.countProj.animateValueTo(blogs.length)
     })
   }
 
