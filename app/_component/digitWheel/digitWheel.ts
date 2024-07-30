@@ -53,8 +53,9 @@ export default class DigitWheel extends Component<false> {
 
     if (initValue !== undefined) this.value(initValue)
 
-
-    this.elemIndex[0].elem.resizeDataBase()(({height}) => {
+ 
+    this.resizeDataBase()(({height}) => {
+      // listen on the parent, as on the child, the the size changes during anim
       this.elemHeight = height
     })
   }
@@ -166,24 +167,5 @@ export default class DigitWheel extends Component<false> {
 }
 
 
-function animationStepFuncGen(digit: number, maxHeight: number) {
-
-  return function(progAbs: number) {
-    
-  }
-}
-
-function changeVis(elem: Element, show: boolean) {
-  elem.css({
-    opacity: show ? 1 : 0,
-    userSelect: show ? "all" : "none",
-  })
-}
-
-function* range(from: number, to: number, step = 1) {
-  for (let i = from; i < to; i += step) {
-    yield i
-  }
-}
 
 declareComponent("c-digit-wheel", DigitWheel)
