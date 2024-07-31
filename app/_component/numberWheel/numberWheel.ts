@@ -15,6 +15,7 @@ export default class NumberWheel extends Component<false> {
 
   private digitElems = keyIndex((digit: number) => {
     const elem = new DigitWheel(0)
+    if (this._placeHolder !== undefined) elem.placeHolder(this._placeHolder)
     this.shadowRoot.prepend(elem)
     return elem
   })
@@ -45,6 +46,14 @@ export default class NumberWheel extends Component<false> {
       for (const func of animFuncs) {
         func(prog)
       }
+    }
+  }
+
+  private _placeHolder: string
+  placeHolder(to: string) {
+    this._placeHolder = to
+    for (const [_, digit] of this.digitElems) {
+      digit.placeHolder(to)
     }
   }
 

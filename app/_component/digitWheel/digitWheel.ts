@@ -77,6 +77,10 @@ export default class DigitWheel extends Component<false> {
     })
   }
 
+  placeHolder(to: string) {
+    this.elemIndex[0].elem.txt(to)
+  }
+
   // private _hideInitState: boolean = false
   // hideInitState(to: boolean) {
   //   to = !!to
