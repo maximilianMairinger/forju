@@ -122,7 +122,7 @@ let appEntryPath = path.join(appDir, appEntryFileName);
   
   
   console.log("Starting Browser")
-  open(`http://127.0.0.1:${gotPort}`)
+  //open(`http://127.0.0.1:${gotPort}`)
   
   
   
