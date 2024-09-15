@@ -20,6 +20,7 @@ export default class UiButton extends FormUi<Button> {
     this.moveBody.append(this.mySlotElem)
 
     this.button = button
+    button.link
     button.userFeedbackMode.focus.set(false)
 
     this.validMouseButtons = button.validMouseButtons
@@ -48,7 +49,7 @@ export default class UiButton extends FormUi<Button> {
 
 
 
-  public link: ((() => string) & ((to: null) => this) & ((to: string, domainLevel?: number, push?: boolean, notify?: boolean) => this))
+  public link(to: string, domainLevel?: number, push?: boolean, notify?: boolean): this
   public addActivationCallback?<CB extends (e: MouseEvent | KeyboardEvent | undefined) => void>(cb: CB): CB
   public removeActivationCallback?<CB extends (e: MouseEvent | KeyboardEvent | undefined) => void>(cb: CB): CB
   public click?<CB extends (e?: MouseEvent | KeyboardEvent) => void>(f: CB): CB

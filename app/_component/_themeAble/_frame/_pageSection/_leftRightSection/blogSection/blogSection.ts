@@ -7,14 +7,33 @@ import { ghostApi } from "../../../../../../lib/ghostApi"
 import ParallaxImgCard from "../../../../../parallaxImgCard/parallaxImgCard";
 import RippleButton from "../../../../_focusAble/_formUi/_rippleButton/rippleButton"
 import { loadRecord } from "../../../frame";
+import BlockButton from "../../../../_focusAble/_formUi/_rippleButton/_blockButton/blockButton";
+
+const baseTag = "forju"
 
 export default class BlogSection extends LeftRightSection {
   protected body: BodyTypes
 
-  constructor() {
+  constructor({ blogTag, note, header, text, btns }: { blogTag: string, note?: string, header: string, text: string, btns?: {text: string, link: string | VoidFunction}[] }) {
     super(1010);
 
-    const filter = process.env.DEV_BUILD === "true" ? "tag:forju+tag:test" : "tag:forju+tag:scienceBlog"
+    this.body.txtBlob.heading(header)
+    this.body.txtBlob.text(text)
+    if (note !== undefined) this.body.txtBlob.note(note)
+
+    if (btns !== undefined) {
+      for (const btn of btns) {
+        const btnElem = new BlockButton()
+        btnElem.addClass("themed")
+        btnElem.content(btn.text as string)
+        if (btn.link instanceof Function) btnElem.click(btn.link)
+        else btnElem.link(btn.link)
+
+        this.body.btnContainer.append(btnElem)
+      }
+    }
+
+    const filter = process.env.DEV_BUILD === "true" ? `tag:${baseTag}+tag:test` : `tag:${baseTag}+tag:${blogTag}`
 
 
     loadRecord.full.add(async () => {
