@@ -71,7 +71,7 @@ let appEntryPath = path.join(appDir, appEntryFileName);
   }
   
   if (imageWeb) {
-    const compressImages = imageWeb.constrImageWeb(["jpg", "webp", "avif"], ["3K", "PREV"])
+    const compressImages = imageWeb.constrImageWeb(["jpg", "webp", "avif"], ["4K", "2K", "PREV"])
     const imgDistPath = "public/res/img/dist" 
     const imgSrcPath = "app/res/img"
     mkdirp.sync(imgSrcPath)
