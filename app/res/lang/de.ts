@@ -17,6 +17,7 @@ export default {
     legalNotice: "Impressum",
     praesidium: "Präsidium",
     presse: "Presse",
-    us: "Über uns"
+    us: "Über uns",
+    presseaussendungen: "Aussendung"
   }
 }

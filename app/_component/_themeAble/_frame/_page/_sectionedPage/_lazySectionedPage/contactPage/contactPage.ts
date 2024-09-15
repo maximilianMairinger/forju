@@ -49,7 +49,8 @@ export default class ContactPage extends LazySectionedPage {
     this.iconIndex = {
       praesidium: new TeamIcon(),
       presse: new TeamIcon(),
-      contact: new ContactIcon()
+      contact: new ContactIcon(),
+      presseaussendungen: new ThoughtBubbleIcon()
     }
 
 
