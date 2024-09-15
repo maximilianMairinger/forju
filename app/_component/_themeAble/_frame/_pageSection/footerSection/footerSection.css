@@ -17,12 +17,33 @@ component-body {
 
 
 
-.logo {
+.logoContainer {
   width: 400px;
   height: 300px;
   margin-right: calc(18% - 150px);
   --accent: rgb(var(--primary-theme));
 }
+
+.logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.logoContainer span {
+  display: block;
+}
+
+@media (min-width: 1060px) {
+  .logo {
+    height: 90%;
+  }
+  .logoContainer span {
+    margin-top: -70px;
+  }
+}
+
+
 
 content-body {
   display: flex;
@@ -64,9 +85,13 @@ h3 {
     margin: 0 45px;
     min-width: 0;
   }
-  .logo {
+  .logoContainer {
     width: min(483px, 95%);
     margin: 0 auto;
+    margin-bottom: 25px;
+  }
+  .logoContainer span {
+    margin-top: -10px;
   }
 }
 
@@ -83,14 +108,23 @@ h3 {
   }
   h-col {
     width: 100%;
-    margin-left: 6%;
+    margin-left: 4%;
     margin-top: 20px;
     min-height: unset;
   }
-  .logo {
-    height: 50vw;
+  .logoContainer {
+    height: max(150px, 50vw);
   }
 
-  
+  .logoContainer span {
+    margin-top: -10px;
+    padding: 0 2%;
+  }  
 }
+
+/* @media (max-width: 300px) {
+  .logoContainer {
+    height: 150px
+  }
+} */
 
