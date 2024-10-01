@@ -283,6 +283,8 @@ jobs:
     - name: "checkout"
       if: ${{ needs.detectChanges.outputs.public == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: actions/checkout@master
+      with:
+        lfs: "true"
 
     - name: Upload public files
       if: ${{ needs.detectChanges.outputs.public == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
