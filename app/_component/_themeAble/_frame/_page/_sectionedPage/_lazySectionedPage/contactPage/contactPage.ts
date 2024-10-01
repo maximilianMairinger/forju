@@ -7,6 +7,7 @@ import ThoughtBubbleIcon from "../../../../../_icon/_highlightAbleIcon/thoughtBu
 import TeamIcon from "../../../../../_icon/_highlightAbleIcon/teamIcon/teamIcon"
 import ContactIcon from "../../../../../_icon/_highlightAbleIcon/contact/contact"
 import FooterSection from "../../../../_pageSection/footerSection/footerSection"
+import PresseBlogSection from "../../../../_pageSection/_leftRightSection/blogSection/presseaussendungenBlogSection/presseaussendungenBlogSection";
 
 export default class ContactPage extends LazySectionedPage {
   public iconIndex: { [key: string]: HighlightAbleIcon; };
@@ -30,12 +31,17 @@ export default class ContactPage extends LazySectionedPage {
         ), val: () => import(/* webpackChunkName: "presseContactSection" */"../../../../_pageSection/miniContactSection/presseContactSection/presseContactSection")
       },
       {
+        key: new Import("presseaussendungen", 1, (blogSection: typeof PresseBlogSection) =>
+          new blogSection()
+        ), val: () => import(/* webpackChunkName: "presseBlogSection" */"../../../../_pageSection/_leftRightSection/blogSection/presseaussendungenBlogSection/presseaussendungenBlogSection")
+      },
+      {
         key: new Import("footer", 1, (footerSection: typeof FooterSection) =>
           new footerSection()
         ), val: () => import(/* webpackChunkName: "footerSection" */"../../../../_pageSection/footerSection/footerSection")
       },
     ), baselink, sectionChangeCallback, undefined, {
-      footer: "presse"
+      footer: "presseaussendungen"
     })
 
 
@@ -43,7 +49,8 @@ export default class ContactPage extends LazySectionedPage {
     this.iconIndex = {
       praesidium: new TeamIcon(),
       presse: new TeamIcon(),
-      contact: new ContactIcon()
+      contact: new ContactIcon(),
+      presseaussendungen: new ThoughtBubbleIcon()
     }
 
 
