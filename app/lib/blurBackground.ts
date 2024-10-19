@@ -52,7 +52,7 @@ const _blurEverythingInBackground = latestLatent(function blurEverythingInBackgr
       
       const doneWithAnim = blurElem.anim({opacity: 0})
       res({doneWithAnim, except, blurElem})
-    }, 2)
+    }, 2) // a 2 here because on popup one resize event is triggered, always
   })
 })
 
