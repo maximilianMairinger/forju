@@ -1,0 +1,14 @@
+component-body {
+  background-color: #ebf2f1;
+  background-color: rgb(var(--primary-themed-background));
+}
+
+
+c-text-blob {
+  /* width: 450px; */
+  --theme: var(--primary-theme);
+}
+
+c-contact-card {
+  --background: 255, 249, 248;
+}

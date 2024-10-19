@@ -1,8 +1,8 @@
 import declareComponent from "../../../../../../lib/declareComponent"
-import MiniContactSection from "../miniContactSection"
+import MiniTeamSection from "../miniTeamSection"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 
-export default class PresseContactSection extends MiniContactSection {
+export default class PresseContactSection extends MiniTeamSection {
   protected body: BodyTypes
 
   constructor() {

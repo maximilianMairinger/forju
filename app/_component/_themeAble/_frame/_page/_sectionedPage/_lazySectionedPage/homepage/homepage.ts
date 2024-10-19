@@ -44,7 +44,7 @@ export default class HomePage extends LazySectionedPage {
       {
         key: new Import("team", 1, (teamSection: typeof TeamSection) =>
           new teamSection()
-        ), val: () => import(/* webpackChunkName: "teamSection" */"../../../../_pageSection/teamSection/teamSection")
+        ), val: () => import(/* webpackChunkName: "vorstandsSection" */"../../../../_pageSection/teamSection/vorstandsSection/vorstandsSection")
       },
       {
         key: new Import("partner", 1, (partnerSection: typeof PartnerSection) =>
