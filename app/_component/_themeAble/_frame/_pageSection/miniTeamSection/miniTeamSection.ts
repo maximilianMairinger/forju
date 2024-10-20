@@ -2,7 +2,7 @@ import declareComponent from "../../../../../lib/declareComponent"
 import PageSection from "../pageSection"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 
-export default class MiniContactSection extends PageSection {
+export default class MiniTeamSection extends PageSection {
   protected body: BodyTypes
 
   constructor() {
@@ -12,11 +12,11 @@ export default class MiniContactSection extends PageSection {
   }
 
   stl() {
-    return super.stl() + require("./miniContactSection.css").toString()
+    return super.stl() + require("./miniTeamSection.css").toString()
   }
   pug() {
-    return require("./miniContactSection.pug").default
+    return require("./miniTeamSection.pug").default
   }
 }
 
-declareComponent("c-mini-contact-section", MiniContactSection)
+declareComponent("c-mini-team-section", MiniTeamSection)

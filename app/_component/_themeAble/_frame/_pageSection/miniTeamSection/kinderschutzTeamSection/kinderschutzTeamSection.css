@@ -1,0 +1,27 @@
+component-body {
+  background-color: #ebf2f1;
+  background-color: rgb(var(--primary-themed-background));
+}
+
+
+c-text-blob {
+  min-width: 300px;
+  width: 500px;
+  --theme: var(--primary-theme);
+}
+
+c-contact-card {
+  --background: 255, 249, 248;
+}
+
+@media (max-width: 1470px) {
+  component-body {
+    padding-left: calc(6% - 12px)
+  }
+}
+
+@media (max-width: 1180px) {
+  component-body {
+    padding-left: calc(12% - 12px)
+  }
+}

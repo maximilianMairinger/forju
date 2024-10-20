@@ -1,6 +1,7 @@
 :host {
   display: block;
   position: relative;
+  background: rgb(var(--tertiary-themed-background));
   box-sizing: border-box;
 }
 
@@ -73,7 +74,7 @@ c-text-blob {
 
 
 c-oval-icon {
-  --color: rgb(var(--tertiary-strongly-themed-background));
+  --color: rgb(var(--tertiary-themed-background));
   position: absolute;
   /* left: -100px; */
   width: auto;

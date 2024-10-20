@@ -23,12 +23,12 @@ export default class ContactPage extends LazySectionedPage {
       {
         key: new Import("praesidium", 1, (praesidiumContactSection: any) =>
           new praesidiumContactSection()
-        ), val: () => import(/* webpackChunkName: "praesidiumContactSection" */"../../../../_pageSection/miniContactSection/praesidiumContactSection/praesidiumContactSection")
+        ), val: () => import(/* webpackChunkName: "praesidiumContactSection" */"../../../../_pageSection/miniTeamSection/praesidiumContactSection/praesidiumContactSection")
       },
       {
         key: new Import("presse", 1, (presseContactSection: any) =>
           new presseContactSection()
-        ), val: () => import(/* webpackChunkName: "presseContactSection" */"../../../../_pageSection/miniContactSection/presseContactSection/presseContactSection")
+        ), val: () => import(/* webpackChunkName: "presseContactSection" */"../../../../_pageSection/miniTeamSection/presseContactSection/presseContactSection")
       },
       {
         key: new Import("presseaussendungen", 1, (blogSection: typeof PresseBlogSection) =>
