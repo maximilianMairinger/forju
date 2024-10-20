@@ -23,7 +23,7 @@ export default class TextBlob extends ThemeAble {
 
 
   heading(to: string) {
-    this.headerElem.html(to)
+    this.headerElem.text(to)
   }
   note(to: string) {
     this.noteElem.text(to)
