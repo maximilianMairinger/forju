@@ -15,10 +15,9 @@ export default class TeamPage extends LazySectionedPage {
   protected body: BodyTypes
 
   iconIndex = {
-    praesidium: new TeamIcon(),
-    presse: new TeamIcon(),
-    contact: new ContactIcon(),
-    presseaussendungen: new ThoughtBubbleIcon()
+    about: new ContactIcon(),
+    funktionaere: new TeamIcon(),
+    kinderschutz: new ThoughtBubbleIcon()
   }
 
   constructor(baselink: string, sectionChangeCallback?: (section: string) => void) {
@@ -46,8 +45,6 @@ export default class TeamPage extends LazySectionedPage {
     ), baselink, sectionChangeCallback, undefined, {
       footer: "kinderschutz"
     })
-
-
   }
 
   stl() {

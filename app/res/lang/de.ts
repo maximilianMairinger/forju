@@ -5,6 +5,10 @@ export default {
   },
   copiedFeedback: "In der Zwischenablage",
   links: {
+    about: "Über uns",
+    funktionaere: "Funktionäre",
+    kinderschutz: "Kinderschutz",
+    ourTeam: "Unser Team",
     philosophy: "Philosophie",
     services: "Service",
     partner: "Partner",
