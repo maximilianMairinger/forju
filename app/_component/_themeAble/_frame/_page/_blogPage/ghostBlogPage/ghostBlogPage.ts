@@ -5,7 +5,7 @@ import Image from "../../../../../image/image"
 
 import GhostContentAPI, {PostOrPage} from '@tryghost/content-api'
 import {lang} from "../../../../../../lib/lang"
-import {Data} from "josm";
+import {Data, ReadonlyData} from "josm";
 import {ghostApi} from "../../../../../../lib/ghostApi";
 import "../../../../link/link"
 import "../../../../../image/image" 
@@ -17,6 +17,7 @@ import PersonCircle from "../../../../../personCircle/personCircle"
 import keyIndex, { memoize } from "key-index"
 import { loadRecord } from "../../../frame"
 import Parallax from "../../../../../parallax/parallax"
+import { parseEscapedValues } from "../../../../../../lib/txtParse"
 
 const parallaxLength = 100
 
@@ -41,7 +42,7 @@ function parseContentHTML(html: string) {
     // heading
     .replaceAll(/<(?:h(1|2|3|4|5|6|7).*?>)(.*?)<\/h.>/gi, "<c-text-blob class='h$1' heading='$2'></c-text-blob>")
 
-  return html
+  return parseEscapedValues(html)
   // console.log(html)
   // let parser = new DOMParser();
   // let htmlDOM = parser.parseFromString(html, 'text/html');
@@ -58,6 +59,7 @@ function parseContentHTML(html: string) {
 export default class GhostBlogPage extends BlogPage {
 
   private parseBlogPostToHTML(slug: string, blogData: PostOrPage) {
+    console.log(blogData.title)
     // let blogData: Required<PostOrPage> = {
     //   title: "My Title",
     //   published_at: new Date().toISOString(),
@@ -76,14 +78,14 @@ export default class GhostBlogPage extends BlogPage {
     const headingElem = new TextBlob()
     headingElem.addClass("h1")
     headingElem.setAttribute("popunderline", "popunderline")
-    headingElem.heading(blogData.title)
+    headingElem.heading(parseEscapedValues(blogData.title))
     headingElem.note(AT.formatDate(new Date(blogData.published_at)))
 
     // special header section
     if (blogData.feature_image != null) {
 
 
-      const author = new PersonCircle()  
+      const author = new PersonCircle()
       author.src(blogData.primary_author.profile_image ?? "unknownAvatarDepthRect")
       author.heading(blogData.primary_author.name)
       author.subText(blogData.primary_author.location)

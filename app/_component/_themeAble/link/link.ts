@@ -7,6 +7,7 @@ import ExternalLinkIcon from "../_icon/externalLink/externalLink"
 import { Prim, EventListener } from "extended-dom";
 
 import { Record } from "../../../lib/record";
+import { parseEscapedValues } from "../../../lib/txtParse";
 
 export const linkRecord = new Record<{link: string, level: number}>()
 
@@ -360,7 +361,7 @@ export default class Link extends ThemeAble {
   content(): string
   content(to?: string | Data<string>): void
   content(to?: string | Data<string>): any {
-    if (to !== undefined) return this.text(to as any, true, false)
+    if (to !== undefined) return this.text(parseEscapedValues(to) as any, true, false)
     return this.text()
   }
 
