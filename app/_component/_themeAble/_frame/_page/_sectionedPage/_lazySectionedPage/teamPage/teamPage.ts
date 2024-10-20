@@ -24,7 +24,12 @@ export default class TeamPage extends LazySectionedPage {
   constructor(baselink: string, sectionChangeCallback?: (section: string) => void) {
     super(new ImportanceMap<() => Promise<any>, any>(
       {
-        key: new Import("", 1, (funktionaereSection: any) =>
+        key: new Import("about", 1, (aboutSection: any) =>
+          new aboutSection()
+        ), val: () => import(/* webpackChunkName: "aboutSection" */"../../../../_pageSection/aboutSection/aboutSection")
+      },
+      {
+        key: new Import("funktionaere", 1, (funktionaereSection: any) =>
           new funktionaereSection()
         ), val: () => import(/* f: "funktionaereSection" */"../../../../_pageSection/teamSection/funktionaereSection/funktionaereSection")
       },

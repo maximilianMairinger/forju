@@ -1,7 +1,14 @@
 :host {
   display: block;
   position: relative;
+  --theme: var(--tertiary-theme);
 }
+
+c-block-button.themed {
+  --text: var(--text);
+}
+
+
 component-body {
   min-height: 700px;
   padding-bottom: 100px;
@@ -27,12 +34,13 @@ under-section {
 }
 
 under-section.a {
-  flex-direction: column;
+  /* flex-direction: column; */
   margin-bottom: 50px;
 }
 
 under-section.a c-block-button {
-  --background: var(--tertiary-theme);
+  /* --background: var(--tertiary-theme); */
+  margin-right: 10px;
   /* --text: var(--plain-background); */
 }
 

@@ -10,9 +10,9 @@
 
 
 :host(.themed) {
-  --background-color: rgb(var(--primary-theme));
+  --background-color: rgb(var(--theme));
   --text: var(--plain-background); 
-  --focus: var(--primary-theme);
+  --focus: var(--theme);
 }
 
 
