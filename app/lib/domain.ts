@@ -3,6 +3,7 @@ import * as global from "./../global"
 import slugify from "slugify"
 import getBaseUrl from "get-base-url";
 import lang from "./../lib/lang"
+import { parseEscapedValues } from "./txtParse"
 
 
 const commonTitle = lang.appName.short;
@@ -59,15 +60,15 @@ function parselocalUrlToDomainIndex() {
 parselocalUrlToDomainIndex()
 
 
+
 function renderSubtitle(myDomainIndex: string[] = domIndex) {
-  return myDomainIndex.Replace((k) => {
+  return myDomainIndex.map((k) => {
     try {
       return lang.links[k].get()
     }
     catch (e) {
       return k
     }
-    
   }).join(commonSubtileSeperator)
 }
 
@@ -104,7 +105,7 @@ function updateTitle() {
 
   
   titleElement.txt(title + subtitle)
-  return title + originalSubtitle
+  return title + parseEscapedValues(originalSubtitle)
 }
 updateTitle()
 

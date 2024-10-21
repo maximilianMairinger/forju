@@ -14,6 +14,7 @@ function parseEscapedValuesTxt(text: string) {
     //@ts-ignore
     .replaceAll("\\u00AD", "\u00AD")
     .replaceAll("&shy;", "\u00AD")
+    .replaceAll(/(?<!\\)\$/g, "\u00AD")
 
   return text
 }
