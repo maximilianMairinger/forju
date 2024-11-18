@@ -5,7 +5,7 @@ const saniQr = sani({
   qrName: String
 })
 
-
+console.log("process.env.inProd", process.env.inProd)
 const qrCollectionName = process.env.inProd === "true" ? "qr" : "qrDev"
 
 setup("forju").then(async ({app, db}) => {
