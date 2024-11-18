@@ -146,8 +146,9 @@ export default function (dbName_DBConfig?: string | null | undefined | DBConfig,
       MongoClient.connect(dbConfig.url, { useUnifiedTopology: true }).then(async (client) => {
         let db = client.db(dbConfig.dbName)
         res({db, app: await app})
-      }).catch(async () => {
+      }).catch(async (e) => {
         console.error("Unable to connect to MongoDB")
+        console.error(e)
 
         res({app: await app})
       })
