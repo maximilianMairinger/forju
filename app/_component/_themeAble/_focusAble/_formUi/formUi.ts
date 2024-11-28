@@ -189,6 +189,8 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
     if (window.matchMedia && window.matchMedia("(hover:hover)").matches) {
       import("./preHoverInteraction").then(({default: f}) => {
         this.preHoverAnimations = f(root as any, hovPreDet, this.moveBody as any, this.componentBody as any)
+        if (this.prePreHoverAnimEnabled) this.preHoverAnimations.enable()
+        else this.preHoverAnimations.disable()
       })
     }
 
@@ -206,7 +208,15 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
 
 
   }
-  private preHoverAnimations: {disable: () => void, enable: () => void}
+  private prePreHoverAnimEnabled = true
+  public preHoverAnimations: {disable: () => void, enable: () => void} = {
+    enable() {
+      this.prePreHoverAnimEnabled = true
+    },
+    disable() {
+      this.prePreHoverAnimEnabled = false
+    }
+  }
 
 
   protected fadeRipple: ((anim?: boolean) => void)[] = []

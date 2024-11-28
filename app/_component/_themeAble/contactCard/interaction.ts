@@ -6,13 +6,13 @@ export default function(this: ContactCard) {
   const confetti = _confetti.create(this.body.canvas, { resize: true });
 
   this.body.btn.click(() => {
-    const { done, canOpen } = blurEverythingInBackground(this.body.btn)
-    if (!canOpen) return
-    
+    const blurRes = blurEverythingInBackground(this.body.btn)
+    if (!blurRes.canOpen) return
+    const { done } = blurRes
+     
     console.log(this.body.btn.offsetLeft)
 
-    const width = 800
-    const height = 450
+    
 
     this.css({
       height: this.css("height"),
@@ -27,34 +27,65 @@ export default function(this: ContactCard) {
     this.body.btn.css("cursor", "default")
 
 
-    this.body.btn.anim({
-      width,
-      height,
-      marginLeft: document.body.clientWidth/2 - width/2 - this.body.btn.getBoundingClientRect().left,
-      marginTop: document.body.clientHeight/2 - height/2 - this.body.btn.getBoundingClientRect().top,
-    })
+    let wantedWidth = 800
+    let wantedHeight = 450
+
 
     const descHeight = this.body.desc.height()
     this.body.desc.css("height", descHeight)
-    console.log(descHeight)
-
     this.body.desc.css("width", this.body.desc.css("width"))
 
-    this.body.desc.anim({
-      left: "47%",
-      height: 0,
-      translateY: -386,
-      scale: 1.2
-    })
+
+    
+
+    if (window.innerWidth > 750) {
+      this.body.desc.anim({
+        left: "47%",
+        height: 0,
+        translateY: -386,
+        scale: 1.2
+      })
 
 
-    this.body.pic.anim({
-      translateX: -30
+      this.body.pic.anim({
+        translateX: -30
+      })
+
+      this.body.background.anim({
+        translateX: 30
+      })
+    }
+    else {
+      wantedWidth = Math.min(window.innerWidth - 50, 500)
+      this.body.desc.anim({
+        color: "white",
+      })
+      this.body.subSubTxt.css("--text", "255, 255, 255")
+    }
+
+    this.body.btn.preHoverAnimations.disable()
+
+    
+
+    const width = Math.min(window.innerWidth - 50, wantedWidth)
+    const height = wantedHeight
+    const bottom = -1 * (document.body.clientHeight/2 - height/2 - this.body.btn.getBoundingClientRect().top)
+    const right = -1 * (document.body.clientWidth/2 - width/2 - this.body.btn.getBoundingClientRect().left)
+    this.body.btn.anim({
+      width,
+      height,
+      bottom,
+      right
     })
 
-    this.body.background.anim({
-      translateX: 30
-    })
+    
+
+    
+
+
+    
+
+    
     
 
     
@@ -119,12 +150,19 @@ export default function(this: ContactCard) {
 
 
     done.then(async () => {
+      this.body.btn.preHoverAnimations.enable()
+      this.body.desc.anim({
+        color: "inherit",
+      })
+      this.body.subSubTxt.css("--text", "inherit")
+
+
       await Promise.all([
         this.body.btn.anim({
           width: ogButtonWidth,
           height: ogButtonHeight,
-          marginLeft: 0,
-          marginTop: 0
+          bottom: 0,
+          right: 0
         }),
         this.body.desc.anim({
           left: 0,

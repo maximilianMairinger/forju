@@ -1,10 +1,6 @@
-:host {
-  --text: var(--primary-text);
-}
 
 
 :host {
-  color: rgb(var(--text));
   user-select: none;
   display: inline-block;
 }
@@ -14,7 +10,7 @@
 }
 
 :host(.pressed) a {
-  color: rgba(var(--text), .7);
+  opacity: .7;
 }
 
 :host a {
@@ -45,11 +41,11 @@ slot {
 
 
 a {
-  color: rgb(var(--text));
+  color: inherit;
   font-weight: inherit;
   cursor: inherit;
   position: relative;
-  transition: color .15s;
+  transition: opacity .15s;
 }
 
 c-external-link-icon {

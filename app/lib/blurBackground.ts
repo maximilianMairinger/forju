@@ -18,7 +18,8 @@ function mkBlurElem() {
     zIndex,
     opacity: 0,
     pointerEvents: "all",
-    background: "rgba(0, 0, 0, 0.5)"
+    background: "rgba(0, 0, 0, 0.5)",
+    backdropFilter: "blur(3px)"
   })
   return blurElem
 }
@@ -28,8 +29,8 @@ function mkBlurElem() {
 
 const activeBlurs = new Set()
 
-const _blurEverythingInBackground = latestLatent(function blurEverythingInBackground(except?: Element, zIndex: number = 50, zIndexExcept: number = zIndex + 1) {
-  return new Promise<{doneWithAnim: Promise<void>, except: Element | undefined, blurElem: Element}>((res) => {
+const _blurEverythingInBackground = latestLatent(function blurEverythingInBackground<T>(except?: Element, end: Promise<T> = new Promise(() => {}), zIndex: number = 50, zIndexExcept: number = zIndex + 1) {
+  return new Promise<{doneWithAnim: Promise<void>, except: Element | undefined, blurElem: Element, e: Event | T | void}>((res) => {
     if (except) {
       initZIndexStore(except)
       except.css("zIndex", zIndex + 1)
@@ -42,17 +43,29 @@ const _blurEverythingInBackground = latestLatent(function blurEverythingInBackgr
 
 
 
-
-    oneOfTheseOnce(blurElem.on("mousedown"), parent.on("scroll"), document.body.on("resize"))((e) => {
-      console.log(e)
+    // a 2 here because on popup one resize event is triggered, always
+    oneOfTheseOnce([
+      end as Promise<unknown>, 
+      blurElem.on("mousedown"), 
+      parent.on("scroll", undefined, { velocity: true }), // Vel here is needed for popup to determine in which direction to fade on close
+      document.body.on("resize"),
+      new Promise<void>((res) => {
+        const ls = document.body.on("keydown", ({key}) => {
+          if (key === "Escape") {
+            res()
+            ls.deactivate()
+          } 
+        })
+      })
+    ], 2).then((e: Event | T | void) => {
       if (e instanceof Event) {
         e.stopPropagation()
         e.preventDefault()
       }
       
       const doneWithAnim = blurElem.anim({opacity: 0})
-      res({doneWithAnim, except, blurElem})
-    }, 2) // a 2 here because on popup one resize event is triggered, always
+      res({doneWithAnim, except, blurElem, e})
+    }) 
   })
 })
 
@@ -64,15 +77,16 @@ _blurEverythingInBackground.then(async ({doneWithAnim, except, blurElem}) => {
   blurElem.remove()
 })
 
-export function blurEverythingInBackground(except?: Element, zIndex?: number, zIndexExcept?: number) {
+export function blurEverythingInBackground<T>(except?: Element, end?: Promise<T>, zIndex?: number, zIndexExcept?: number): {canOpen: false} | {canOpen: true, done: Promise<Event | T>} {
   let myActiveBlursKey = except ? except : undefined
   if (activeBlurs.has(myActiveBlursKey)) return {canOpen: false}
   activeBlurs.add(myActiveBlursKey)
   return {canOpen: true, done: (async () => {
-    const {doneWithAnim} = await _blurEverythingInBackground(except, zIndex, zIndexExcept)
+    const {doneWithAnim, e} = await _blurEverythingInBackground(except, end, zIndex, zIndexExcept)
     doneWithAnim.then(() => {
       activeBlurs.delete(myActiveBlursKey)
     })
+    return e as any
   })()}
   
 }
