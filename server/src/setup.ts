@@ -1,5 +1,5 @@
 import express from "express"
-import * as bodyParser from "body-parser"
+import bodyParser from "body-parser"
 import xrray from "xrray"; xrray(Array);
 import * as MongoDB from "mongodb";
 const MongoClient = MongoDB.MongoClient
@@ -12,7 +12,7 @@ import { ResablePromise } from "more-proms"
 
 const defaultPortStart = 3050
 
-type App = express.Express & { 
+export type App = express.Express & { 
   port: number, 
   getWebSocketServer: (url: `/${string}`) => WebSocketServer,
   ws: (url: `/${string}`, cb: (ws: WebSocket & {on: WebSocket["addEventListener"], off: WebSocket["removeEventListener"]}, req: any) => void) => void,
@@ -21,7 +21,7 @@ type App = express.Express & {
 
 export type SendFileProxyFunc = (file: string, ext: string, fileName: string) => string | void | null
 
-export function configureExpressApp(indexUrl: string, publicPath: string, cb: Function, sendFileProxy?: Promise<SendFileProxyFunc> | SendFileProxyFunc, callAtStart?: (app: express.Express) => express.Express | void) {
+export function configureExpressApp(indexUrl: string, publicPath: string, cb: (app: App) => void, sendFileProxy?: Promise<SendFileProxyFunc> | SendFileProxyFunc, callAtStart?: (app: express.Express) => express.Express | void) {
   if (indexUrl !== "*") if (!indexUrl.startsWith("/")) indexUrl = "/" + indexUrl
 
   let app = express() as express.Express & { 
@@ -84,14 +84,15 @@ export function configureExpressApp(indexUrl: string, publicPath: string, cb: Fu
   
 
   
-  
+  const webSocketServerMap = keyIndex((url: `/${string}`) => new ws.Server({ noServer: true, path: url }))
+  app.getWebSocketServer = webSocketServerMap;
   
 
   (async () => {
     app.port = await _port
     const port = app.port
   
-    const webSocketServerMap = keyIndex((url: `/${string}`) => new ws.Server({ noServer: true, path: url }))
+    
     const expressServer = app.listen(port)
     app.ws = (url: `/${string}`, cb: (ws: WebSocket & {on: WebSocket["addEventListener"], off: WebSocket["removeEventListener"]}, req: any) => void) => {
       const websocketServer = webSocketServerMap(url)
@@ -101,13 +102,12 @@ export function configureExpressApp(indexUrl: string, publicPath: string, cb: Fu
     }
   
     expressServer.on("upgrade", (request, socket, head) => {
-      const url= request.url as `/${string}`
+      const url = request.url as `/${string}`
       webSocketServerMap(url).handleUpgrade(request, socket, head, (websocket) => {
         webSocketServerMap(url).emit("connection", websocket, request);
       });
     });
   
-    app.getWebSocketServer = webSocketServerMap
   })().then(async () => {
     await cb(app)
 
@@ -131,7 +131,7 @@ export default function (dbName_DBConfig: string | DBConfig, indexUrl?: string):
 export default function (dbName_DBConfig?: undefined | null, indexUrl?: string): Promise<App>;
 export default function (dbName_DBConfig?: string | null | undefined | DBConfig, indexUrl: string = "*"): any {
   const userlandExecDoneProm = new ResablePromise()
-  const app = new ResablePromise()
+  const app = new ResablePromise() as any
   configureExpressApp(indexUrl, publicPath, async (_app) => {
     app.res(_app)
     await userlandExecDoneProm
