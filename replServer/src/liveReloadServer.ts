@@ -4,7 +4,8 @@ import pth from "path"
 import fs from "fs"
 import xtring from "xtring"; xtring();
 
-import { configureExpressApp, SendFileProxyFunc } from "./../../server/src/setup"
+import { App, configureExpressApp, SendFileProxyFunc } from "./../../server/src/setup"
+import { ResablePromise } from "more-proms";
 
 
 
@@ -28,14 +29,20 @@ export default async function init(indexUrl: string = "*", _wsUrl: string = "/re
   else wsUrl = _wsUrl as `/${string}`
 
 
-  const app = await configureExpressApp(indexUrl, publicPath, (file, ext) => {
+  const appProm = new ResablePromise() as any
+  configureExpressApp(indexUrl, publicPath, (app) => {
+    appProm.res(app)
+  }, (file, ext) => {
     if (ext === ".html" || ext === ".htm") {
       let injectAt = file.lastIndexOf("</body>")
       return file.splice(injectAt, 0, swInjTxt())
     }
   })
 
-  const { clients } = app.getWebSocketServer(wsUrl)
+  const app = await appProm as any as App
+
+  const clients = app.getWebSocketServer(wsUrl).clients as Set<WebSocket>
+
   // app.ws(wsUrl, () => {})
 
   
