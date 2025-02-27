@@ -139,15 +139,16 @@ export default function (dbName_DBConfig?: string | null | undefined | DBConfig,
 
   if (dbName_DBConfig) {
     let dbConfig: DBConfig
-    if (typeof dbName_DBConfig === "string") dbConfig = { dbName: dbName_DBConfig, url: "mongodb://localhost:27017"}
+    if (typeof dbName_DBConfig === "string") dbConfig = { dbName: dbName_DBConfig, url: "mongodb://127.0.0.1:27017"}
     else dbConfig = dbName_DBConfig
 
     const prom = new Promise((res) => {
       MongoClient.connect(dbConfig.url, { useUnifiedTopology: true }).then(async (client) => {
         let db = client.db(dbConfig.dbName)
         res({db, app: await app})
-      }).catch(async () => {
+      }).catch(async (e) => {
         console.error("Unable to connect to MongoDB")
+        console.error(e)
 
         res({app: await app})
       })
