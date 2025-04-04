@@ -7,6 +7,9 @@ import FocusAble from "../focusAble"
 import { Theme } from "../../themeAble"
 import { loadRecord } from "../../_frame/frame";
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
+import { waitUntilDataEquals } from "../../../../lib/waitUntilDataEquals";
+
+
 
 if (window.TouchEvent === undefined) window.TouchEvent = class SurelyNotTouchEvent {} as any
 
@@ -185,7 +188,7 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
 
     loadRecord.content.add(async () => {
       await delay(0)
-      if (window.matchMedia && window.matchMedia("(hover:hover)").matches && this.userFeedbackMode.preHover.get()) {
+      if (window.matchMedia && window.matchMedia("(hover:hover)").matches && await waitUntilDataEquals(this.userFeedbackMode.preHover, a => a)) {
         await import("./preHoverInteraction").then(({default: f}) => {
           const root = ce("root-bounds");
           this.apd(root);
@@ -210,7 +213,15 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
 
 
   }
-  private preHoverAnimations: {disable: () => void, enable: () => void}
+  private prePreHoverAnimEnabled = true
+  public preHoverAnimations: {disable: () => void, enable: () => void} = {
+    enable() {
+      this.prePreHoverAnimEnabled = true
+    },
+    disable() {
+      this.prePreHoverAnimEnabled = false
+    }
+  }
 
 
   protected fadeRipple: ((anim?: boolean) => void)[] = []

@@ -1,6 +1,3 @@
-:host {
-  --text: var(--primary-text);
-}
 
 
 :host {
@@ -14,7 +11,7 @@
 }
 
 :host(.pressed) a {
-  color: rgba(var(--text), .7);
+  opacity: .7;
 }
 
 
@@ -40,11 +37,11 @@ slot {
 
 
 a {
-  color: rgb(var(--text));
+  color: inherit;
   font-weight: inherit;
   cursor: inherit;
   position: relative;
-  transition: color .15s;
+  transition: color .15s, opacity .15s;
   display: flex;
   cursor: pointer;
   text-decoration: none;

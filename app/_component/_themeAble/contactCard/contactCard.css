@@ -1,7 +1,6 @@
 :host {
   display: block;
   position: relative;
-  --background: var(--tertiary-themed-background)
 }
 
 :host {
@@ -14,21 +13,27 @@
 }
 
 c-image {
-  width: 100%;
-  height: auto;
+  width: auto;
+  height: 100%;
   aspect-ratio: 1/1;
   border-radius: 20px;
+  --object-fit: contain;
+}
+
+canvas {
+  width: 100%;
+  height: 100%;
 }
 
 image-background {
-  background-color: rgb(var(--background));
+  background-color: rgb(var(--tertiary-themed-background));
   border-radius: 20px;
   box-shadow: var(--soft-shadow);
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  aspect-ratio: 1/1;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -41,30 +46,61 @@ background-block {
   background-color: rgb(var(--secondary-theme-alt));
 }
 
+image-desc {
+  z-index: 10;
+}
+
+c-ripple-button {
+  --root-bounds-display: none;
+}
+
 c-spike-shadow-icon {
   position: absolute;
   --color: rgb(var(--text));
   width: 300px;
   height: 300px;
   transform: rotate(32deg);
-  top: 109px;
+  bottom: -75px;
   right: -124px;
 }
 
+wrapper-body {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  z-index: unset;
+}
+
+image-desc {
+  width: 100%;
+  position: relative;
+  height: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  box-sizing: border-box;
+  display: block;
+}
+
 h3 {
-  margin-top: 10px;
-  margin-left: 20px;
+  margin-top: 0;
   font-size: 19px;
   margin-bottom: 0px;
 }
 
 p {
   margin-top: 0;
-  margin-left: 20px;
   font-size: 16px;
   margin-bottom: 5px;
 }
 
-b {
-  margin-left: 20px;
+c-ripple-button {
+  display: inline-block;
+  width: 100%;
+  cursor: zoom-in;
+}
+
+c-ripple-button > * {
+  font-weight: normal;
 }

@@ -39,5 +39,6 @@ a {
 slot {
   border-radius: inherit;
   width: inherit;
+  height: inherit;
   max-width: inherit;
 }

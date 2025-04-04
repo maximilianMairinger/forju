@@ -16,11 +16,10 @@
 }
 
 move-me {
-  display: flex;
+  display: inline-block;
   justify-content: center;
   position: relative;
   border-radius: inherit;
-  z-index: 4;
   width: inherit;
   height: inherit;
   max-width: inherit;
@@ -35,7 +34,6 @@ root-bounds {
   right: 0;
   bottom: 0;
   z-index: 6;
-  /* background-color: yellow; */
 }
 
 .cover {
@@ -75,12 +73,12 @@ active-cover.activeCover {
 }
 
 /* :not(.afterClickFocus) */
-:host(:hover:not(.disabled)) hover-cover {
+:host(:hover:not(.disabled)) hover-cover.active {
   opacity: 1;
 }
 
 
-:host(:hover:active:not(.disabled)) active-cover {
+:host(:hover:active:not(.disabled)) active-cover.active {
   opacity: 1;
 }
 

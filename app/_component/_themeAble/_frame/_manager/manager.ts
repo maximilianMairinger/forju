@@ -317,7 +317,7 @@ export default abstract class Manager extends Frame {
       }
   
   
-      to.css("zIndex", 0)
+      to.css("zIndex", "auto")
       this.busySwaping = false;
       if (this.wantedFrame !== to) {
         await this.swapFrame(this.wantedFrame, domainFrag);
