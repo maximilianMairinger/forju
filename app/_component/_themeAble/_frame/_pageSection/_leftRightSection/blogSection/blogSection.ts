@@ -33,7 +33,8 @@ export default class BlogSection extends LeftRightSection {
       }
     }
 
-    const filter = process.env.DEV_BUILD === "true" ? `tag:${baseTag}+tag:test` : `tag:${baseTag}+tag:${blogTag}`
+    // const filter = process.env.DEV_BUILD === "true" ? `tag:${baseTag}+tag:test` : `tag:${baseTag}+tag:${blogTag}`
+    const filter = `tag:${baseTag}+tag:${blogTag}`
 
 
     loadRecord.full.add(async () => {
