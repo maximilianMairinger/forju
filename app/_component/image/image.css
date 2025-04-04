@@ -65,11 +65,11 @@ img {
 
 :host(.sizeRestrictedWidth) img {
   width: 100%;
-  height: max-content;
+  /* height: max-content; */
 }
 
 :host(.sizeRestrictedHeight) img {
-  width: max-content;
+  /* width: max-content; */
   height: 100%;
 }
 
@@ -79,6 +79,6 @@ img {
 }
 
 :host(.sizeRestrictedNone) img {
-  width: max-content;
-  height: max-content;
+  /* width: max-content;
+  height: max-content; */
 }
