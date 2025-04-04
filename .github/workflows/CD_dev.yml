@@ -342,11 +342,11 @@ jobs:
 
     steps:
     - name: "checkout"
-      if: ${{ needs.detectChanges.outputs.deployOption == 'true' }}
+      if: ${{ needs.detectChanges.outputs.deployOption == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: actions/checkout@master
 
     - name: Upload deploy option files
-      if: ${{ needs.detectChanges.outputs.deployOption == 'true' }}
+      if: ${{ needs.detectChanges.outputs.deployOption == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: appleboy/scp-action@v0.1.1
       with:
         host: ${{ secrets.HOST }}

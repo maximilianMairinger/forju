@@ -5,6 +5,7 @@
 }
 
 c-button {
+  cursor: inherit;
   width: inherit;
   height: inherit;
   max-height: inherit;
@@ -16,6 +17,11 @@ c-button {
 
 }
 
+slot {
+  position: relative;
+}
+
 ::slotted(*) {
   z-index: 1;
+  position: relative;
 }
