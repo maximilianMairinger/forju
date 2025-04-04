@@ -65,7 +65,7 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
   const mouseLeaveF = () => {
     relX = relY = 0
 
-    root.css({zIndex: 6})
+    // root.css({zIndex: 6})
 
 
     target.css({
@@ -131,7 +131,7 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
   evTarget.on("mousemove", mouseMoveF)
 
   const mouseEnterF = (e) => {
-    root.css({zIndex: -1})
+    // root.css({zIndex: -1})
 
     target.css({
       left: -activeTargetOverflow,
@@ -150,7 +150,7 @@ export default function(root: HTMLElement, target: HTMLElement, moveElement: HTM
   evTarget.on("mouseenter", mouseEnterF)
 
   const rootMouseEnterF = () => {
-    root.css({zIndex: -1})
+    // root.css({zIndex: -1})
     target.css({
       zIndex: 3
     })

@@ -192,7 +192,7 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
         await import("./preHoverInteraction").then(({default: f}) => {
           const root = ce("root-bounds");
           this.apd(root);
-          this.preHoverAnimations = f(root as any, hovPreDet, this.moveBody as any, this.q(".cover") as ElementList<HTMLElement>, this.componentBody as any)
+          this.preHoverAnimations = f(this as any, hovPreDet, this.moveBody as any, this.q(".cover") as ElementList<HTMLElement>, this.componentBody as any)
           if (!this.userFeedbackMode.preHover.get()) this.preHoverAnimations.disable()
         })
       }
