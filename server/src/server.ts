@@ -18,9 +18,9 @@ setup("forju").then(async ({app, db}) => {
     app.get("/qr/:qrName", (req, res, next) => {
       try {
         const { qrName } = saniQr(req.params)
-        console.log(qrName)
+        cconsole.log(`QR_REQ: ${qrName}`)
         if (db !== undefined) db.collection(qrCollectionName).updateOne({ qrName }, { $inc: { count: 1 } }, { upsert: true })
-        console.log(`QRVIEW_V2: ${qrName}`)
+        console.log(`QRVIEW: ${qrName}`)
         const redirect = redirectMap.get(qrName)
         if (redirect !== undefined) res.redirect(redirect)
         else res.redirect("/")
