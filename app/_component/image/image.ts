@@ -165,10 +165,33 @@ export default class Image extends Component {
     return prom
   })
 
+  // with fallback
+  private async loadSrc(src: string, res: typeof resesList[number]) {
+    const errorBackgroundStyle = {
+      backgroundColor: '#ffe6e6',
+  backgroundImage: `url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'>\
+  <rect width='40' height='40' fill='%23ffe6e6'/>\
+  <path d='M0,40 L40,0 M-10,10 L10,-10 M30,50 L50,30' \
+        stroke='%23ff4d4f' stroke-width='10'/>\
+</svg>")`,
+  backgroundRepeat: 'repeat',
+  backgroundSize: '40px 40px',
+      opacity: 1
+    };
+    try {
+      return await this.reallyLoadSrc(src, res)
+    }
+    catch(e) {
+      console.error("Image failed to load. Url: " + src, e);
+      this.elems[res].img.css(errorBackgroundStyle)
+    }
+  }
+
 
   private wasAtStageIndex = {}
   private currentlyActiveElems: {picture: HTMLPictureElement, sources: {setSource: (src: string) => void}[], img: HTMLImageElement &  {setSource: (src: string) => void}}
-  private loadSrc(src: string, res: typeof resesList[number]): Promise<void> {
+  private reallyLoadSrc(src: string, res: typeof resesList[number]): Promise<void> {
     const loadStageAtCall = this.currentLoadStage 
     if (this.elems[res] !== undefined) return this.loadedRes[res]
     this.makeNewResElems(res, this.currentLoadStage)
@@ -182,43 +205,51 @@ export default class Image extends Component {
     // if (this.loaded[res].settled) this.newLoadedPromise(res)
 
     
+    const firstTimeAtStage = !this.wasAtStageIndex[this.currentLoadStage]
+    const lastActiveElems = this.currentlyActiveElems
+
+    const loadingAnim = () => {
+      if (loadStageAtCall === 1 && firstTimeAtStage) {
+          
+        thisActiveElems.img.anim({opacity: 1}, 150).then(() => {
+          console.log(this)
+          if (lastActiveElems) lastActiveElems.img.anim({opacity: 0}, 150)
+          thisActiveElems.img.anim({filter: "blur(0px)"}, 800)
+          thisActiveElems.img.anim({scale: 1}, 800)
+        })
+      }
+      else {
+        thisActiveElems.img.anim({opacity: 1}, 300).then(() => {
+          console.log(this)
+          if (lastActiveElems) {
+            lastActiveElems.img.css({opacity: 0})
+          }
+        })
+      }
+    }
+
+
     const proms = [] as Promise<void>[]
     if (!wasLoaded) {
       if (loadingCache[src] === undefined) loadingCache[src] = {} as any
-      
       if (loadingCache[src][loadStageAtCall] === undefined) loadingCache[src][loadStageAtCall] = {} as any
       if (loadingCache[src][loadStageAtCall][res] === undefined) loadingCache[src][loadStageAtCall][res] = false
 
-      const firstTimeAtStage = !this.wasAtStageIndex[this.currentLoadStage]
+      
       
       proms.push(this.loadedRes[res].then(() => {
         loadingCache[src][loadStageAtCall][res] = true
         
-        
-        const lastActiveElems = this.currentlyActiveElems
         if (firstTimeAtStage && loadStageAtCall <= 1) thisActiveElems.img.css({filter: "blur(8px)", scale: 1.03})
-        if (loadStageAtCall === 1 && firstTimeAtStage) {
-          
-          thisActiveElems.img.anim({opacity: 1}, 150).then(() => {
-            if (lastActiveElems) lastActiveElems.img.anim({opacity: 0}, 150)
-            thisActiveElems.img.anim({filter: "blur(0px)"}, 800)
-            thisActiveElems.img.anim({scale: 1}, 800)
-          })
-        }
-        else {
-          thisActiveElems.img.anim({opacity: 1}, 300).then(() => {
-            
-            if (lastActiveElems) {
-              lastActiveElems.img.css({opacity: 0})
-            }
-          })
-        }
-        this.currentlyActiveElems = thisActiveElems
+        loadingAnim()
       }))
     }
     else {
-      thisActiveElems.img.css({opacity: 1})
+      loadingAnim()
+      // thisActiveElems.img.css({opacity: 1})
     }
+
+    this.currentlyActiveElems = thisActiveElems
 
 
     if (isExplicitLocation(src)) {
@@ -304,22 +335,27 @@ export default class Image extends Component {
             biggestLoadedRes = key
           }
         }
-        
-        this.loadSrc(src, isExplicitSrc ? "" : biggestLoadedRes as any)
 
-        if (this.currentLoadStage === 0 && !isExplicitSrc) {
-          loadRecord.full.add(() => {
-            if (this.currentLoadStage >= 1) return
-            this.currentLoadStage = 1
-            const wantedResName = this.getCurrentlyWantedRes()
-            if (wantedResName && this.loadedRes[wantedResName] === undefined) return this.loadSrc(this._src, wantedResName)
-          })
+        if (biggestLoadedRes === undefined) {
+          this.currentLoadStage = undefined
+          this.deferLoading()
         }
         else {
-          const wantedResName = this.getCurrentlyWantedRes()
-          if (wantedResName && this.loadedRes[wantedResName] === undefined) this.loadSrc(this.src(), wantedResName)  
-        }
+          this.loadSrc(src, isExplicitSrc ? "" : biggestLoadedRes as any)
 
+          if (this.currentLoadStage === 0 && !isExplicitSrc) {
+            loadRecord.full.add(() => {
+              if (this.currentLoadStage >= 1) return
+              this.currentLoadStage = 1
+              const wantedResName = this.getCurrentlyWantedRes()
+              if (wantedResName && this.loadedRes[wantedResName] === undefined) return this.loadSrc(this._src, wantedResName)
+            })
+          }
+          else {
+            const wantedResName = this.getCurrentlyWantedRes()
+            if (wantedResName && this.loadedRes[wantedResName] === undefined) this.loadSrc(this.src(), wantedResName)  
+          }
+        }
       }
 
       else {
@@ -332,26 +368,33 @@ export default class Image extends Component {
           })
         }
         else {
-          loadRecord.minimal.add(() => {
-            if (this.currentLoadStage >= 0) return
-            this.currentLoadStage = 0
-            const wantedResName = this.getCurrentlyWantedRes()
-            if (wantedResName) return this.loadSrc(this._src, wantedResName)
-          })
-  
-          loadRecord.full.add(() => {
-            if (this.currentLoadStage >= 1) return
-            this.currentLoadStage = 1
-            const wantedResName = this.getCurrentlyWantedRes()
-            if (wantedResName) return this.loadSrc(this._src, wantedResName)
-          })
+          this.deferLoading()
         }
         
       }
 
       
     }
+
+
+    
     return this
+  }
+
+  private deferLoading() {
+    loadRecord.minimal.add(() => {
+      if (this.currentLoadStage >= 0) return
+      this.currentLoadStage = 0
+      const wantedResName = this.getCurrentlyWantedRes()
+      if (wantedResName) return this.loadSrc(this._src, wantedResName)
+    })
+
+    loadRecord.full.add(() => {
+      if (this.currentLoadStage >= 1) return
+      this.currentLoadStage = 1
+      const wantedResName = this.getCurrentlyWantedRes()
+      if (wantedResName) return this.loadSrc(this._src, wantedResName)
+    })
   }
 
   private getCurrentlyWantedRes() {
