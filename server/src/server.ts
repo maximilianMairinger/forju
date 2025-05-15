@@ -18,7 +18,7 @@ setup("forju").then(async ({app, db}) => {
     app.get("/qr/:qrName", (req, res, next) => {
       try {
         const { qrName } = saniQr(req.params)
-        cconsole.log(`QR_REQ: ${qrName}`)
+        console.log(`QR_REQ: ${qrName}`)
         if (db !== undefined) db.collection(qrCollectionName).updateOne({ qrName }, { $inc: { count: 1 } }, { upsert: true })
         console.log(`QRVIEW: ${qrName}`)
         const redirect = redirectMap.get(qrName)
@@ -26,6 +26,8 @@ setup("forju").then(async ({app, db}) => {
         else res.redirect("/")
       }
       catch(e) {
+        console.error("Error in QR handling")
+        console.error(e)
         res.status(400)
       }
     })
