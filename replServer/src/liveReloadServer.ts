@@ -17,7 +17,9 @@ function formatPath (path: string) {
 }
 
 
-
+function spliceString (str: string, index: number, count: number, add: string) {
+  return str.slice(0, index) + add + str.slice(index + Math.abs(count))
+}
 
 
 const publicPath = "./public"
@@ -35,7 +37,7 @@ export default async function init(indexUrl: string = "*", _wsUrl: string = "/re
   }, (file, ext) => {
     if (ext === ".html" || ext === ".htm") {
       let injectAt = file.lastIndexOf("</body>")
-      return file.splice(injectAt, 0, swInjTxt())
+      return spliceString(file, injectAt, 0, swInjTxt())
     }
   })
 
