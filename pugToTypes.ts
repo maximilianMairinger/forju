@@ -385,7 +385,6 @@ async function pugToTypes(pugFilePath: string) {
 }
 
 function normalizePathToForwardSlashes(p: string) {
-  console.log("Normalizing path:", p)
   return pth.normalize(p).replace(/\\/g, "/")
 }
 
