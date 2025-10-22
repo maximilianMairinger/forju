@@ -374,7 +374,7 @@ async function pugToTypes(pugFilePath: string) {
 
   return [...types.imports.keys()].map((componentPath) => {
     const elemName = types.imports.get(componentPath)
-    const justElemImport = `import "${componentPath}"`
+    const justElemImport = `import "${normalizePathToForwardSlashes(componentPath)}"`
     if (elemName === false) return justElemImport
     else return `import ${elemName} from "${normalizePathToForwardSlashes(componentPath)}"; ` + justElemImport 
   }).join("\n") + (types.imports.size > 0 ? "\n\n" : "") + 
@@ -385,6 +385,7 @@ async function pugToTypes(pugFilePath: string) {
 }
 
 function normalizePathToForwardSlashes(p: string) {
+  console.log("Normalizing path:", p)
   return pth.normalize(p).replace(/\\/g, "/")
 }
 
