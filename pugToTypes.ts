@@ -376,12 +376,16 @@ async function pugToTypes(pugFilePath: string) {
     const elemName = types.imports.get(componentPath)
     const justElemImport = `import "${componentPath}"`
     if (elemName === false) return justElemImport
-    else return `import ${elemName} from "${componentPath}"; ` + justElemImport 
+    else return `import ${elemName} from "${normalizePathToForwardSlashes(componentPath)}"; ` + justElemImport 
   }).join("\n") + (types.imports.size > 0 ? "\n\n" : "") + 
 `export interface BodyTypes {
   ${types.types.join("\n  ")}    
 }
 `
+}
+
+function normalizePathToForwardSlashes(p: string) {
+  return pth.normalize(p).replace(/\\/g, "/")
 }
 
 
