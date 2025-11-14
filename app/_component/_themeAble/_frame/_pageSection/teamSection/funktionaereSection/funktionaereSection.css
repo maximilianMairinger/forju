@@ -19,3 +19,11 @@ c-oval-icon {
     height: 1500px;
   }
 }
+
+under-section.department c-text-blob {
+  --header-fontsize: 2em; /* kleiner als bei Funktionär:innen */
+}
+
+
+
+
