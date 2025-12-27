@@ -369,7 +369,7 @@ jobs:
         # https://unix.stackexchange.com/a/182155/431792
         script: |
           cp -rlf /var/www/html/forju/dev/_${{github.sha}}/* /var/www/html/forju/dev
-        #  rm -r /var/www/html/forju/dev/_${{github.sha}}
+          rm -r /var/www/html/forju/dev/_${{github.sha}}
 
     
     - name: Restarting server
