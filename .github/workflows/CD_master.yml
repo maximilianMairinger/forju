@@ -346,8 +346,17 @@ jobs:
       if: ${{ needs.detectChanges.outputs.deployOption == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
       uses: actions/checkout@master
 
+    - name: Check .deploy existence
+      id: check_deploy
+      run: |
+        if [ -f .deploy ]; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+
     - name: Upload deploy option files
-      if: ${{ needs.detectChanges.outputs.deployOption == 'true' || (needs.detectChanges.outputs.CD == 'true') }}
+      if: ${{ (needs.detectChanges.outputs.deployOption == 'true' || (needs.detectChanges.outputs.CD == 'true')) && steps.check_deploy.outputs.exists == 'true' }}
       uses: appleboy/scp-action@v0.1.1
       with:
         host: ${{ secrets.HOST }}
