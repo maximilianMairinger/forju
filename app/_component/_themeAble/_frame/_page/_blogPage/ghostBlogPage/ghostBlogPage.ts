@@ -1,14 +1,14 @@
-import {declareComponent} from "../../../../../../lib/declareComponent"
+import { declareComponent } from "../../../../../../lib/declareComponent"
 import BlogPage from "../blogPage"
 import * as domain from "./../../../../../../lib/domain"
-import Image from "../../../../../image/image" 
+import Image from "../../../../../image/image"
 
-import GhostContentAPI, {PostOrPage} from '@tryghost/content-api'
-import {lang} from "../../../../../../lib/lang"
-import {Data, ReadonlyData} from "josm";
-import {ghostApi} from "../../../../../../lib/ghostApi";
+import GhostContentAPI, { PostOrPage } from '@tryghost/content-api'
+import { lang } from "../../../../../../lib/lang"
+import { Data, ReadonlyData } from "josm";
+import { ghostApi } from "../../../../../../lib/ghostApi";
 import "../../../../link/link"
-import "../../../../../image/image" 
+import "../../../../../image/image"
 import "../../../../textBlob/textBlob"
 import "../../../../../parallax/parallax"
 import TextBlob from "../../../../textBlob/textBlob"
@@ -21,8 +21,8 @@ import { parseEscapedValues } from "../../../../../../lib/txtParse"
 
 const parallaxLength = 100
 
-const importGridJs = memoize(() => Promise.all([import("gridjs").then(({Grid}) => Grid), import("./gridjsStyles")]))
-const importAudioJs = memoize(() => Promise.all([import("./audioPlayerJs").then(({default: audioPlayer}) => audioPlayer), import("./audioPlayerStyles")]))
+const importGridJs = memoize(() => Promise.all([import("gridjs").then(({ Grid }) => Grid), import("./gridjsStyles")]))
+const importAudioJs = memoize(() => Promise.all([import("./audioPlayerJs").then(({ default: audioPlayer }) => audioPlayer), import("./audioPlayerStyles")]))
 
 function parseContentHTML(html: string) {
 
@@ -32,11 +32,11 @@ function parseContentHTML(html: string) {
     //@ts-ignore
     .replaceAll("'", "&apos;")
     // a tag to link 
-    .replaceAll(/<(?:a.*?\shref=(?:"|')(.*?)(?:"|').*?>)(.*?)<\/a>/gi, "<c-link link='$1'>$2</c-link>")
+    .replaceAll(/<(?:a.*?\shref=(?:"|')(.*?)(?:"|').*?>)(.*?)<\/a>/gi, (match, link, content) => "<c-link link='" + link + "'>" + content.replace(/<\/?u>/gi, "") + "</c-link>")
     // this must be below the link parsing
     .replaceAll(/<(?:div.*?\sclass=(?:"|')(?:kg-card kg-button-card kg-align-)(.*?)(?:"|').*?>)(?:<c-link link=(?:"|'))(.*?)(?:(?:"|').*?>)(.*?)(?:<\/c-link>)(?:<\/div>)/gi, "<c-block-button link='$2' class='align-btn-$1 themed' content='$3'></c-block-button>")
     // delete imgs with empty src
-    .replaceAll(/<img\s.*?src(\s|(=(""|''))).*?>(<\/img>)?/gi, "") 
+    .replaceAll(/<img\s.*?src(\s|(=(""|''))).*?>(<\/img>)?/gi, "")
     // img to c-image
     .replaceAll(/<(?:img.*?\ssrc=(?:"|')(.*?)(?:"|').*?>)(.*?)(?:<\/img>)?/gi, "<c-parallax y='y'><c-image src='$1'></c-image></c-parallax>")
     // heading
@@ -50,7 +50,7 @@ function parseContentHTML(html: string) {
   //   let ratio = parseInt(img.childs().getAttribute("width"), 10) / parseInt(img.childs().getAttribute("height"), 10);
   //   img.css({"flex": ratio + "1 0"});
   // });
-  
+
   // return (htmlDOM.firstChild as HTMLElement).innerHTML;
 }
 
@@ -69,11 +69,11 @@ export default class GhostBlogPage extends BlogPage {
 
 
 
-    lang({links: {[slug]: blogData.title}})
+    lang({ links: { [slug]: blogData.title } })
 
     const retArr = [] as HTMLElement[]
     const contentContainer = ce("content-inner-container").apd(parseContentHTML(blogData.html))
-    
+
 
     const headingElem = new TextBlob()
     headingElem.addClass("h1")
@@ -91,7 +91,7 @@ export default class GhostBlogPage extends BlogPage {
       author.subText(blogData.primary_author.location)
       if (blogData.primary_author.website !== undefined && blogData.primary_author.website !== null) author.link(blogData.primary_author.website)
       headingElem.text(author as any)
-      
+
       const imgElem = new Image(blogData.feature_image ?? "greenSpace")
       imgElem.addClass("title")
       const imgParallaxElem = new Parallax(parallaxLength)
@@ -115,17 +115,17 @@ export default class GhostBlogPage extends BlogPage {
         header.setAttribute("popUnderline", "popunderline")
       }
     }
-    
+
 
     const tables = contentContainer.childs("table", true)
     if (tables.length > 0) {
       loadRecord.content.add(() => {
-        importGridJs().then(([ Grid, css ]) => {
+        importGridJs().then(([Grid, css]) => {
           this.addStyle(css)
-  
-  
+
+
           for (const table of tables) {
-          
+
             const grid = new Grid({
               from: table as HTMLElement,
               sort: true
@@ -133,10 +133,10 @@ export default class GhostBlogPage extends BlogPage {
             const tableContainer = ce("table-container")
             tableContainer.addClass("blogCard", "bg")
             grid.render(tableContainer)
-            
+
             contentContainer.insertAfter(tableContainer, table)
             table.remove()
-          } 
+          }
         })
       })
     }
@@ -145,7 +145,7 @@ export default class GhostBlogPage extends BlogPage {
     if (audioPlayers.length > 0) {
       audioPlayers.addClass("blogCard", "bg")
       loadRecord.content.add(() => {
-        importAudioJs().then(([ f, css ]) => {
+        importAudioJs().then(([f, css]) => {
           this.addStyle(css)
           f(this.body.contentContainer)
         })
@@ -153,7 +153,7 @@ export default class GhostBlogPage extends BlogPage {
     }
 
     const parallaxElems = contentContainer.childs("c-parallax", true) as any as Parallax[]
-    
+
     for (const parallaxElem of parallaxElems) {
       parallaxElem.autoHook(this)
 
@@ -167,7 +167,7 @@ export default class GhostBlogPage extends BlogPage {
     return retArr
   }
 
-  addStyle = keyIndex(({css}) => {
+  addStyle = keyIndex(({ css }) => {
     this.shadowRoot.append(ce("style").addClass("gridJsCss").html(css))
   })
   // this is important for frame, so that it knows that each sub domainFragment should be treated as a unique load 
@@ -189,15 +189,15 @@ export default class GhostBlogPage extends BlogPage {
     if (this.cache.has(this.domainFrag)) return true
     let blogData: PostOrPage
     try {
-      blogData = await ghostApi.posts.read({ slug }, {formats: ['html'], include: ['authors']})
+      blogData = await ghostApi.posts.read({ slug }, { formats: ['html'], include: ['authors'] })
     } catch (e) {
       return false
     }
-    
-    return {slug, blogData}
+
+    return { slug, blogData }
   }
-  
-  attachStructureCallback({blogData, slug}: {blogData: PostOrPage, slug: string}) {
+
+  attachStructureCallback({ blogData, slug }: { blogData: PostOrPage, slug: string }) {
     this.cache.set(slug, this.parseBlogPostToHTML(slug, blogData))
   }
 
