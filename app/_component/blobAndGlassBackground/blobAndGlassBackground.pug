@@ -1,0 +1,22 @@
+<svg style="display: none">
+  <filter id="frostedGlass">
+    //- <!-- Apply a Gaussian blur -->
+    <feGaussianBlur in="SourceGraphic" stdDeviation="180" result="blur" />
+    //- <!-- Apply a noise effect -->
+    <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="1" stitchTiles="stitch" result="turbulence" />
+
+    <feColorMatrix type="matrix" values="0.33 0.33 0.33 0 0   0.33 0.33 0.33 0 0   0.33 0.33 0.33 0 0   0 0 0 1 0" result="grayscaleNoise" />
+
+    <feComponentTransfer in="grayscaleNoise" result="fadedTurbulence">
+      <feFuncA type="linear" slope=".35" />
+    </feComponentTransfer>
+    //- <!-- Combine blur and noise -->
+    <feBlend in="blur" in2="fadedTurbulence" mode="overlay" />
+  </filter>
+</svg>
+
+
+background-blob-container
+  
+  c-blob-a-icon.blob.a
+  c-blob-b-icon.blob.b

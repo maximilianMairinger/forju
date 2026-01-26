@@ -1,8 +1,8 @@
-import { mousePos } from "../../../../../lib/dataBindings";
-import { signedEasing } from "../../../../../lib/util";
-import ProjectBrowsePage from "./projectBrowsePage";
+import { mousePos } from "../../lib/dataBindings";
+import { signedEasing } from "../../lib/util";
 import animationFrameDelta from "animation-frame-delta"
 import { Easing } from "waapi-easing"
+import BlobAndGlassBackground from "./blobAndGlassBackground";
 
 const easeOutFunc = signedEasing(new Easing("easeOut"))
 
@@ -13,7 +13,7 @@ const possibleSwivelPercent = {
 }
 const approachSpeed = 0.04
 
-export default function(page: ProjectBrowsePage) {
+export default function(page: BlobAndGlassBackground) {
   for (const blob of page.q(".blob", true) as any as HTMLElement[]) {
     const topFrac = blob.css("top") / page.clientHeight
     const leftFrac = blob.css("left") / page.clientWidth
