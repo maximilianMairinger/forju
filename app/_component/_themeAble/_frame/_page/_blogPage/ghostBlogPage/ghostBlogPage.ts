@@ -28,6 +28,8 @@ function parseContentHTML(html: string) {
 
   html = html ?? ""
 
+  console.log(html)
+
   html = html
     //@ts-ignore
     .replaceAll("'", "&apos;")
@@ -39,8 +41,11 @@ function parseContentHTML(html: string) {
     .replaceAll(/<img\s.*?src(\s|(=(""|''))).*?>(<\/img>)?/gi, "")
     // img to c-image
     .replaceAll(/<(?:img.*?\ssrc=(?:"|')(.*?)(?:"|').*?>)(.*?)(?:<\/img>)?/gi, "<c-parallax y='y'><c-image src='$1'></c-image></c-parallax>")
-    // heading
-    .replaceAll(/<(?:h(1|2|3|4|5|6|7).*?>)(.*?)<\/h.>/gi, "<c-text-blob class='h$1' heading='$2'></c-text-blob>")
+    // heading (but not toggle headings which contain HTML)
+    .replaceAll(/<(?:h(1|2|3|4|5|6|7).*?>)(.*?)<\/h.>/gi, (match, level, content) => {
+      if (match.includes('kg-toggle-heading-text')) return match;
+      return `<c-text-blob class='h${level}' heading='${content}'></c-text-blob>`;
+    })
 
   return parseEscapedValues(html)
   // console.log(html)
@@ -74,23 +79,29 @@ export default class GhostBlogPage extends BlogPage {
     const retArr = [] as HTMLElement[]
     const contentContainer = ce("content-inner-container").apd(parseContentHTML(blogData.html))
 
+    let headingElem: TextBlob
+    if (blogData.title && blogData.title !== "(Untitled)" && blogData.title.trim() !== "" && blogData.title.trim() !== "(Untitled)") {
+      headingElem = new TextBlob()
+      headingElem.addClass("h1")
+      headingElem.setAttribute("popunderline", "popunderline")
+      headingElem.heading(parseEscapedValues(blogData.title))
+      headingElem.note(AT.formatDate(new Date(blogData.published_at)))
+    }
 
-    const headingElem = new TextBlob()
-    headingElem.addClass("h1")
-    headingElem.setAttribute("popunderline", "popunderline")
-    headingElem.heading(parseEscapedValues(blogData.title))
-    headingElem.note(AT.formatDate(new Date(blogData.published_at)))
+    
 
     // special header section
     if (blogData.feature_image != null) {
 
-
-      const author = new PersonCircle()
-      author.src(blogData.primary_author.profile_image ?? "unknownAvatarDepthRect")
-      author.heading(blogData.primary_author.name)
-      author.subText(blogData.primary_author.location)
-      if (blogData.primary_author.website !== undefined && blogData.primary_author.website !== null) author.link(blogData.primary_author.website)
-      headingElem.text(author as any)
+      if (headingElem) {
+        const author = new PersonCircle()
+        author.src(blogData.primary_author.profile_image ?? "unknownAvatarDepthRect")
+        author.heading(blogData.primary_author.name)
+        author.subText(blogData.primary_author.location)
+        if (blogData.primary_author.website !== undefined && blogData.primary_author.website !== null) author.link(blogData.primary_author.website)
+        headingElem.text(author as any)
+      }
+      
 
       const imgElem = new Image(blogData.feature_image ?? "greenSpace")
       imgElem.addClass("title")
@@ -100,12 +111,15 @@ export default class GhostBlogPage extends BlogPage {
       imgParallaxElem.autoHook(this)
 
 
-      const titleContainer = ce("title-container")
-      titleContainer.apd(headingElem as any, imgParallaxElem)
-      retArr.push(titleContainer)
+      if (headingElem) {
+        const titleContainer = ce("title-container")
+        titleContainer.apd(headingElem as any, imgParallaxElem)
+        retArr.push(titleContainer)
+      }
+      
     }
     else {
-      contentContainer.prepend(headingElem as any)
+      if (headingElem) contentContainer.prepend(headingElem as any)
     }
 
 
@@ -144,6 +158,17 @@ export default class GhostBlogPage extends BlogPage {
     const audioPlayers = contentContainer.childs("div.kg-card.kg-audio-card", true)
     if (audioPlayers.length > 0) {
       audioPlayers.addClass("blogCard", "bg")
+      loadRecord.content.add(() => {
+        importAudioJs().then(([f, css]) => {
+          this.addStyle(css)
+          f(this.body.contentContainer)
+        })
+      })
+    }
+
+    const toggleCards = contentContainer.childs("div.kg-card.kg-toggle-card", true)
+    if (toggleCards.length > 0) {
+      toggleCards.addClass("blogCard")
       loadRecord.content.add(() => {
         importAudioJs().then(([f, css]) => {
           this.addStyle(css)
