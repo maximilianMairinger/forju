@@ -5,6 +5,7 @@ import HomePage from "../../_page/_sectionedPage/_lazySectionedPage/homepage/hom
 import ContactPage from "../../_page/_sectionedPage/_lazySectionedPage/contactPage/contactPage";
 import TeamPage from "../../_page/_sectionedPage/_lazySectionedPage/teamPage/teamPage";
 import AboutPage from "../../_page/_sectionedPage/_lazySectionedPage/aboutPage/aboutPage";
+import JobsPage from "../../_page/_sectionedPage/_lazySectionedPage/jobsPage/jobsPage";
 import { declareComponent } from "../../../../../lib/declareComponent"
 import HighlightAbleIcon from "../../../_icon/_highlightAbleIcon/highlightAbleIcon";
 import FixedGhostBlogPage from "../../_page/_blogPage/ghostBlogPage/fixedGhostPage/fixedGhostPage"
@@ -43,6 +44,11 @@ export default class PageManager extends Manager {
         key: new Import("about", 10, (aboutPage: typeof AboutPage) =>
             new aboutPage("about", sectionChangeCallback)
         ), val: () => import(/* webpackChunkName: "aboutPage" */"../../_page/_sectionedPage/_lazySectionedPage/aboutPage/aboutPage")
+      },
+      {
+        key: new Import("jobs", 10, (jobsPage: typeof JobsPage) =>
+            new jobsPage("jobs", sectionChangeCallback)
+        ), val: () => import(/* webpackChunkName: "jobsPage" */"../../_page/_sectionedPage/_lazySectionedPage/jobsPage/jobsPage")
       },
       {
         key: new Import("impressum", 10, (fixedGhostBlogPage: typeof FixedGhostBlogPage) =>

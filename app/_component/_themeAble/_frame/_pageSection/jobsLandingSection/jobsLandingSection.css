@@ -1,0 +1,64 @@
+:host {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+
+c-blob-and-glass-background {
+  --blob-a-color: rgba(255, 79, 223, 0.293);
+  --blob-b-color: rgba(0, 67, 253, 0.293);
+  background-color: black;
+}
+
+component-body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+content-wrapper {
+  display: inline-block;
+  position: relative;
+  color: white;
+}
+
+h1 {
+  font-size: 80px;
+}
+
+switch-wrapper {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 6rem;
+}
+
+switch-label {
+  color: red;
+  position: absolute;
+  top: 180px;
+  left: -230px;
+  white-space: nowrap;
+  transform: rotate(8deg);
+
+  font-size: 30px;
+}
+
+span.oo {
+  position: relative;
+  display: inline-block;
+}
+
+span.oo > span {
+  opacity: 0;
+  user-select: none;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
