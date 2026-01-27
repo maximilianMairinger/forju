@@ -169,6 +169,19 @@ export default class GhostBlogPage extends BlogPage {
     const toggleCards = contentContainer.childs("div.kg-card.kg-toggle-card", true)
     if (toggleCards.length > 0) {
       toggleCards.addClass("blogCard")
+      
+      for (const card of toggleCards) {
+        const content = card.querySelector(".kg-toggle-content")
+        if (content) {
+          const wrapper = document.createElement("div")
+          wrapper.className = "kg-toggle-content-wrapper"
+          while (content.firstChild) {
+            wrapper.appendChild(content.firstChild)
+          }
+          content.appendChild(wrapper)
+        }
+      }
+
       loadRecord.content.add(() => {
         importAudioJs().then(([f, css]) => {
           this.addStyle(css)

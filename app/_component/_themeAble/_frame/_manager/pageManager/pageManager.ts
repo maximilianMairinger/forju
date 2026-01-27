@@ -11,6 +11,7 @@ import HighlightAbleIcon from "../../../_icon/_highlightAbleIcon/highlightAbleIc
 import FixedGhostBlogPage from "../../_page/_blogPage/ghostBlogPage/fixedGhostPage/fixedGhostPage"
 import GhostBlogPage from "../../_page/_blogPage/ghostBlogPage/ghostBlogPage"
 import ProjectsPage from "../../_page/projectBrowsePage/projectBrowsePage"
+import JobsGhostBlog from "../../_page/_blogPage/ghostBlogPage/fixedGhostPage/jobsGhostBlog/jobsGhostBlog";
 
 
 
@@ -24,6 +25,12 @@ export default class PageManager extends Manager {
         key: new Import("", 10, (homepage: typeof HomePage) =>
             new homepage("", sectionChangeCallback)
         ), val: () => import(/* webpackChunkName: "homepage" */"../../_page/_sectionedPage/_lazySectionedPage/homepage/homepage")
+      },
+
+      {
+        key: new Import("jobsPlain", 10, (homepage: typeof JobsGhostBlog) =>
+            new JobsGhostBlog()
+        ), val: () => import(/* webpackChunkName: "homepage" */"../../_page/_blogPage/ghostBlogPage/fixedGhostPage/jobsGhostBlog/jobsGhostBlog")
       },
       {
         key: new Import("contactSite", 10, (contactPage: typeof ContactPage) =>
