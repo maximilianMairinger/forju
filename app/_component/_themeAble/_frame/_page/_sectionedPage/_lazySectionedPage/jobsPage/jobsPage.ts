@@ -4,6 +4,8 @@ import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 import { Import, ImportanceMap } from "../../../../../../../lib/lazyLoad"
 import JobsLandingSection from "../../../../_pageSection/jobsLandingSection/jobsLandingSection"
 import HighlightAbleIcon from "../../../../../_icon/_highlightAbleIcon/highlightAbleIcon"
+import BlogPage from "../../../blogPage/blogPage";
+import GhostBlogSection from "../../../../_pageSection/blogSection/ghostBlogSection/ghostBlogSection";
 
 export default class JobsPage extends LazySectionedPage {
   protected body: BodyTypes
@@ -15,6 +17,11 @@ export default class JobsPage extends LazySectionedPage {
         key: new Import("", 1, (jobsLandingSection: typeof JobsLandingSection) =>
           new jobsLandingSection()
         ), val: () => import(/* webpackChunkName: "jobsLandingSection" */"../../../../_pageSection/jobsLandingSection/jobsLandingSection")
+      },
+      {
+        key: new Import<string, [BlogPage, GhostBlogSection]>("services/*", 10, ([blogPage, ghostBlogSection]) =>
+            new blogPage(new ghostBlogSection("jobs-forju"))
+        ), val: () => Promise.all([import("../../../../_page/blogPage/blogPage"), import("../../../../_pageSection/blogSection/ghostBlogSection/ghostBlogSection")])
       }
     ), baselink, sectionChangeCallback)
   }

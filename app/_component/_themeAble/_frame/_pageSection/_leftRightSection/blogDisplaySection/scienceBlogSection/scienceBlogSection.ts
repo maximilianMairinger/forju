@@ -1,6 +1,6 @@
 import declareComponent from "../../../../../../../lib/declareComponent"
 import SpikeShadowIcon from "../../../../../../_icon/spikeShadowIcon/spikeShadowIcon"
-import BlogSection from "../blogSection"
+import BlogSection from "../blogDisplaySection"
 
 export default class ScienceBlogSection extends BlogSection {
 

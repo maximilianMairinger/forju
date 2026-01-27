@@ -4,7 +4,7 @@ import LandingSection from "../../../../_pageSection/landingSection/landingSecti
 
 import ServicesSection from "../../../../_pageSection/servicesSection/servicesSection"
 import PartnerSection from "../../../../_pageSection/partnerSection/partnerSection"
-import ScienceBlogSection from "../../../../_pageSection/_leftRightSection/blogSection/scienceBlogSection/scienceBlogSection"
+import ScienceBlogSection from "../../../../_pageSection/_leftRightSection/blogDisplaySection/scienceBlogSection/scienceBlogSection"
 import TeamSection from "../../../../_pageSection/teamSection/teamSection"
 import FooterSection from "../../../../_pageSection/footerSection/footerSection"
 
@@ -39,7 +39,7 @@ export default class HomePage extends LazySectionedPage {
       {
         key: new Import("blog", 1, (blogSection: typeof ScienceBlogSection) =>
           new blogSection()
-        ), val: () => import(/* webpackChunkName: "scienceBlogSection" */"../../../../_pageSection/_leftRightSection/blogSection/scienceBlogSection/scienceBlogSection")
+        ), val: () => import(/* webpackChunkName: "scienceBlogSection" */"../../../../_pageSection/_leftRightSection/blogDisplaySection/scienceBlogSection/scienceBlogSection")
       },
       {
         key: new Import("team", 1, (teamSection: typeof TeamSection) =>

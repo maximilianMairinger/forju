@@ -1,5 +1,6 @@
-import { declareComponent } from "../../../../../../lib/declareComponent"
-import BlogPage from "../blogPage"
+import declareComponent from "../../../../../../lib/declareComponent"
+import BlogSection from "../blogSection"
+import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 import * as domain from "./../../../../../../lib/domain"
 import Image from "../../../../../image/image"
 
@@ -24,11 +25,12 @@ const parallaxLength = 100
 const importGridJs = memoize(() => Promise.all([import("gridjs").then(({ Grid }) => Grid), import("./gridjsStyles")]))
 const importAudioJs = memoize(() => Promise.all([import("./audioPlayerJs").then(({ default: audioPlayer }) => audioPlayer), import("./audioPlayerStyles")]))
 
+
+
 function parseContentHTML(html: string) {
 
   html = html ?? ""
 
-  console.log(html)
 
   html = html
     //@ts-ignore
@@ -61,10 +63,12 @@ function parseContentHTML(html: string) {
 
 
 
-export default class GhostBlogPage extends BlogPage {
+export default class GhostBlogSection extends BlogSection {
+   constructor(private slug?: string) {
+    super()
+  }
 
   private parseBlogPostToHTML(slug: string, blogData: PostOrPage) {
-    console.log(blogData.title)
     // let blogData: Required<PostOrPage> = {
     //   title: "My Title",
     //   published_at: new Date().toISOString(),
@@ -108,7 +112,7 @@ export default class GhostBlogPage extends BlogPage {
       const imgParallaxElem = new Parallax(parallaxLength)
       imgParallaxElem.append(imgElem)
       imgParallaxElem.y("y")
-      imgParallaxElem.autoHook(this)
+      imgParallaxElem.autoHook(this.parentElement as any)
 
 
       if (headingElem) {
@@ -193,7 +197,7 @@ export default class GhostBlogPage extends BlogPage {
     const parallaxElems = contentContainer.childs("c-parallax", true) as any as Parallax[]
 
     for (const parallaxElem of parallaxElems) {
-      parallaxElem.autoHook(this)
+      parallaxElem.autoHook(this.parentElement as any)
 
       parallaxElem.parallaxLength(parallaxLength)
 
@@ -208,23 +212,23 @@ export default class GhostBlogPage extends BlogPage {
   addStyle = keyIndex(({ css }) => {
     this.shadowRoot.append(ce("style").addClass("gridJsCss").html(css))
   })
+
   // this is important for frame, so that it knows that each sub domainFragment should be treated as a unique load 
   // process with a seperate loadUid, where loadUid === domainFragment. 
   domainFragmentToLoadUid = true
 
-  private async setBlogFromQuery(query: string) {
+  public async setBlogFromQuery(query: string) {
     this.setBlog(...this.cache.get(query))
   }
-  public domainLevel = 2
 
 
   private cache = new Map<string, ReturnType<typeof this.parseBlogPostToHTML>>()
-  private domainFrag: string
 
   async tryNavigationCallback(domainFragment: string) {
+    if (this.slug !== undefined) domainFragment = this.slug
     const splitDomain = domainFragment.split(domain.dirString)
     const slug = splitDomain.last
-    if (this.cache.has(this.domainFrag)) return true
+    if (this.cache.has(slug)) return true
     let blogData: PostOrPage
     try {
       blogData = await ghostApi.posts.read({ slug }, { formats: ['html'], include: ['authors'] })
@@ -239,7 +243,6 @@ export default class GhostBlogPage extends BlogPage {
     this.cache.set(slug, this.parseBlogPostToHTML(slug, blogData))
   }
 
-
   public async minimalContentPaint(loadUid: string) {
     await super.minimalContentPaint(loadUid)
   }
@@ -251,18 +254,11 @@ export default class GhostBlogPage extends BlogPage {
   public async completePaint(loadUid: string) {
     await super.completePaint(loadUid)
   }
-
-  navigationCallback(loadId: string) {
-    super.navigationCallback(loadId)
-    return this.setBlogFromQuery(loadId)
-  }
+  
 
   stl() {
-    return super.stl() + require("./ghostBlogPage.css").toString()
+    return super.stl() + require("./ghostBlogSection.css").toString()
   }
-
-
-
 }
 
-declareComponent("ghost-blog-page", GhostBlogPage)
+declareComponent("c-ghost-blog-section", GhostBlogSection)

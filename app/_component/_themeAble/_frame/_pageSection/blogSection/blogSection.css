@@ -15,9 +15,12 @@ component-body {
 content-container {
   display: flex;
   flex-direction: column;
-  align-items: left;
+  align-items: flex-start;
   width: 100%;
 }
+
+
+
 c-footer-section {
   opacity: 1;
   width: 100%;
@@ -294,3 +297,15 @@ blockquote {
   border-radius: 5px;
 }
 
+
+
+
+content-inner-container {
+  display: inline-block;
+  width: 100%;
+  height: max-content;
+}
+
+content-container {
+  align-items: center;
+}

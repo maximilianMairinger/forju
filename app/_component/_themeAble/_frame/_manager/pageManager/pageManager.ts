@@ -8,11 +8,9 @@ import AboutPage from "../../_page/_sectionedPage/_lazySectionedPage/aboutPage/a
 import JobsPage from "../../_page/_sectionedPage/_lazySectionedPage/jobsPage/jobsPage";
 import { declareComponent } from "../../../../../lib/declareComponent"
 import HighlightAbleIcon from "../../../_icon/_highlightAbleIcon/highlightAbleIcon";
-import FixedGhostBlogPage from "../../_page/_blogPage/ghostBlogPage/fixedGhostPage/fixedGhostPage"
-import GhostBlogPage from "../../_page/_blogPage/ghostBlogPage/ghostBlogPage"
 import ProjectsPage from "../../_page/projectBrowsePage/projectBrowsePage"
-import JobsGhostBlog from "../../_page/_blogPage/ghostBlogPage/fixedGhostPage/jobsGhostBlog/jobsGhostBlog";
-
+import GhostBlogSection from "../../_pageSection/blogSection/ghostBlogSection/ghostBlogSection";
+import BlogPage from "../../_page/blogPage/blogPage";
 
 
 
@@ -26,11 +24,10 @@ export default class PageManager extends Manager {
             new homepage("", sectionChangeCallback)
         ), val: () => import(/* webpackChunkName: "homepage" */"../../_page/_sectionedPage/_lazySectionedPage/homepage/homepage")
       },
-
       {
-        key: new Import("jobsPlain", 10, (homepage: typeof JobsGhostBlog) =>
-            new JobsGhostBlog()
-        ), val: () => import(/* webpackChunkName: "homepage" */"../../_page/_blogPage/ghostBlogPage/fixedGhostPage/jobsGhostBlog/jobsGhostBlog")
+        key: new Import<string, [BlogPage, GhostBlogSection]>("jobsPlain", 10, ([blogPage, ghostBlogSection]) =>
+            new blogPage(new ghostBlogSection("jobs-forju"))
+        ), val: () => Promise.all([import("../../_page/blogPage/blogPage"), import("../../_pageSection/blogSection/ghostBlogSection/ghostBlogSection")])
       },
       {
         key: new Import("contactSite", 10, (contactPage: typeof ContactPage) =>
@@ -58,24 +55,24 @@ export default class PageManager extends Manager {
         ), val: () => import(/* webpackChunkName: "jobsPage" */"../../_page/_sectionedPage/_lazySectionedPage/jobsPage/jobsPage")
       },
       {
-        key: new Import("impressum", 10, (fixedGhostBlogPage: typeof FixedGhostBlogPage) =>
-            new fixedGhostBlogPage("impressum-forju")
-        ), val: () => import(/* webpackChunkName: "legalPage" */"../../_page/_blogPage/ghostBlogPage/fixedGhostPage/fixedGhostPage")
+        key: new Import<string, [BlogPage, GhostBlogSection]>("impressum", 10, ([blogPage, ghostBlogSection]) =>
+            new blogPage(new ghostBlogSection("impressum"))
+        ), val: () => Promise.all([import("../../_page/blogPage/blogPage"), import("../../_pageSection/blogSection/ghostBlogSection/ghostBlogSection")])
       },
       {
-        key: new Import("blog/*", 10, (ghostBlogPage: typeof GhostBlogPage) => 
-          new ghostBlogPage()
-        ), val: () => import(/* webpackChunkName: "ghostBlogPage" */"../../_page/_blogPage/ghostBlogPage/ghostBlogPage")
+        key: new Import<string, [BlogPage, GhostBlogSection]>("blog/*", 10, ([blogPage, ghostBlogSection]) =>
+            new blogPage(new ghostBlogSection())
+        ), val: () => Promise.all([import("../../_page/blogPage/blogPage"), import("../../_pageSection/blogSection/ghostBlogSection/ghostBlogSection")])
       },
       {
-        key: new Import("services/*", 10, (ghostBlogPage: typeof GhostBlogPage) => 
-          new ghostBlogPage()
-      ), val: () => import(/* webpackChunkName: "ghostBlogPage" */"../../_page/_blogPage/ghostBlogPage/ghostBlogPage")
-    },
-    {
-        key: new Import("projects/*", 10, (ghostBlogPage: typeof GhostBlogPage) => 
-          new ghostBlogPage()
-        ), val: () => import(/* webpackChunkName: "ghostBlogPage" */"../../_page/_blogPage/ghostBlogPage/ghostBlogPage")
+        key: new Import<string, [BlogPage, GhostBlogSection]>("services/*", 10, ([blogPage, ghostBlogSection]) =>
+            new blogPage(new ghostBlogSection())
+        ), val: () => Promise.all([import("../../_page/blogPage/blogPage"), import("../../_pageSection/blogSection/ghostBlogSection/ghostBlogSection")])
+      },
+      {
+        key: new Import<string, [BlogPage, GhostBlogSection]>("projects/*", 10, ([blogPage, ghostBlogSection]) =>
+            new blogPage(new ghostBlogSection())
+        ), val: () => Promise.all([import("../../_page/blogPage/blogPage"), import("../../_pageSection/blogSection/ghostBlogSection/ghostBlogSection")])
       },
       {
         key: new Import("", 60, (notFoundPage: typeof NotFoundPage) =>

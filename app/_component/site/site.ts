@@ -89,7 +89,6 @@ export default class Site extends Component {
       }
       sectionNames.rmI(...removeIndices)
 
-
       if (currentlyShowingLowerNav) lowerNav.updatePage(sections, domainLevel)
       header.updatePage(sectionNames, domainLevel)
     }, (section) => {

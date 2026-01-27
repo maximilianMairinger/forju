@@ -50,7 +50,11 @@ export default function init<Func extends () => Promise<any>>(resources: Importa
             
           }
 
-          let instanceProm = ((async () => imp.initer((await load()).default)))();
+          let instanceProm = (async () => {
+            const loaded = await load()
+            const defaultImports = loaded instanceof Array ? loaded.map(l => l.default) : loaded.default
+            return imp.initer(defaultImports as any)
+          })();
 
 
           
@@ -234,7 +238,7 @@ export class ImportanceMap<Func extends () => Promise<{default: {new(): Module}}
     return this.startResolvement(toStage)
   }
   public whiteListAll(toStage?: typeof loadStates[number]) {
-    return this.whiteList(this.importanceList.map((imp) => ({imp, domainFrag: null})), toStage)
+    return this.whiteList(this.importanceList.map((imp) => ({imp, domainFrag: undefined})), toStage)
   }
 
   private superWhiteListCache: {domainFrag: string, imp: Import<string, Module>, deepLoad: boolean | typeof loadStates[number]}
@@ -289,7 +293,7 @@ export class ImportanceMap<Func extends () => Promise<{default: {new(): Module}}
 }
 
 export class Import<T, Mod> {
-  constructor(public val: T, public importance: number, public initer: (mod: {new(): Mod}) => Mod) {
+  constructor(public val: T, public importance: number, public initer: (mod: Mod extends Array<any> ? {[key in keyof Mod]: {new(...args: any[]): Mod[key]}} : {new(...args: any[]): Mod}) => (Mod extends Array<any> ? Mod[number] : Mod)) {
 
   }
 }
