@@ -14,6 +14,8 @@ export default class ToggleSwitch extends FormUi<Button> {
     const button = new Button()
     super(button);
 
+    this.moveBody.append(ce("switch-knob"))
+
     this.button = button
     button.userFeedbackMode.focus.set(false)
 
