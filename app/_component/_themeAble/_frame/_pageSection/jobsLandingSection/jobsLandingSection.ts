@@ -11,57 +11,47 @@ export default class JobsLandingSection extends PageSection {
 
   constructor() {
     super("dark")
-
-    const toggleSwitch = this.body.toggleSwitch
     
-    // Check if it's actually a ToggleSwitch instance (custom element has been upgraded)
-    this.toggleSwitch = toggleSwitch
-    
-    // this.toggleSwitch.toggled.get((toggled) => {
-    //   this.isLightOn = toggled
-    //   if (toggled) {
-    //     this.lightOn()
-    //   } else {
-    //     this.lightOff()
-    //   }
-    // })
+    this.body.toggleSwitch.toggled.get((toggled) => {
+      this.isLightOn = toggled
+      if (toggled) {
+        // scroll down a bit??
+        this.body.bg.anim({
+          backgroundColor: "white"
+        })
+        this.body.heading.anim({color: "black"})
+        
+      } else {
+        this.body.bg.anim({backgroundColor: "black"})
+        this.body.heading.anim({color: "white"})
+      }
+    })
 
 
     loadRecord.full.add(async () => {
       await this.body.bg.loadAnimations()
+
+      const font = new FontFace('Permanent Marker', 'url(https://fonts.gstatic.com/s/permanentmarker/v16/Fh4uPib9Iyv2ucM6pGQMWimMp004La2Cf5b6jlg.woff2) format(\'woff2\')', {
+        style: "normal",
+        weight: "400"
+      });
+
+      document.fonts.add(font);
+
+      font.load().then((loadedFont) => {
+        this.body.switchLabel.anim({opacity: 1})
+      })
+
+//       document.head.insertAdjacentHTML("beforeend", `
+// <link rel="preconnect" href="https://fonts.googleapis.com">
+// <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+// <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+//       `)
+
+
     })
   }
 
-  // private async lightOn() {
-  //   this.addClass("light-on")
-    
-  //   // Animate triangles in
-  //   const triangles = this.q(".triangle", true)
-  //   triangles.ea((triangle, index) => {
-  //     setTimeout(() => {
-  //       triangle.classList.add("visible")
-  //     }, index * 150)
-  //   })
-
-  //   // Animate paperboat
-  //   const paperboat = this.q(".paperboat") as HTMLElement
-  //   setTimeout(() => {
-  //     if (paperboat) paperboat.classList.add("visible")
-  //   }, 300)
-  // }
-
-  // private async lightOff() {
-  //   this.removeClass("light-on")
-    
-  //   // Hide all elements
-  //   const triangles = this.q(".triangle", true)
-  //   triangles.ea(triangle => {
-  //     triangle.classList.remove("visible")
-  //   })
-
-  //   const paperboat = this.q(".paperboat") as HTMLElement
-  //   if (paperboat) paperboat.classList.remove("visible")
-  // }
 
   stl() {
     return super.stl() + require("./jobsLandingSection.css").toString()
