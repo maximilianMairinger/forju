@@ -6,11 +6,6 @@
   user-select: none;
 }
 
-c-blob-and-glass-background {
-  --blob-a-color: rgba(255, 79, 223, 0.493);
-  --blob-b-color: rgba(0, 67, 253, 0.493);
-  background-color: black;
-}
 
 component-body {
   position: relative;

@@ -4,5 +4,15 @@
 }
 
 component-body {
-  
+  background-color: transparent;
+}
+
+c-blob-and-glass-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  --blob-a-color: rgba(255, 79, 223, 0.493);
+  --blob-b-color: rgba(0, 67, 253, 0.493);
+  background-color: black;
 }

@@ -12,6 +12,14 @@ component-body {
   --margin: 1em;
 }
 
+:host(.noBg) component-body {
+  background-color: transparent;
+}
+
+:host(.noBg) background-container {
+  display: none;
+}
+
 content-container {
   display: flex;
   flex-direction: column;

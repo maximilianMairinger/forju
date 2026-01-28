@@ -22,8 +22,10 @@ import { parseEscapedValues } from "../../../../../../lib/txtParse"
 
 const parallaxLength = 100
 
-const importGridJs = memoize(() => Promise.all([import("gridjs").then(({ Grid }) => Grid), import("./gridjsStyles")]))
-const importAudioJs = memoize(() => Promise.all([import("./audioPlayerJs").then(({ default: audioPlayer }) => audioPlayer), import("./audioPlayerStyles")]))
+const importGridInteractAndCss = memoize(() => Promise.all([import("gridjs").then(({ Grid }) => Grid), import("./gridjsStyles")]))
+const importAudioCss = memoize(() => import("./audioPlayerStyles"))
+const importGhostInteractivity = memoize(() => import("./ghostInteractivity").then(e => e.default))
+const importAccordionCss = memoize(() => import("./accordionStyles"))
 
 
 
@@ -66,6 +68,14 @@ function parseContentHTML(html: string) {
 export default class GhostBlogSection extends BlogSection {
    constructor(private slug?: string) {
     super()
+
+    // this is very chick and dirty
+    if (slug !== undefined) {
+      (async () => {
+        await this.tryNavigate(undefined)
+        this.setBlogFromQuery(slug)
+      })()
+    }
   }
 
   private parseBlogPostToHTML(slug: string, blogData: PostOrPage) {
@@ -137,8 +147,8 @@ export default class GhostBlogSection extends BlogSection {
 
     const tables = contentContainer.childs("table", true)
     if (tables.length > 0) {
-      loadRecord.content.add(() => {
-        importGridJs().then(([Grid, css]) => {
+      // loadRecord.content.add(() => {
+        importGridInteractAndCss().then(([Grid, css]) => {
           this.addStyle(css)
 
 
@@ -156,19 +166,23 @@ export default class GhostBlogSection extends BlogSection {
             table.remove()
           }
         })
-      })
+      // })
     }
 
     const audioPlayers = contentContainer.childs("div.kg-card.kg-audio-card", true)
     if (audioPlayers.length > 0) {
       audioPlayers.addClass("blogCard", "bg")
-      loadRecord.content.add(() => {
-        importAudioJs().then(([f, css]) => {
-          this.addStyle(css)
+      // loadRecord.content.add(() => {
+        importGhostInteractivity().then((f) => {
           f(this.body.contentContainer)
         })
-      })
+
+        importAudioCss().then(({ css }) => {
+          this.addStyle(css)
+        })
+      // })
     }
+
 
     const toggleCards = contentContainer.childs("div.kg-card.kg-toggle-card", true)
     if (toggleCards.length > 0) {
@@ -186,12 +200,12 @@ export default class GhostBlogSection extends BlogSection {
         }
       }
 
-      loadRecord.content.add(() => {
-        importAudioJs().then(([f, css]) => {
-          this.addStyle(css)
+      // loadRecord.content.add(() => {
+        importGhostInteractivity().then((f) => {
           f(this.body.contentContainer)
         })
-      })
+        importAccordionCss().then(({ css }) => this.addStyle(css))
+      // })
     }
 
     const parallaxElems = contentContainer.childs("c-parallax", true) as any as Parallax[]
@@ -209,20 +223,20 @@ export default class GhostBlogSection extends BlogSection {
     return retArr
   }
 
-  addStyle = keyIndex(({ css }) => {
-    this.shadowRoot.append(ce("style").addClass("gridJsCss").html(css))
-  })
+  addStyle = (css) => {
+    this.shadowRoot.append(ce("style").addClass("ghostCss").html(css))
+  }
 
   // this is important for frame, so that it knows that each sub domainFragment should be treated as a unique load 
   // process with a seperate loadUid, where loadUid === domainFragment. 
   domainFragmentToLoadUid = true
 
   public async setBlogFromQuery(query: string) {
-    this.setBlog(...this.cache.get(query))
+    this.setBlog(...this.parseBlogPostToHTML(query, this.cache.get(query)))
   }
 
 
-  private cache = new Map<string, ReturnType<typeof this.parseBlogPostToHTML>>()
+  private cache = new Map<string, PostOrPage>()
 
   async tryNavigationCallback(domainFragment: string) {
     if (this.slug !== undefined) domainFragment = this.slug
@@ -236,12 +250,11 @@ export default class GhostBlogSection extends BlogSection {
       return false
     }
 
+    this.cache.set(slug, blogData)
+
     return { slug, blogData }
   }
 
-  attachStructureCallback({ blogData, slug }: { blogData: PostOrPage, slug: string }) {
-    this.cache.set(slug, this.parseBlogPostToHTML(slug, blogData))
-  }
 
   public async minimalContentPaint(loadUid: string) {
     await super.minimalContentPaint(loadUid)
