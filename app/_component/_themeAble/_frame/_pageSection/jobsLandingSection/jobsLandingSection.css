@@ -39,8 +39,8 @@ switch-label {
   position: absolute;
   top: 180px;
   left: -230px;
-  white-space: nowrap;
   transform: rotate(8deg);
+  white-space: nowrap;
 
   font-size: 30px;
 
@@ -69,8 +69,8 @@ span.oo > span {
 }
 
 c-toggle-switch {
-  --switch-width: 6rem;
-  margin-left: .5rem;
+  --switch-width: 1.2em;
+  margin-left: .1em;
 
   --switch-bg-off: rgb(255, 255, 255);
   --switch-bg-on: rgb(0, 0, 0);
@@ -85,4 +85,59 @@ h1 {
   position: relative;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+
+@media (max-width: 960px) {
+  switch-label {
+    top: 150px;
+    left: -30px;
+    transform: rotate(-6deg);
+  }
+}
+
+@media (max-width: 660px) {
+  h1 {
+    font-size: 70px;
+  }
+
+  switch-label {
+    font-size: 25px;
+    top: 20vw;
+  }
+}
+
+@media (max-width: 560px) {
+  h1 {
+    font-size: 60px;
+  }
+}
+
+@media (max-width: 520px) {
+  h1 {
+    font-size: 50px;
+  }
+
+  switch-label {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 430px) {
+  h1 {
+    font-size: 40px;
+  }
+  switch-label {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 330px) {
+  h1 {
+    font-size: 35px;
+  }
+  switch-label {
+    top: 66px;
+    font-size: 16px;
+  }
 }
