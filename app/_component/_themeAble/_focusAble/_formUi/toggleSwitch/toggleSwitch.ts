@@ -7,7 +7,7 @@ type ReadonlyData<T> = Omit<Data<T>, "set">
 
 export default class ToggleSwitch extends FormUi<Button> {
   public button: Button
-  public toggled = new Data(false) as ReadonlyData<boolean>
+  public toggled = new Data(false) as Data<boolean>
   public preToggled = new Data(false) as ReadonlyData<boolean>
 
   constructor(toggleCallback?: (toggled: boolean) => void) {
@@ -30,7 +30,7 @@ export default class ToggleSwitch extends FormUi<Button> {
     this.userFeedbackMode.hover.set(false)
 
     this.button.addActivationCallback(() => {
-      (this.toggled as Data<boolean>).set(!this.toggled.get())
+      this.toggled.set(!this.toggled.get())
     })
 
     this.toggled.get((toggled) => {
