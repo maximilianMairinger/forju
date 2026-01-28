@@ -35,20 +35,23 @@ background-blob-container {
   /* filter: url(#frostedGlass); */
 }
 
-.blob {
-  width: var(--blob-a-size);
+::slotted(.blob) {
   position: absolute;
   transform: translate(-50%, -50%);
 }
 
-.blob.a {
+::slotted(.blob.a) {
   top: var(--blob-a-top);
+  width: var(--blob-a-size);
+  height: var(--blob-a-size);
   left: var(--blob-a-left);
   --color: var(--blob-a-color);
 }
 
-.blob.b {
+::slotted(.blob.b) {
   top: var(--blob-b-top);
   left: var(--blob-b-left);
+  width: var(--blob-b-size);
+  height: var(--blob-b-size);
   --color: var(--blob-b-color);
 }
