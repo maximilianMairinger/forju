@@ -30,10 +30,10 @@ export default class JobsLandingSection extends PageSection {
       this.theme.set("dark")
     })
     
-    this.toggled.get(async (toggled) => {
-      if (toggled) turnOn()
-      else turnOff()
-    })
+    this.toggled.get(latestLatent((toggled) => {
+      if (toggled) return turnOn()
+      else return turnOff()
+    }), false)
 
 
     loadRecord.full.add(async () => {

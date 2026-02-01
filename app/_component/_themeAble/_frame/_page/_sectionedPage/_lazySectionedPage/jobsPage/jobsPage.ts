@@ -11,6 +11,7 @@ import delay from "tiny-delay";
 import { latestLatent, ResablePromise } from "more-proms";
 import { loadRecord } from "../../../../frame";
 import BlobAndGlassBackground from "../../../../../../blobAndGlassBackground/blobAndGlassBackground";
+import Easing from "waapi-easing";
 
 export default class JobsPage extends LazySectionedPage {
   protected body: BodyTypes
@@ -58,36 +59,55 @@ export default class JobsPage extends LazySectionedPage {
     const turnOn = latestLatent(async () => {
       await delay(200)
     }).then(async () => {
-      await whiteBlob.anim({width: 500}, 400)
+      await whiteBlob.anim({width: 500}, {duration: 500, easing: "ease-in"})
     }).then(async () => {
       whiteBlob.css({width: 0})
       await delay(120)
     }).then(async () => {
-      whiteBlob.css({width: 500})
+      whiteBlob.css({width: 700})
       await delay(70)
     }).then(async () => {
       whiteBlob.css({width: 0})
       whiteBlob.anim({width: 2000}, 2000)
       await delay(400)
     }).then(async () => {
-      await bg.anim({backgroundColor: "rgb(244, 244, 247)"}, 1600)
+      bg.anim({backgroundColor: "rgb(244, 244, 247)"}, 1600)
+      await delay(800)
+      this.css({overflow: "auto"})
+      if (this.scrollTop === 0) this.scroll({y: 200}, {speed: 300, cancelOnUserInput: true, easing: new Easing("ease-out").function})
     })
 
-    const turnOff = () => {
-      whiteBlob.anim({width: 0}, 1000)
-    }
+    const turnOff = latestLatent(async () => {
+      console.log("turn off")
+      bg.anim({backgroundColor: "black"}, 500)
+      whiteBlob.anim({width: 0}, 1300)
+      await this.scroll({y: 0}, {speed: 1000, cancelOnUserInput: false})
+    }).then(() => {
+      this.css({overflow: "hidden"})
+    })
+
+    
+      
+
+    landingToggle.then((landingToggle) => {
+      landingToggle.get(latestLatent((on) => {
+        if (on) return turnOn()
+        else return turnOff()
+      }), false)
+    })
+
+
 
     loadRecord.full.add(async () => {
       await bg.loadAnimations()
     })
-      
+  }
 
-    landingToggle.then((landingToggle) => {
-      landingToggle.get((on) => {
-        if (on) turnOn()
-        else turnOff()
-      })
+  navigationCallback(loadId: string): Promise<void> {
+    delay(0).then(() => {
+      this.scroll({y: 0})
     })
+    return super.navigationCallback(loadId)
   }
 
   // this is important for frame, so that it knows that each sub domainFragment should be treated as a unique load 

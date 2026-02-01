@@ -1,6 +1,7 @@
 import { declareComponent } from "../../../../../lib/declareComponent"
 import Page from "../page"
 import BlogSection from "../../_pageSection/blogSection/blogSection"
+import delay from "delay"
 
 export default class BlogPage extends Page {
 
@@ -43,7 +44,9 @@ export default class BlogPage extends Page {
   public domainLevel = 2
 
   navigationCallback(loadId: string) {
-    this.scrollTop = 0
+    delay(0).then(() => {
+      this.scroll({y: 0})
+    })
     return this.blogSection.setBlogFromQuery(loadId)
   }
 

@@ -1,9 +1,13 @@
+:host {
+  background-color: rgb(var(--tertiary-themed-background-soft));
+  display: inline-block;
+}
+
 component-body {
   display: flex;
   align-items: center;
   flex-direction: column;
   min-height: 100%;
-  background-color: rgb(var(--tertiary-themed-background-soft));
 
   --oversized: max(min(85vw, 170%), 100%);
   --normalFontSize: 18px;
@@ -12,7 +16,7 @@ component-body {
   --margin: 1em;
 }
 
-:host(.noBg) component-body {
+:host(.noBg) {
   background-color: transparent;
 }
 
@@ -29,17 +33,11 @@ content-container {
 
 
 
-c-footer-section {
-  opacity: 1;
-  width: 100%;
-  /* --padding: 0 var(--side-padding); */
-  /* --align-x: flex-start; */
-  background-color: transparent;
-}
+
 
 
 blog-content {
-  margin-top: 200px;
+  /* margin-top: 200px; */
   transition: .3s margin-top;
   width: calc(15% + 450px);
   height: max-content;
@@ -47,11 +45,6 @@ blog-content {
   flex-direction: column;
   align-items: center;
   z-index: 1;
-}
-
-bottom-spacer {
-  height: 100px;
-  display: block;
 }
 
 @media (max-width: 620px) {

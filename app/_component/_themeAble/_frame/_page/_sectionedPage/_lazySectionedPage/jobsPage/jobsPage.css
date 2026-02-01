@@ -1,6 +1,7 @@
 :host {
   display: block;
   position: relative;
+  overflow: hidden;
 }
 
 component-body {
