@@ -4,6 +4,7 @@ export const createLocalSetting = josmLocalStorageReflection
 export default createLocalSetting
 
 
+export const jobsLandingSectionToggled = createLocalSetting("jobsLandingSectionToggled", false)
 
 export const cookieAllowedSettings = /*#__PURE__*/createLocalSetting<string>("allowCookies", "unknown")
 

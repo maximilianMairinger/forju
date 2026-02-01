@@ -9,7 +9,6 @@
   box-shadow: none;
   box-sizing: border-box;
   z-index: 0;
-  transition: transform 0.1s ease;
 }
 
 .kg-toggle-card::before {

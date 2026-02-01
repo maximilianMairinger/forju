@@ -19,6 +19,7 @@ import keyIndex, { memoize } from "key-index"
 import { loadRecord } from "../../../frame"
 import Parallax from "../../../../../parallax/parallax"
 import { parseEscapedValues } from "../../../../../../lib/txtParse"
+import { ResablePromise } from "more-proms";
 
 const parallaxLength = 100
 
@@ -231,8 +232,11 @@ export default class GhostBlogSection extends BlogSection {
   // process with a seperate loadUid, where loadUid === domainFragment. 
   domainFragmentToLoadUid = true
 
+  public blogContentLoaded = new ResablePromise()
+
   public async setBlogFromQuery(query: string) {
     this.setBlog(...this.parseBlogPostToHTML(query, this.cache.get(query)))
+    this.blogContentLoaded.res()
   }
 
 
@@ -243,6 +247,7 @@ export default class GhostBlogSection extends BlogSection {
     const splitDomain = domainFragment.split(domain.dirString)
     const slug = splitDomain.last
     if (this.cache.has(slug)) return true
+    if (this.blogContentLoaded.settled) this.blogContentLoaded = new ResablePromise()
     let blogData: PostOrPage
     try {
       blogData = await ghostApi.posts.read({ slug }, { formats: ['html'], include: ['authors'] })

@@ -5,6 +5,8 @@ import { loadRecord } from "../../frame"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 import delay from "tiny-delay";
 import { latestLatent } from "more-proms";
+import { jobsLandingSectionToggled } from "../../../../../lib/localSettings";
+import { bidirectionalBindData } from "../../../../../lib/dataBindings";
 
 export default class JobsLandingSection extends PageSection {
   protected body: BodyTypes
@@ -13,6 +15,8 @@ export default class JobsLandingSection extends PageSection {
 
   constructor() {
     super("dark")
+
+    bidirectionalBindData(this.toggled, jobsLandingSectionToggled)
 
 
     const turnOn = latestLatent(async () => {
@@ -24,6 +28,12 @@ export default class JobsLandingSection extends PageSection {
       this.body.heading.anim({color: "black"})
     })
 
+    if (this.toggled.get()) {
+      this.theme.set("light")
+      this.body.heading.css({color: "black"})
+    }
+
+    
 
     const turnOff = latestLatent(async () => {
       this.body.heading.anim({color: "white"})

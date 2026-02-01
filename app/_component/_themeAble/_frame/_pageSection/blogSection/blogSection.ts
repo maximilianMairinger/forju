@@ -5,6 +5,8 @@ import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 export default class BlogSection extends PageSection {
   protected body: BodyTypes
 
+  public blogContentContainer = this.body.contentContainer
+
   constructor(...content: (string | Element)[]) {
     super()
 
