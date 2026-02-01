@@ -57,7 +57,7 @@ span.oo {
 
 span.oo > span {
   opacity: 0;
-  user-select: none;
+  /* user-select: none; */
 }
 
 .nowrap {
