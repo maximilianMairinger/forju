@@ -20,8 +20,16 @@ export default class JobsLandingSection extends PageSection {
 
 
     const turnOn = latestLatent(async () => {
-      await delay(1000)
-    }).then(async () => {
+      await delay(900)
+    })
+    .then(async () => {
+      if (this.body.paperboat.css("opacity") === 0) {
+        this.body.paperboat.css({marginTop: -10})
+        this.body.paperboat.anim({opacity: 1, marginTop: 0})
+      }
+      await delay(100)
+    })
+    .then(async () => {
       this.theme.set("light")
       await delay(400)
     }).then(() => {
@@ -31,6 +39,7 @@ export default class JobsLandingSection extends PageSection {
     if (this.toggled.get()) {
       this.theme.set("light")
       this.body.heading.css({color: "black"})
+      this.body.paperboat.css({opacity: 1})
     }
 
     

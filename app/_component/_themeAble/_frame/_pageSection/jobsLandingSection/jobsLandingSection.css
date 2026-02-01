@@ -6,6 +6,15 @@
   user-select: none;
 }
 
+.paperboat {
+  position: absolute;
+  top: -25px;
+  width: 95px;
+  height: 73px;
+  transform: translateX(-83px);
+  opacity: 0;
+}
+
 
 component-body {
   position: relative;
@@ -24,6 +33,7 @@ content-wrapper {
 }
 
 h1 {
+  position: relative;
   font-size: 80px;
 }
 
@@ -102,7 +112,16 @@ h1 {
 
 @media (max-width: 660px) {
   h1 {
-    font-size: 12.5vw;;
+    font-size: 12.5vw;
+  }
+
+  .paperboat {
+    --width: 15vw;
+    --height: calc(var(--width) * 0.75);
+    width: var(--width);
+    height: var(--height);
+    top: -4.3vw;
+    transform: translateX(-13vw);
   }
 
   switch-label {
@@ -126,6 +145,12 @@ h1 {
 @media (max-width: 300px) {
   h1 {
     font-size: 37.5px;
+  }
+  .paperboat {
+    width: 45px;
+    height: 33.75px;
+    transform: translateX(-40px);
+    top: -13px;
   }
   switch-label {
     top: 66px;
