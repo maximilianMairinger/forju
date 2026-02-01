@@ -1,8 +1,10 @@
-import { mousePos } from "../../../../../lib/dataBindings";
-import { signedEasing } from "../../../../../lib/util";
-import ProjectBrowsePage from "./projectBrowsePage";
+import { mousePos } from "../../lib/dataBindings";
+import { signedEasing } from "../../lib/util";
 import animationFrameDelta from "animation-frame-delta"
 import { Easing } from "waapi-easing"
+import BlobAndGlassBackground from "./blobAndGlassBackground";
+import BlobAIcon from "../_icon/blobAIcon/blobAIcon";
+import BlobBIcon from "../_icon/blobBIcon/blobBIcon";
 
 const easeOutFunc = signedEasing(new Easing("easeOut"))
 
@@ -13,8 +15,8 @@ const possibleSwivelPercent = {
 }
 const approachSpeed = 0.04
 
-export default function(page: ProjectBrowsePage) {
-  for (const blob of page.q(".blob", true) as any as HTMLElement[]) {
+export default function(page: BlobAndGlassBackground) {
+  for (const blob of page.childs(".blob", true) as any as (BlobAIcon | BlobBIcon)[]) {
     const topFrac = blob.css("top") / page.clientHeight
     const leftFrac = blob.css("left") / page.clientWidth
 
@@ -25,6 +27,7 @@ export default function(page: ProjectBrowsePage) {
       y: 0
     }
 
+    const totalMovementFactor = blob.totalMovementFactor ?? 1
     mousePos(({x: mouseX, y: mouseY}) => {
       const mouseXFrac = mouseX / page.clientWidth
       const mouseYFrac = mouseY / page.clientHeight
@@ -33,8 +36,8 @@ export default function(page: ProjectBrowsePage) {
       const mouseYFracAroundCenter = easeOutFunc(mouseYFrac - topFrac)
 
 
-      const swivelX = possibleSwivelPercent.x * page.offsetHeight * mouseXFracAroundCenter
-      const swivelY = possibleSwivelPercent.y * page.offsetWidth * mouseYFracAroundCenter
+      const swivelX = possibleSwivelPercent.x * page.offsetHeight * mouseXFracAroundCenter * totalMovementFactor
+      const swivelY = possibleSwivelPercent.y * page.offsetWidth * mouseYFracAroundCenter * totalMovementFactor
 
       wantPos.x = swivelX
       wantPos.y = swivelY
@@ -45,9 +48,13 @@ export default function(page: ProjectBrowsePage) {
       y: 0
     }
 
+    const draggingFactor = blob.draggingSpeedFactor ?? 1
+
+    console.log("draggingFactor", draggingFactor)
+
     animationFrameDelta((delta) => {
-      currentPos.x += (wantPos.x - currentPos.x) * delta * approachSpeed
-      currentPos.y += (wantPos.y - currentPos.y) * delta * approachSpeed
+      currentPos.x += (wantPos.x - currentPos.x) * delta * approachSpeed * draggingFactor
+      currentPos.y += (wantPos.y - currentPos.y) * delta * approachSpeed * draggingFactor
 
       // currentPos.x = wantPos.x
       // currentPos.y = wantPos.y

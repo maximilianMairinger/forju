@@ -1,0 +1,1 @@
+export const css = require("./accordionStyles.css")

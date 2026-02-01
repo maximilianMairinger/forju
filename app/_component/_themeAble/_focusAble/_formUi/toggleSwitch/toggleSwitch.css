@@ -1,0 +1,101 @@
+
+
+:host {
+  --switch-width: 60px;
+  --switch-height: calc(var(--switch-width) * 0.533); /* 32px at 60px width */
+  --knob-size: calc(var(--switch-width) * 0.4); /* 24px at 60px width */
+  --knob-offset: calc(var(--switch-width) * 0.067); /* 4px at 60px width */
+  --knob-stretch: calc(var(--switch-width) * 0.1); /* 6px at 60px width */
+  --switch-bg-off: rgba(120, 120, 128, 0.16);
+  --switch-bg-on: rgba(120, 120, 128, 0.16);
+  --knob-color-off: white;
+  --knob-color-on: white;
+  --transition-duration: 0.3s;
+  --transition-easing: cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+:host {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+}
+
+move-me {
+  display: block;
+  width: var(--switch-width);
+  height: var(--switch-height);
+  border-radius: calc(var(--switch-height) / 2);
+  position: relative;
+  background: var(--switch-bg-off);
+  transition: background-color var(--transition-duration) var(--transition-easing);
+  overflow: hidden;
+}
+
+:host(.toggled) move-me,
+:host(.preToggled) move-me {
+  background: var(--switch-bg-on);
+}
+
+switch-knob {
+  position: absolute;
+  width: var(--knob-size);
+  height: var(--knob-size);
+  border-radius: 50%;
+  background: var(--knob-color-off);
+  top: var(--knob-offset);
+  left: var(--knob-offset);
+  transition: transform var(--transition-duration) var(--transition-easing),
+              width var(--transition-duration) var(--transition-easing),
+              background-color var(--transition-duration) var(--transition-easing),
+              box-shadow var(--transition-duration) var(--transition-easing);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+:host(.toggled) switch-knob,
+:host(.preToggled) switch-knob {
+  transform: translateX(calc(var(--switch-width) - var(--knob-size) - 2 * var(--knob-offset)));
+  background: var(--knob-color-on);
+}
+
+:host(:hover) switch-knob {
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+:host(:active) switch-knob {
+  width: calc(var(--knob-size) + var(--knob-stretch));
+}
+
+:host(.toggled:active) switch-knob,
+:host(.preToggled:active) switch-knob {
+  transform: translateX(calc(var(--switch-width) - var(--knob-size) - 2 * var(--knob-offset) - var(--knob-stretch)));
+}
+
+/* Hide the default button appearance */
+a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Responsive sizing */
+@media (max-width: 768px) {
+  :host {
+    --switch-width: 56px;
+  }
+}
+
+@media (max-width: 480px) {
+  :host {
+    --switch-width: 52px;
+  }
+}
+
+
+background-cover {
+  display: none !important;
+}

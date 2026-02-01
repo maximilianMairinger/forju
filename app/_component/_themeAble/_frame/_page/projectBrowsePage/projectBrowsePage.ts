@@ -109,9 +109,7 @@ export default class ProjectBrowsePage extends Page {
 
 
     loadRecord.full.add(async () => {
-      await import("./blobMove").then(({ default: blobMove }) => {
-        blobMove(this)
-      })
+      await this.body.bg.loadAnimations()
     })
 
 

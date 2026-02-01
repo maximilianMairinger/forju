@@ -1,7 +1,7 @@
 import declareComponent from "../../../../../../lib/declareComponent"
 import UiButton from "../../../../_focusAble/_formUi/_rippleButton/rippleButton";
 import LeftRightSection from "../leftRightSection"
-import "./../../../../link/link"
+import "../../../../link/link"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 import { ghostApi } from "../../../../../../lib/ghostApi"
 import ParallaxImgCard from "../../../../../parallaxImgCard/parallaxImgCard";
@@ -11,7 +11,7 @@ import BlockButton from "../../../../_focusAble/_formUi/_rippleButton/_blockButt
 
 const baseTag = "forju"
 
-export default class BlogSection extends LeftRightSection {
+export default class BlogDisplaySection extends LeftRightSection {
   protected body: BodyTypes
 
   constructor({ blogTag, note, header, text, btns }: { blogTag: string, note?: string, header: string, text: string, btns?: {text: string, link: string | VoidFunction}[] }) {
@@ -80,11 +80,11 @@ export default class BlogSection extends LeftRightSection {
 
 
   stl() {
-    return super.stl() + require("./blogSection.css").toString()
+    return super.stl() + require("./blogDisplaySection.css").toString()
   }
   pug() {
-    return require("./blogSection.pug").default
+    return require("./blogDisplaySection.pug").default
   }
 }
 
-declareComponent("c-blog-section", BlogSection)
+declareComponent("c-blog-display-section", BlogDisplaySection)

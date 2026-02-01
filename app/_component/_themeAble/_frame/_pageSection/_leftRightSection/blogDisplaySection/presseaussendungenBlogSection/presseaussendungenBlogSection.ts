@@ -1,5 +1,5 @@
 import declareComponent from "../../../../../../../lib/declareComponent"
-import BlogSection from "../blogSection"
+import BlogSection from "../blogDisplaySection"
 
 export default class PresseaussendungenBlogSection extends BlogSection {
 
