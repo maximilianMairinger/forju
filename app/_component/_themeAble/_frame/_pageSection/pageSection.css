@@ -4,5 +4,6 @@ component-body {
   float: left;
   width: 100%;
   min-height: 100px;
-  overflow: hidden;
+  /* needed for c-contact-card */
+  overflow: visible;
 }
