@@ -85,10 +85,14 @@ h1 {
   position: relative;
   flex-wrap: wrap;
   justify-content: center;
+  padding: 0 50px
 }
 
 
 @media (max-width: 960px) {
+  h1 {
+    padding: 0;
+  }
   switch-label {
     top: 150px;
     left: -30px;
@@ -98,7 +102,7 @@ h1 {
 
 @media (max-width: 660px) {
   h1 {
-    font-size: 70px;
+    font-size: 12.5vw;;
   }
 
   switch-label {
@@ -107,34 +111,21 @@ h1 {
   }
 }
 
-@media (max-width: 560px) {
-  h1 {
-    font-size: 60px;
-  }
-}
-
 @media (max-width: 520px) {
-  h1 {
-    font-size: 50px;
-  }
-
   switch-label {
     font-size: 20px;
   }
 }
 
 @media (max-width: 430px) {
-  h1 {
-    font-size: 40px;
-  }
   switch-label {
     font-size: 18px;
   }
 }
 
-@media (max-width: 330px) {
+@media (max-width: 300px) {
   h1 {
-    font-size: 35px;
+    font-size: 37.5px;
   }
   switch-label {
     top: 66px;

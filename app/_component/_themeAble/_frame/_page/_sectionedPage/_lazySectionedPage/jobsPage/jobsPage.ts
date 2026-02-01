@@ -28,6 +28,7 @@ export default class JobsPage extends LazySectionedPage {
     const blogSectionInstance: ResablePromise<GhostBlogSection> = new ResablePromise()
     const landingSectionInstance = new ResablePromise<JobsLandingSection>()
     const footerSectionInstance = new ResablePromise<FooterSection>()
+
     super(new ImportanceMap<() => Promise<any>, any>(
       {
         key: new Import("", 1, (jobsLandingSection: typeof JobsLandingSection) => {
