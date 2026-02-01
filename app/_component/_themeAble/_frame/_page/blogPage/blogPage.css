@@ -3,6 +3,8 @@
   padding-top: 200px;
 }
 
+
+
 c-footer-section {
   opacity: 1;
   width: 100%;
@@ -12,7 +14,7 @@ c-footer-section {
 }
 
 component-body {
-  background-color: transparent;
+  background-color: rgb(var(--tertiary-themed-background-soft));
 }
 
 bottom-spacer {

@@ -14,6 +14,7 @@ import BlobAndGlassBackground from "../../../../../../blobAndGlassBackground/blo
 import Easing from "waapi-easing";
 import { range } from "../../../../../../../lib/util";
 import { ElementList } from "extended-dom";
+import FooterSection from "../../../../_pageSection/footerSection/footerSection";
 
 
 
@@ -26,6 +27,7 @@ export default class JobsPage extends LazySectionedPage {
     const landingToggle: ResablePromise<Data<boolean>> = new ResablePromise()
     const blogSectionInstance: ResablePromise<GhostBlogSection> = new ResablePromise()
     const landingSectionInstance = new ResablePromise<JobsLandingSection>()
+    const footerSectionInstance = new ResablePromise<FooterSection>()
     super(new ImportanceMap<() => Promise<any>, any>(
       {
         key: new Import("", 1, (jobsLandingSection: typeof JobsLandingSection) => {
@@ -42,8 +44,17 @@ export default class JobsPage extends LazySectionedPage {
           blogSectionInstance.res(ghSec)
           return ghSec
         }), val: () => import("../../../../_pageSection/blogSection/ghostBlogSection/ghostBlogSection")
+      },
+      {
+        key: new Import("contact", 1, (footerSection: typeof FooterSection) => {
+          const footerSec = new footerSection()
+          footerSectionInstance.res(footerSec)
+          return footerSec
+      }), val: () => import(/* webpackChunkName: "footerSection" */"../../../../_pageSection/footerSection/footerSection")
       }
-    ), baselink, sectionChangeCallback)
+    ), baselink, sectionChangeCallback, undefined, {
+      footer: "jobs"
+    })
 
 
     const bg = new BlobAndGlassBackground()
@@ -130,7 +141,7 @@ export default class JobsPage extends LazySectionedPage {
     })
 
 
-    Promise.all([blogSectionInstance, landingSectionInstance, blogSectionInstance.then((b) => b.blogContentLoaded)]).then(async ([blogSectionInstance, landingSectionInstance]) => {
+    Promise.all([blogSectionInstance, landingSectionInstance, footerSectionInstance, blogSectionInstance.then((b) => b.blogContentLoaded)]).then(async ([blogSectionInstance, landingSectionInstance, footerSectionInstance]) => {
       const offsetYBlog = -500
       const animDeltaY = -20
       const scale = 0.97
@@ -139,10 +150,12 @@ export default class JobsPage extends LazySectionedPage {
 
       blogSectionInstance.css({translateY: offsetYBlog})
 
+      footerSectionInstance.css({visibility: "visible"})
+
       
 
       const blogContent = blogSectionInstance.blogContentContainer.children[0].children
-      const elementsToAnim = new ElementList(...range(10).map(i => blogContent[i]).filter(el => el !== undefined))
+      const elementsToAnim = new ElementList(...range(30).map(i => blogContent[i]).filter(el => el !== undefined))
       const forwardsAnim = latestLatent(async () => {
         // debugger
         elementsToAnim.css({opacity: 0})

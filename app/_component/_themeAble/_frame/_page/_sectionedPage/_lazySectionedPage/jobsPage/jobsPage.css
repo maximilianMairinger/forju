@@ -17,3 +17,10 @@ c-blob-and-glass-background {
   --blob-b-color: rgba(0, 67, 253, 0.493);
   background-color: black;
 }
+
+c-footer-section {
+  background-color: transparent;
+  transform: translateY(-500px);
+  margin-bottom: -500px;
+  visibility: hidden;
+}

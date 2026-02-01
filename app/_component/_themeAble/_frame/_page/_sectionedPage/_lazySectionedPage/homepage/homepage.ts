@@ -57,7 +57,7 @@ export default class HomePage extends LazySectionedPage {
         ), val: () => import(/* webpackChunkName: "footerSection" */"../../../../_pageSection/footerSection/footerSection")
       }
     ), baselink, sectionChangeCallback, undefined, {
-      footer: "team"
+      footer: "partner"
     })
 
 

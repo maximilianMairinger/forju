@@ -2,8 +2,10 @@ import { declareComponent } from "../../../../../lib/declareComponent"
 import Page from "../page"
 import BlogSection from "../../_pageSection/blogSection/blogSection"
 import delay from "delay"
+import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 
 export default class BlogPage extends Page {
+  protected body: BodyTypes
 
   constructor(blogSection?: BlogSection) {
     super()
