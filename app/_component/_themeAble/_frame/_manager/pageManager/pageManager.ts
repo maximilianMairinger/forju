@@ -11,10 +11,18 @@ import HighlightAbleIcon from "../../../_icon/_highlightAbleIcon/highlightAbleIc
 import ProjectsPage from "../../_page/projectBrowsePage/projectBrowsePage"
 import GhostBlogSection from "../../_pageSection/blogSection/ghostBlogSection/ghostBlogSection";
 import BlogPage from "../../_page/blogPage/blogPage";
+import { Data } from "josm";
 
 
 
 export default class PageManager extends Manager {
+  public lowerNavDisabled = new Data(false)
+
+  protected pageChanged(page: any): void {
+    const optOut = page?.optOutOfNav
+    this.lowerNavDisabled.set(optOut === undefined ? false : !!optOut)
+  }
+
   constructor(pageChangeCallback?: (page: string, sectiones: {[link: string]: HighlightAbleIcon}[], domainLevel: number) => void, sectionChangeCallback?: (section: string) => void, onScroll?: (scrollProgress: number) => void, onUserScroll?: (scrollProgress: number, userInited: boolean) => void) {
 
     super(new ImportanceMap<() => Promise<any>, any>(

@@ -22,6 +22,7 @@ export default class JobsPage extends LazySectionedPage {
   protected body: BodyTypes
   public iconIndex: { [key: string]: HighlightAbleIcon } = {}
   private isInitiallyToggled: Promise<boolean>
+  public optOutOfNav = true
 
   constructor(baselink: string, sectionChangeCallback?: (section: string) => void) {
     const landingToggle: ResablePromise<Data<boolean>> = new ResablePromise()

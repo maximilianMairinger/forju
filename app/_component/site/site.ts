@@ -8,6 +8,7 @@ import { dirString } from "../../lib/domain"
 import { ElementList } from "extended-dom"
 import HighlightAbleIcon from "../_themeAble/_icon/_highlightAbleIcon/highlightAbleIcon"
 import { Data, DataSubscription } from "josm"
+import { latestLatent } from "more-proms"
 
 
 
@@ -109,6 +110,22 @@ export default class Site extends Component {
     },);
 
     
+
+    const hideLowerNav = latestLatent(async () => {
+      await lowerNav.anim({opacity: 0})
+    }).then(async () => {
+      lowerNav.hide()
+    })
+
+    const showLowerNav = latestLatent(async () => {
+      lowerNav.show()
+      await lowerNav.anim({opacity: 1})
+    })
+
+    pageManager.lowerNavDisabled.get(latestLatent((disabled) => {
+      if (disabled) return hideLowerNav()
+      else return showLowerNav()
+    }))
 
     this.apd(pageManager)
     pageManager.activate()

@@ -264,6 +264,7 @@ export default abstract class Manager extends Frame {
 
   
     this.currentPage = to;
+    this.pageChanged(to);
 
 
     
@@ -325,6 +326,8 @@ export default abstract class Manager extends Frame {
       }
     })()
   }
+
+  protected pageChanged(page: Page): void {}
 
   private currentUrl: string
   private nextPageToken: Symbol
