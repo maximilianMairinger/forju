@@ -167,13 +167,14 @@ export default class JobsPage extends LazySectionedPage {
           {offset: 1, opacity: 0, translateY: animDeltaY, scale},
         ], {duration: animDur})
       })
-      elementsToAnim.css({opacity: 0})
+      elementsToAnim.css({opacity: 0, pointerEvents: "none"})
 
       
 
       let lastLL = forwardsAnim.then(() => delay(110))
       for (const el of elementsToAnim) {
         lastLL = lastLL.then(async () => {
+          el.css({pointerEvents: "all"})
           el.anim([
             {offset: 0, opacity: 0, translateY: animDeltaY, scale},
             {offset: 1, opacity: 1, translateY: 0, scale: 1}
@@ -186,6 +187,7 @@ export default class JobsPage extends LazySectionedPage {
       
 
       const backwardsAnim = latestLatent(async () => {
+        elementsToAnim.css({pointerEvents: "none"})
         elementsToAnim.anim({opacity: 0, translateY: animDeltaY, scale}, 400)
 
         await delay(140)
