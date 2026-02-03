@@ -1,0 +1,159 @@
+:host {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  user-select: none;
+}
+
+.paperboat {
+  position: absolute;
+  top: -25px;
+  width: 95px;
+  height: 73px;
+  transform: translateX(-83px);
+  opacity: 0;
+}
+
+
+component-body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+content-wrapper {
+  display: inline-block;
+  position: relative;
+  color: white;
+}
+
+h1 {
+  position: relative;
+  font-size: 80px;
+}
+
+switch-wrapper {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 7rem;
+}
+
+switch-label {
+  color: red;
+  position: absolute;
+  top: 180px;
+  left: -230px;
+  transform: rotate(8deg);
+  white-space: nowrap;
+
+  font-size: 30px;
+
+  font-family: "Permanent Marker", cursive;
+  font-weight: 400;
+  font-style: normal;
+  opacity: 0;
+}
+
+span.oo {
+  position: relative;
+  display: inline-block;
+}
+
+span.oo > span {
+  opacity: 0;
+  /* user-select: none; */
+}
+
+.nowrap {
+  white-space: nowrap;
+  display: inline-flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  margin-left: 1.3rem
+}
+
+c-toggle-switch {
+  --switch-width: 1.2em;
+  margin-left: .1em;
+
+  --switch-bg-off: rgb(255, 255, 255);
+  --switch-bg-on: rgb(0, 0, 0);
+
+  --knob-color-off: rgb(0, 0, 0);
+  --knob-color-on: white;
+}
+
+h1 {
+  display: flex;
+  width: auto;
+  position: relative;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0 50px
+}
+
+
+@media (max-width: 960px) {
+  h1 {
+    padding: 0;
+  }
+  switch-label {
+    top: 150px;
+    left: -30px;
+    transform: rotate(-6deg);
+  }
+}
+
+@media (max-width: 660px) {
+  h1 {
+    font-size: 12.5vw;
+  }
+
+  .paperboat {
+    --width: 15vw;
+    --height: calc(var(--width) * 0.75);
+    width: var(--width);
+    height: var(--height);
+    top: -4.3vw;
+    transform: translateX(-13vw);
+  }
+
+  switch-label {
+    font-size: 25px;
+    top: 20vw;
+  }
+}
+
+@media (max-width: 520px) {
+  switch-label {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 430px) {
+  switch-label {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 300px) {
+  h1 {
+    font-size: 37.5px;
+  }
+  .paperboat {
+    width: 45px;
+    height: 33.75px;
+    transform: translateX(-40px);
+    top: -13px;
+  }
+  switch-label {
+    top: 66px;
+    font-size: 16px;
+  }
+}

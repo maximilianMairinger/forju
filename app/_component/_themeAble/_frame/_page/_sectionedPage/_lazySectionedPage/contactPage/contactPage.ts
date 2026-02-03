@@ -7,7 +7,7 @@ import ThoughtBubbleIcon from "../../../../../_icon/_highlightAbleIcon/thoughtBu
 import TeamIcon from "../../../../../_icon/_highlightAbleIcon/teamIcon/teamIcon"
 import ContactIcon from "../../../../../_icon/_highlightAbleIcon/contact/contact"
 import FooterSection from "../../../../_pageSection/footerSection/footerSection"
-import PresseBlogSection from "../../../../_pageSection/_leftRightSection/blogSection/presseaussendungenBlogSection/presseaussendungenBlogSection";
+import PresseBlogSection from "../../../../_pageSection/_leftRightSection/blogDisplaySection/presseaussendungenBlogSection/presseaussendungenBlogSection";
 
 export default class ContactPage extends LazySectionedPage {
   public iconIndex: { [key: string]: HighlightAbleIcon; };
@@ -33,7 +33,7 @@ export default class ContactPage extends LazySectionedPage {
       {
         key: new Import("presseaussendungen", 1, (blogSection: typeof PresseBlogSection) =>
           new blogSection()
-        ), val: () => import(/* webpackChunkName: "presseBlogSection" */"../../../../_pageSection/_leftRightSection/blogSection/presseaussendungenBlogSection/presseaussendungenBlogSection")
+        ), val: () => import(/* webpackChunkName: "presseBlogSection" */"../../../../_pageSection/_leftRightSection/blogDisplaySection/presseaussendungenBlogSection/presseaussendungenBlogSection")
       },
       {
         key: new Import("footer", 1, (footerSection: typeof FooterSection) =>

@@ -1,0 +1,57 @@
+:host {
+  background-color: white;
+  position: relative;
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  --blob-a-color: rgba(var(--primary-theme), 0.8);
+  --blob-b-color: rgba(var(--tertiary-theme), 0.8);
+  --blob-a-size: 400px;
+  --blob-b-size: 400px;
+  --blob-a-left: 20%;
+  --blob-a-top: 40%;
+  --blob-b-left: 70%;
+  --blob-b-top: 80%;
+  --blur: blur(200px);
+  --noise-opacity: 1;
+}
+
+
+svg {
+  --noiseOpacity: var(--noise-opacity);
+}
+
+
+background-blob-container {
+  pointer-events: none;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  filter: var(--blur);
+  /* opacity: .5; */
+  /* filter: url(#frostedGlass); */
+}
+
+::slotted(.blob) {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+::slotted(.blob.a) {
+  top: var(--blob-a-top);
+  width: var(--blob-a-size);
+  height: var(--blob-a-size);
+  left: var(--blob-a-left);
+  --color: var(--blob-a-color);
+}
+
+::slotted(.blob.b) {
+  top: var(--blob-b-top);
+  left: var(--blob-b-left);
+  width: var(--blob-b-size);
+  height: var(--blob-b-size);
+  --color: var(--blob-b-color);
+}
