@@ -19,12 +19,13 @@
 move-me {
   width: inherit;
   height: inherit;
+  overflow: hidden;
   /* background-color: var(--background-color); */
 }
 
 
-slot {
-  overflow: hidden;
+::slotted(*) {
+  /* overflow: hidden; */
   display: block;
   font-size: 1em;
   margin: auto 0;

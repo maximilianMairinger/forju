@@ -3,10 +3,11 @@ import Component from "../component"
 import keyIndex from "key-index"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 import DigitWheel from "../digitWheel/digitWheel";
-import animFrameDelta from "animation-frame-delta"
+import animFrameDelta, { CancelAblePromise } from "animation-frame-delta"
 
 
 import { Easing } from "waapi-easing"
+import delay from "tiny-delay";
 const easeF = new Easing("ease").function
 
 
@@ -67,9 +68,20 @@ export default class NumberWheel extends Component<false> {
       const dur = 1000 * distance / speedInNumbersPerSecond
 
       const animF = this.value(to, increment)
-      return animFrameDelta((progAbs) => {
+
+      const animProm = animFrameDelta((progAbs) => {
         animF(easingF(progAbs / dur))
       }, dur)
+
+      const ret = new CancelAblePromise((res, rej) => {
+        animProm.then(res, rej)
+      }, animProm.cancel.bind(animProm)) as CancelAblePromise<void> & { onProgress: (prog: number) => Promise<void> }
+
+      ret.onProgress = (prog: number) => {
+        return delay(prog * dur)
+      }
+
+      return ret
     }
   }
 

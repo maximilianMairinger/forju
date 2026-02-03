@@ -4,6 +4,7 @@ component-body {
   float: left;
   width: 100%;
   min-height: 100px;
-  /* needed for c-contact-card */
-  overflow: hidden;
+  
+  overflow: hidden; /* !! This needs to be hidden, for the overflowing content in some section in the bg. Like on landing section etc. */
+                    /* we would need it to be vis for c-contact-card :/ */
 }
