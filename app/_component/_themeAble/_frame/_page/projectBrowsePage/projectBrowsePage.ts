@@ -143,14 +143,27 @@ export default class ProjectBrowsePage extends Page {
     })
   }
 
-  protected async navigationCallback(loadId: unknown): Promise<void> {
-    delay(600).then(() => {
-      this.body.countMA.animateValueTo(57, 15)
-    })
+  private initLoad = true
 
-    Promise.all([this.blogDataProm, delay(500)]).then(async ([blogs]) => {
-      this.body.countProj.animateValueTo(blogs.length)
-    })
+  protected async navigationCallback(loadId: unknown): Promise<void> {
+    if (this.initLoad) {
+      this.initLoad = false
+
+      delay(600).then(() => {
+        this.body.countMA.animateValueTo(57, 15).onProgress(0.9).then(() => {
+          this.body.plusBtn.css({pointerEvents: "all"})
+          this.body.plusBtn.anim([
+            { offset: 0, opacity: 0, scale: .98, translateY: -4 },
+            { offset: 1, opacity: 1, scale: 1, translateY: 0 }
+          ])
+        })
+      })
+
+      Promise.all([this.blogDataProm, delay(500)]).then(async ([blogs]) => {
+        this.body.countProj.animateValueTo(blogs.length)
+      })
+    }
+    
   }
 
 

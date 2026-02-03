@@ -165,3 +165,21 @@ c-footer-section {
   --align-x: flex-start;
   background-color: transparent;
 }
+
+
+.plusMA {
+  display: inline-block;
+  /* height: 20px; */
+  height: 40px;
+  line-height: 43px;
+  border-radius: 15px;
+  pointer-events: none;
+  opacity: 0;
+  /* width: 30px; */
+}
+
+.plusMA > span {
+  overflow: visible;
+  padding: 0 7px;
+  /* padding-left: 4px; */
+}

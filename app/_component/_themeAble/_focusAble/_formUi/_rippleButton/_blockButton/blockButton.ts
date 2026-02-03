@@ -5,11 +5,11 @@ import { Data } from "josm";
 
 
 export default class BlockButton extends RippleButton {
-  constructor(content: string = "", onClick?: ((e?: MouseEvent | KeyboardEvent) => any)) {
+  constructor(content?: string, onClick?: ((e?: MouseEvent | KeyboardEvent) => any)) {
     super();
 
     if (onClick) this.click(onClick)
-    this.content(content);
+    if (content !== undefined) this.content(content);
   }
 
 
