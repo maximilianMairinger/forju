@@ -1,7 +1,7 @@
 import declareComponent from "../../../../../lib/declareComponent"
 import PageSection from "../pageSection"
 import ToggleSwitch from "../../../_focusAble/_formUi/toggleSwitch/toggleSwitch"
-import { loadRecord } from "../../frame"
+import { getCurrentLoadRecord } from "../../frame"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 import delay from "tiny-delay";
 import { latestLatent } from "more-proms";
@@ -55,7 +55,7 @@ export default class JobsLandingSection extends PageSection {
     }), false)
 
 
-    loadRecord.full.add(async () => {
+    getCurrentLoadRecord().full.add(async () => {
       const font = new FontFace('Permanent Marker', 'url(https://fonts.gstatic.com/s/permanentmarker/v16/Fh4uPib9Iyv2ucM6pGQMWimMp004La2Cf5b6jlg.woff2) format(\'woff2\')', {
         style: "normal",
         weight: "400"

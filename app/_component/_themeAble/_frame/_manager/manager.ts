@@ -127,7 +127,7 @@ export default abstract class Manager extends Frame {
     const prom = this.setElem(to)
     const { pageProm, suc } = await prom
     pageProm.priorityThen(suc.domain, () => {}, "completePaint").then(() => {
-      this.preloadLinks(linkRecord.doneRecording())
+      this.preloadLinks(linkRecord.flush())
     })
   }
 
@@ -152,7 +152,7 @@ export default abstract class Manager extends Frame {
     // console.log("start complete")
     await super.completePaint(loadId);
     await (await this.findSuitablePage(this.domainSubscription.domain)).pageProm.priorityThen(this.lastFoundPageParams.suc.domain, () => {}, "completePaint")
-    this.preloadLinks(linkRecord.doneRecording())
+    this.preloadLinks(linkRecord.flush())
     
   }
 
@@ -172,11 +172,16 @@ export default abstract class Manager extends Frame {
       
     }
 
-    const el = await Promise.all(toBePreloadedLocally.map(async (url) => {
+
+    // we cant parallelize this, because loadRecord (potentually in trynavigate (like in ghostblogsection)) is expecting, synchronous execution.
+    const els = []
+    for (const url of toBePreloadedLocally) {
       const page = await this.findSuitablePage(url)
-      return {domainFrag: page.suc.domain, imp: page.pageProm.imp}
-    }))
-    await this.importanceMap.whiteList(el, "minimalContentPaint")
+      const el = {domainFrag: page.suc.domain, imp: page.pageProm.imp}
+      els.push(el)
+    }
+
+    await this.importanceMap.whiteList(els, "minimalContentPaint")
     
     
     // Always cors an issue

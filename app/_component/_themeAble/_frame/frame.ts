@@ -1,26 +1,66 @@
 import ThemeAble, { Theme } from "../themeAble";
-import { StackedAsyncTaskRecord } from "../../../lib/record";
+import { FutureRecord, StackedFutureRecord } from "../../../lib/record";
 import { Data } from "josm";
 import keyIndex from "key-index";
 import { ResablePromise, ResableSyncPromise } from "more-proms";
 import { isPromiseLike } from "../../../lib/util";
+import LinkedList from "fast-linked-list";
 
-const resolveAddOnEmpty = (func: Function) => func()
 
-export const loadRecord = {
-  minimal: new StackedAsyncTaskRecord(resolveAddOnEmpty),
-  content: new StackedAsyncTaskRecord(resolveAddOnEmpty),
-  full: new StackedAsyncTaskRecord(resolveAddOnEmpty)
+const loadRecord = {
+  minimal: new StackedFutureRecord(),
+  content: new StackedFutureRecord(),
+  full: new StackedFutureRecord()
+}
+
+const loadId = Symbol("loadId")
+
+// IMPORTAMT: Call in the constructor of a component. When you then, want to add something to a loadRecord later, thats okay just save it at constructor invocation time to this. Otherwise you add it to the loadRecord of a different frame (that is currently loading), which may resolve at a random time or never. There is no warning about this!
+export function getCurrentLoadRecord() {
+
+  if (!override.empty) return override.last 
+
+
+  for (const key in loadRecord) {
+    if (loadRecord[key].currentRecord === undefined) throw new Error(`Load Error`)
+  }
+
+  if (!(loadRecord.minimal.currentRecord[loadId] === loadRecord.content.currentRecord[loadId] && loadRecord.content.currentRecord[loadId] === loadRecord.full.currentRecord[loadId])) {
+    throw new Error("Load Error")
+  }
+
+  return {
+    minimal: loadRecord.minimal.currentRecord,
+    content: loadRecord.content.currentRecord,
+    full: loadRecord.full.currentRecord
+  }
+}
+
+const override = new LinkedList<{minimal: FutureRecord<unknown>, content: FutureRecord<unknown>, full: FutureRecord<unknown>}>()
+// only call this if you know what you are doing.
+export function overrideCurrentLoadRecord(newRec: {minimal: FutureRecord<unknown>, content: FutureRecord<unknown>, full: FutureRecord<unknown>}) {
+  const tok = override.push(newRec)
+  return tok.rm.bind(tok)
 }
 
 type ID = unknown
 type Recording = ReturnType<typeof loadRecord.minimal.record>
 
+function nameOb(name: string | PromiseLike<string>) {
+  return function type(type: "minimal" | "content" | "full") {
+    const composeName = (name: string) => `${type}_${name}`
+    const ob = {} as { name: string | PromiseLike<string> }
+    ob.name = isPromiseLike(name) ? name.then(n => composeName(n)) : composeName(name)
+    return ob
+  }
+}
+
 function makeRec(name: string | PromiseLike<string>) {
+  const fn = nameOb(name)
   return {
-    minimal: loadRecord.minimal.record(isPromiseLike(name) ? name.then(n => `minimal_${n}`) : `minimal_${name}`),
-    content: loadRecord.content.record(isPromiseLike(name) ? name.then(n => `content_${n}`) : `content_${name}`),
-    full: loadRecord.full.record(isPromiseLike(name) ? name.then(n => `full_${n}`) : `full_${name}`)
+    minimal: loadRecord.minimal.record(fn("minimal")),
+    content: loadRecord.content.record(fn("content")),
+    full: loadRecord.full.record(fn("full"))
   }
 }
 

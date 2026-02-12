@@ -4,9 +4,8 @@ import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 import * as domain from "./../../../../../../lib/domain"
 import Image from "../../../../../image/image"
 
-import GhostContentAPI, { PostOrPage } from '@tryghost/content-api'
+import { PostOrPage } from '@tryghost/content-api'
 import { lang } from "../../../../../../lib/lang"
-import { Data, ReadonlyData } from "josm";
 import { ghostApi } from "../../../../../../lib/ghostApi";
 import "../../../../link/link"
 import "../../../../../image/image"
@@ -15,8 +14,7 @@ import "../../../../../parallax/parallax"
 import TextBlob from "../../../../textBlob/textBlob"
 import AT from "../../../../../../lib/formatTime"
 import PersonCircle from "../../../../../personCircle/personCircle"
-import keyIndex, { memoize } from "key-index"
-import { loadRecord } from "../../../frame"
+import { memoize } from "key-index"
 import Parallax from "../../../../../parallax/parallax"
 import { parseEscapedValues } from "../../../../../../lib/txtParse"
 import { ResablePromise } from "more-proms";
@@ -235,12 +233,13 @@ export default class GhostBlogSection extends BlogSection {
   public blogContentLoaded = new ResablePromise()
 
   public async setBlogFromQuery(query: string) {
-    this.setBlog(...this.parseBlogPostToHTML(query, this.cache.get(query)))
+    // this.setBlog(...this.parseBlogPostToHTML(query, this.cache.get(query)))
+    this.setBlog(...this.cache.get(query))
     this.blogContentLoaded.res()
   }
 
 
-  private cache = new Map<string, PostOrPage>()
+  private cache = new Map<string, HTMLElement[]>()
 
   async tryNavigationCallback(domainFragment: string) {
     if (this.slug !== undefined) domainFragment = this.slug
@@ -254,8 +253,8 @@ export default class GhostBlogSection extends BlogSection {
     } catch (e) {
       return false
     }
-
-    this.cache.set(slug, blogData)
+    
+    this.cache.set(slug, this.parseBlogPostToHTML(slug, blogData))
 
     this.setBlogFromQuery(slug)
 

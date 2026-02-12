@@ -2,7 +2,7 @@ import declareComponent from "../../../../../lib/declareComponent"
 import { ghostApi } from "../../../../../lib/ghostApi";
 import Parallax from "../../../../parallax/parallax";
 import Image from "../../../../image/image";
-import { loadRecord } from "../../frame";
+import { getCurrentLoadRecord } from "../../frame";
 import Page from "../page"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 import TextBlob from "../../../textBlob/textBlob";
@@ -25,13 +25,17 @@ export default class ProjectBrowsePage extends Page {
 
   private blogDataProm: Promise<any>
 
+  private loadRecord = getCurrentLoadRecord()
+
   constructor() {
     super()
+
+    
 
 
     const blogElemOffsetTopIndexProm = new ResablePromise<Map<Element, number>>()
 
-    const blogDataProm = this.blogDataProm = loadRecord.content.add(async () => {
+    const blogDataProm = this.blogDataProm = this.loadRecord.content.add(async () => {
       const blogs = await ghostApi.posts.browse({
         formats: "html",
         limit: 15,
@@ -39,7 +43,7 @@ export default class ProjectBrowsePage extends Page {
         include: "authors"
       })
       return blogs
-    })
+    }) as Promise<any>
 
     blogDataProm.catch(() => {
       this.body.contentContainer.childs("h1").txt("Failed to load projects, try refreshing the page.")
@@ -108,7 +112,7 @@ export default class ProjectBrowsePage extends Page {
     })
 
 
-    loadRecord.full.add(async () => {
+    this.loadRecord.full.add(async () => {
       await this.body.bg.loadAnimations()
     })
 

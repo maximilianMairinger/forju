@@ -1,6 +1,6 @@
 import Component from "../component"
 import declareComponent from "./../../lib/declareComponent"
-import { loadRecord } from "../_themeAble/_frame/frame"
+import { getCurrentLoadRecord } from "../_themeAble/_frame/frame"
 import { ResablePromise, ResableSyncPromise } from "more-proms"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 import keyIndex from "key-index";
@@ -67,6 +67,7 @@ export default class Image extends Component {
     full: new ResablePromise<void>(),
     min: new ResablePromise<void>()
   }
+  private loadRecord = getCurrentLoadRecord()
   private minLoadedSyncProm = new ResableSyncPromise()
   private elems: {[key in typeof resesList[number]]?: {picture: HTMLPictureElement, sources: {setSource: (src: string) => void}[], img: HTMLImageElement &  {setSource: (src: string) => void}}} = {}
   private myWantedRes = new Data(0)
@@ -212,7 +213,7 @@ export default class Image extends Component {
       if (loadStageAtCall === 1 && firstTimeAtStage) {
           
         thisActiveElems.img.anim({opacity: 1}, 150).then(() => {
-          console.log(this)
+          // console.log(this)
           if (lastActiveElems) lastActiveElems.img.anim({opacity: 0}, 150)
           thisActiveElems.img.anim({filter: "blur(0px)"}, 800)
           thisActiveElems.img.anim({scale: 1}, 800)
@@ -220,7 +221,7 @@ export default class Image extends Component {
       }
       else {
         thisActiveElems.img.anim({opacity: 1}, 300).then(() => {
-          console.log(this)
+          // console.log(this)
           if (lastActiveElems) {
             lastActiveElems.img.css({opacity: 0})
           }
@@ -305,7 +306,7 @@ export default class Image extends Component {
     }
 
 
-
+    if (src === "WhatsApp-Image-2026-01-15-at-5.43.50-PM-1") debugger
     this._src = src
     
     if (forceLoad) {
@@ -344,7 +345,7 @@ export default class Image extends Component {
           this.loadSrc(src, isExplicitSrc ? "" : biggestLoadedRes as any)
 
           if (this.currentLoadStage === 0 && !isExplicitSrc) {
-            loadRecord.full.add(() => {
+            this.loadRecord.full.add(() => {
               if (this.currentLoadStage >= 1) return
               this.currentLoadStage = 1
               const wantedResName = this.getCurrentlyWantedRes()
@@ -362,7 +363,7 @@ export default class Image extends Component {
         if (isExplicitSrc) {
           const wantedResName = ""
           this.loadedPromiseMemo(wantedResName as any)
-          loadRecord.full.add(() => {
+          this.loadRecord.full.add(() => {
             this.currentLoadStage = 1
             return this.loadSrc(this._src, wantedResName as any)
           })
@@ -382,14 +383,14 @@ export default class Image extends Component {
   }
 
   private deferLoading() {
-    loadRecord.minimal.add(() => {
+    this.loadRecord.minimal.add(() => {
       if (this.currentLoadStage >= 0) return
       this.currentLoadStage = 0
       const wantedResName = this.getCurrentlyWantedRes()
       if (wantedResName) return this.loadSrc(this._src, wantedResName)
     })
 
-    loadRecord.full.add(() => {
+    this.loadRecord.full.add(() => {
       if (this.currentLoadStage >= 1) return
       this.currentLoadStage = 1
       const wantedResName = this.getCurrentlyWantedRes()

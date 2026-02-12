@@ -3,7 +3,7 @@ import Link from "../link";
 import copyToClipboard from "copy-to-clipboard"
 import delay from "delay"
 import lang from "../../../../lib/lang";
-import { loadRecord } from "../../_frame/frame";
+import { getCurrentLoadRecord } from "../../_frame/frame";
 
 function selectText(node: Node) {
 if (window.getSelection) {
@@ -31,7 +31,7 @@ export default class CopyLink extends Link {
       this.content(content)
     }
 
-    loadRecord.full.add(async () => {
+    getCurrentLoadRecord().full.add(async () => {
       copyFeedback = (await import("./tippyFeedback")).default(this)
     })
     

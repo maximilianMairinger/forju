@@ -5,7 +5,7 @@ import declareComponent from "../../../../lib/declareComponent";
 import Button from "../_button/button";
 import FocusAble from "../focusAble"
 import { Theme } from "../../themeAble"
-import { loadRecord } from "../../_frame/frame";
+import { getCurrentLoadRecord } from "../../_frame/frame";
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 import { waitUntilDataEquals } from "../../../../lib/waitUntilDataEquals";
 
@@ -185,8 +185,7 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
     }, true)
     this.componentBody.prepend(hovPreDet);
 
-
-    loadRecord.content.add(async () => {
+    getCurrentLoadRecord().content.add(async () => {
       await delay(0)
       if (window.matchMedia && window.matchMedia("(hover:hover)").matches && await waitUntilDataEquals(this.userFeedbackMode.preHover, a => a)) {
         await import("./preHoverInteraction").then(({default: f}) => {

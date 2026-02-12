@@ -9,7 +9,7 @@ import GhostBlogSection from "../../../../_pageSection/blogSection/ghostBlogSect
 import { Data } from "josm";
 import delay from "tiny-delay";
 import { latestLatent, ResablePromise } from "more-proms";
-import { loadRecord } from "../../../../frame";
+import { getCurrentLoadRecord } from "../../../../frame";
 import BlobAndGlassBackground from "../../../../../../blobAndGlassBackground/blobAndGlassBackground";
 import Easing from "waapi-easing";
 import { range } from "../../../../../../../lib/util";
@@ -138,7 +138,7 @@ export default class JobsPage extends LazySectionedPage {
 
 
 
-    loadRecord.full.add(async () => {
+    getCurrentLoadRecord().full.add(async () => {
       await bg.loadAnimations()
     })
 

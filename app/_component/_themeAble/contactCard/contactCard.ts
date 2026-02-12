@@ -1,21 +1,7 @@
-import LinkedList from "fast-linked-list";
 import declareComponent from "../../../lib/declareComponent"
 import ThemeAble from "../themeAble"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
-import keyIndex, { memoize } from "key-index"
-import { latestLatent } from "more-proms"
-import { EventListener } from "extended-dom";
-import { loadRecord } from "../../_themeAble/_frame/frame"
-import confetti from "canvas-confetti"
-
-
-
-
-
-
-
-
-
+import { getCurrentLoadRecord } from "../../_themeAble/_frame/frame"
 
 
 
@@ -34,8 +20,8 @@ export default class ContactCard extends ThemeAble {
     // todo: max size
 
     
-    loadRecord.full.add(() => {
-      import(/* webpackChunkName: "contactCardInteraction" */"./interaction").then((mod) => mod.default.apply(this))
+    getCurrentLoadRecord().full.add(() => {
+      return import(/* webpackChunkName: "contactCardInteraction" */"./interaction").then((mod) => mod.default.apply(this))
     })
     
 

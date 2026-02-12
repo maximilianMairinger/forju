@@ -59,6 +59,7 @@ export default class BlogPage extends Page {
     delay(0).then(() => {
       this.scroll({y: 0})
     })
+    this.blogSection.setBlogFromQuery(loadId)
   }
 
 

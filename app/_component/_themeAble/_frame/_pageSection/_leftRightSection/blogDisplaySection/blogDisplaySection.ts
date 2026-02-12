@@ -6,13 +6,15 @@ import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
 import { ghostApi } from "../../../../../../lib/ghostApi"
 import ParallaxImgCard from "../../../../../parallaxImgCard/parallaxImgCard";
 import RippleButton from "../../../../_focusAble/_formUi/_rippleButton/rippleButton"
-import { loadRecord } from "../../../frame";
+import { getCurrentLoadRecord, overrideCurrentLoadRecord } from "../../../frame";
 import BlockButton from "../../../../_focusAble/_formUi/_rippleButton/_blockButton/blockButton";
 
 const baseTag = "forju"
 
 export default class BlogDisplaySection extends LeftRightSection {
   protected body: BodyTypes
+
+  private loadRecord = getCurrentLoadRecord()
 
   constructor({ blogTag, note, header, text, btns }: { blogTag: string, note?: string, header: string, text: string, btns?: {text: string, link: string | VoidFunction}[] }) {
     super(1010);
@@ -37,7 +39,8 @@ export default class BlogDisplaySection extends LeftRightSection {
     const filter = `tag:${baseTag}+tag:${blogTag}`
 
 
-    loadRecord.full.add(async () => {
+    
+    this.loadRecord.full.add(async () => {
       const blogs = await ghostApi.posts.browse({
         formats: "html",
         limit: 15,
@@ -48,7 +51,8 @@ export default class BlogDisplaySection extends LeftRightSection {
     }).then((blogs) => {
       this.body.scrollBody.innerHTML = ""
 
-      
+      const stopOverridingCurrentLoadRecord = overrideCurrentLoadRecord(this.loadRecord)
+
       for (const blog of blogs) {
         const card = new ParallaxImgCard()
         card.imgSrc(blog.feature_image, true)
@@ -62,6 +66,8 @@ export default class BlogDisplaySection extends LeftRightSection {
         btn.append(card)
         this.body.scrollBody.append(btn)
       }
+
+      stopOverridingCurrentLoadRecord()
     })
   }
 
