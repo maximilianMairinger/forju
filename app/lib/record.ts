@@ -1,10 +1,13 @@
 import delay from "tiny-delay"
 import LinkedList, { Token } from "fast-linked-list"
+import { isPromiseLike } from "./util"
 
 
 
 export class Record<T> {
   protected ls = [] as T[]
+  // name is just for debugging purposes
+  constructor(public name?: string | PromiseLike<string>) {}
   doneRecording(): T[] {
     const ret = this.ls
     this.ls = []
@@ -42,17 +45,17 @@ export class AsyncTaskRecord<Q, R extends Promise<Q> | Q = Promise<Q> | Q, T ext
 }
 
 
-function makeStackedRecord(MyRecord: typeof Record): {new<T>(resolveAddOnEmpty?: (val: any) => void): {add: Record<T>["add"], record: (doneRecordingCbToBringToTop?: (() => any) & { token: Token }) => (Record<T>["doneRecording"] & { token: Token })}}
-function makeStackedRecord(MyRecord: typeof TaskRecord): {new<T>(resolveAddOnEmpty?: (val: any) => void): {add: TaskRecord<T>["add"], record: (doneRecordingCbToBringToTop?: (() => any) & { token: Token }) => (TaskRecord<T>["doneRecording"] & { token: Token })}}
-function makeStackedRecord(MyRecord: typeof AsyncTaskRecord): {new<T>(resolveAddOnEmpty?: (val: any) => void): {add: AsyncTaskRecord<T>["add"], record: (doneRecordingCbToBringToTop?: (() => any) & { token: Token }) => (AsyncTaskRecord<T>["doneRecording"] & { token: Token })}}
-function makeStackedRecord(MyRecord: {new<T>(): {add: any, doneRecording: any}}): any {
+function makeStackedRecord(MyRecord: typeof Record): {new<T>(resolveAddOnEmpty?: (val: any) => void): {add: Record<T>["add"], record: (name_doneRecordingCbToBringToTop?: PromiseLike<string> | string | (() => any) & { token: Token }) => (Record<T>["doneRecording"] & { token: Token })}}
+function makeStackedRecord(MyRecord: typeof TaskRecord): {new<T>(resolveAddOnEmpty?: (val: any) => void): {add: TaskRecord<T>["add"], record: (name_doneRecordingCbToBringToTop: PromiseLike<string> | string | (() => any) & { token: Token }) => (TaskRecord<T>["doneRecording"] & { token: Token })}}
+function makeStackedRecord(MyRecord: typeof AsyncTaskRecord): {new<T>(resolveAddOnEmpty?: (val: any) => void): {add: AsyncTaskRecord<T>["add"], record: (name_doneRecordingCbToBringToTop: PromiseLike<string> | string | (() => any) & { token: Token }) => (AsyncTaskRecord<T>["doneRecording"] & { token: Token })}}
+function makeStackedRecord(MyRecord: {new<T>(name?: string | Promise<string>): {add: any, doneRecording: any}}): any {
   return class StackedNewRecord<T> {
-    constructor(private resolveAddOnEmpty?: (val: T) => unknown) {
+    constructor(public name: string, private resolveAddOnEmpty?: (val: T) => unknown) {
 
     }
     private records = new LinkedList<any>()
-    record(doneRecordingCbToBringToTop?: (() => void) & { token: Token }) {
-      const tok = doneRecordingCbToBringToTop === undefined ? this.records.push(new MyRecord<T>()) : this.records.pushToken(doneRecordingCbToBringToTop.token)
+    record(name_doneRecordingCbToBringToTop: Promise<string> | (string | (() => void) & { token: Token })) {
+      const tok = (typeof name_doneRecordingCbToBringToTop === "string" || isPromiseLike(name_doneRecordingCbToBringToTop)) ? this.records.push(new MyRecord<T>(name_doneRecordingCbToBringToTop)) : this.records.pushToken(name_doneRecordingCbToBringToTop.token)
       const doneRecording = () => {
         tok.remove()
         // make two callbacks here. One for stop recording and the other to resolve.

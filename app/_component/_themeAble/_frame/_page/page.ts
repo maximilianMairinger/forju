@@ -25,7 +25,7 @@ export default abstract class Page extends Frame {
 
 
   
-  protected navigationCallback?(loadId: unknown): Promise<void>
+  protected navigationCallback?(loadId: unknown): void
 
   
   

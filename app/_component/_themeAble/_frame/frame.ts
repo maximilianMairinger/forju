@@ -2,6 +2,8 @@ import ThemeAble, { Theme } from "../themeAble";
 import { StackedAsyncTaskRecord } from "../../../lib/record";
 import { Data } from "josm";
 import keyIndex from "key-index";
+import { ResablePromise, ResableSyncPromise } from "more-proms";
+import { isPromiseLike } from "../../../lib/util";
 
 const resolveAddOnEmpty = (func: Function) => func()
 
@@ -14,11 +16,11 @@ export const loadRecord = {
 type ID = unknown
 type Recording = ReturnType<typeof loadRecord.minimal.record>
 
-function makeRec() {
+function makeRec(name: string | PromiseLike<string>) {
   return {
-    minimal: loadRecord.minimal.record(),
-    content: loadRecord.content.record(),
-    full: loadRecord.full.record()
+    minimal: loadRecord.minimal.record(isPromiseLike(name) ? name.then(n => `minimal_${n}`) : `minimal_${name}`),
+    content: loadRecord.content.record(isPromiseLike(name) ? name.then(n => `content_${n}`) : `content_${name}`),
+    full: loadRecord.full.record(isPromiseLike(name) ? name.then(n => `full_${n}`) : `full_${name}`)
   }
 }
 
@@ -36,11 +38,14 @@ export default abstract class Frame extends ThemeAble<HTMLElement> {
     full: Recording
   }>()
 
-
-
+  
+  private nameP: PromiseLike<string>
   constructor(theme: Theme) {
-    const initRec = makeRec()
+    const nameP = new ResableSyncPromise<string>()
+    const initRec = makeRec(nameP)
     super(undefined, theme)
+    this.nameP = nameP
+    nameP.res(this.tagName)
     this.accentTheme = new Data("primary") as Data<"primary" | "secondary">
 
     this.records.set(undefined, initRec)
@@ -101,7 +106,7 @@ export default abstract class Frame extends ThemeAble<HTMLElement> {
       }
     }
     else {
-      if (!this.records.has(loadUid)) this.records.set(loadUid, myRecords = makeRec())
+      if (!this.records.has(loadUid)) this.records.set(loadUid, myRecords = makeRec(this.nameP))
       else myRecords = this.records.get(loadUid)
     }
 

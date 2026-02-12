@@ -257,6 +257,8 @@ export default class GhostBlogSection extends BlogSection {
 
     this.cache.set(slug, blogData)
 
+    this.setBlogFromQuery(slug)
+
     return { slug, blogData }
   }
 

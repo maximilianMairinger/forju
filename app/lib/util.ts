@@ -68,3 +68,7 @@ export function range(end: number, start: number = 0, step = 1) {
   }
   return arr
 }
+
+export function isPromiseLike<T = any>(value: any): value is PromiseLike<T> {
+  return value != null && typeof value.then === "function"
+}

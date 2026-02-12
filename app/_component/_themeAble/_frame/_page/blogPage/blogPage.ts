@@ -3,6 +3,7 @@ import Page from "../page"
 import BlogSection from "../../_pageSection/blogSection/blogSection"
 import delay from "delay"
 import { BodyTypes } from "./pugBody.gen"; import "./pugBody.gen"
+import FooterSection from "./../../_pageSection/footerSection/footerSection";
 
 export default class BlogPage extends Page {
   protected body: BodyTypes
@@ -38,8 +39,17 @@ export default class BlogPage extends Page {
   }
 
   public async completePaint(loadUid: string) {
+    const footerProm = import("./../../_pageSection/footerSection/footerSection").then(m => m.default as typeof FooterSection)
     await this.blogSection.completePaint(loadUid)
     await super.completePaint(loadUid)
+
+    const Footer = await footerProm
+    const footer = new Footer()
+    this.apd(footer)
+    footer.tryNavigate(undefined)
+    .then(() => footer.minimalContentPaint(undefined))
+    .then(() => footer.fullContentPaint(undefined))
+    .then(() => footer.completePaint(undefined))
   }
 
   // this is used for the header, the left side, how far to query the subpages for the breadcrumbs
@@ -49,7 +59,6 @@ export default class BlogPage extends Page {
     delay(0).then(() => {
       this.scroll({y: 0})
     })
-    return this.blogSection.setBlogFromQuery(loadId)
   }
 
 
