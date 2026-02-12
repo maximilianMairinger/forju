@@ -360,8 +360,8 @@ export default abstract class Manager extends Frame {
       
       while(pageProm === undefined) {
         if (to === "") {
-          const msg = "421 Misdirected request"
-          document.body.html(`<b>${msg}</b>`)
+          const msg = "421 Misdirected request - No page found for domain " + fullDomain
+          // document.body.html(`<b>${msg}</b>`)
           throw new Error(msg)
         }
         to = to.substr(0, to.lastIndexOf("/")) as any
