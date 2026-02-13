@@ -187,7 +187,8 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
 
     getCurrentLoadRecord().content.add(async () => {
       await delay(0)
-      if (window.matchMedia && window.matchMedia("(hover:hover)").matches && await waitUntilDataEquals(this.userFeedbackMode.preHover, a => a)) {
+
+      const load = async () => {
         await import("./preHoverInteraction").then(({default: f}) => {
           const root = ce("root-bounds");
           this.apd(root);
@@ -195,6 +196,16 @@ export default class FormUi<T extends false | HTMLElement | HTMLAnchorElement = 
           if (!this.userFeedbackMode.preHover.get()) this.preHoverAnimations.disable()
         })
       }
+      if (window.matchMedia && window.matchMedia("(hover:hover)").matches) {
+        if (this.userFeedbackMode.preHover.get()) {
+          await load()
+        }
+        else {
+          // dont await here, or else we would block later loads
+          waitUntilDataEquals(this.userFeedbackMode.preHover, a => a).then(() => load())
+        }
+      }
+
     })
     
 
