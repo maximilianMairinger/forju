@@ -64,7 +64,7 @@ export default class PageManager extends Manager {
       },
       {
         key: new Import<string, [BlogPage, GhostBlogSection]>("impressum", 10, ([blogPage, ghostBlogSection]) =>
-            new blogPage(new ghostBlogSection("impressum"))
+            new blogPage(new ghostBlogSection("impressum-forju"))
         ), val: () => Promise.all([import("../../_page/blogPage/blogPage"), import("../../_pageSection/blogSection/ghostBlogSection/ghostBlogSection")])
       },
       {
