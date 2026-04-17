@@ -4,6 +4,56 @@
   min-height: 650px;
 }
 
+img-wrapper {
+  width: 100%;
+  position: relative;
+  display: block;
+  height: 100%;
+}
+
+video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
+  transition: opacity .35s cubic-bezier(.22, 1, .36, 1);
+}
+
+img-wrapper c-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: opacity .55s cubic-bezier(.22, 1, .36, 1), transform .6s cubic-bezier(.22, 1, .36, 1), filter .6s cubic-bezier(.22, 1, .36, 1);
+  transform-origin: 50% 88%;
+  will-change: transform, opacity, filter;
+}
+
+:host(.imageMorph) img-wrapper c-image,
+:host(.videoReveal) img-wrapper c-image,
+:host(.videoFinished) img-wrapper c-image {
+  transform: perspective(1600px) rotateX(1deg) scale(1.01) translateY(5px);
+}
+
+:host(.videoReveal) video,
+:host(.videoFinished) video {
+  opacity: 1;
+}
+
+:host(.videoReveal) img-wrapper c-image,
+:host(.videoFinished) img-wrapper c-image {
+  opacity: .2;
+  filter: blur(1.5px);
+}
+
+:host(.videoFinished) img-wrapper c-image {
+  opacity: 0;
+}
+
 
 landing-circle-wrapper {
   position: absolute;
