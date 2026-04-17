@@ -3,7 +3,10 @@ c-oval-icon(name="backgroundCircle")
 right-side
   //- todo next parent has relative! But should only happen when scroll
   c-parallax(y autoHook="c-home-page" parallaxLength="150")
-    c-image(src="paperPark")
+    img-wrapper
+      c-image(src="paperPark")
+      video(data-src="/res/vid/leaves_winding_around_202604171253.mp4")
+    
   c-spike-icon
   c-fidget.a
   c-fidget.b
@@ -14,7 +17,6 @@ left-side
     c-text-blob(note="Verein der" heading="Forschenden Jugend" text="Der ehrenamtliche Verein, der Jugendliche, Unternehmen, Hochschulen, Institute und Schulen miteinander verbindet!")
     c-block-button(content="Laufende Projekte" link="projects").main
     c-block-button(content="Kontakt" link="contactSite").secondary
-    //kommentar
     
 landing-circle-wrapper
   c-landing-circle
